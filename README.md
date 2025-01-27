@@ -1,2 +1,2 @@
 # ShelterConnect
-Disaster Relief Platform for Evacuees and Volunteers
+Disaster Relief Platform for connecting Evacuees and Volunteers to Shelters
