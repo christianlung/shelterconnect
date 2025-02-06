@@ -14,49 +14,31 @@ interface SidebarProps {
     onClose: () => void;
 }
 
+const menuItems = [
+    { text: 'Map', href: '/', icon: <MapIcon /> },
+    { text: 'Donate', href: '/donate', icon: <PaidIcon /> },
+    { text: 'About', href: '/about', icon: <InfoIcon /> },
+]
+
 export default function Sidebar({ open, onClose }: SidebarProps) {
     const handleListItemClick = (event: React.MouseEvent) => {
         onClose();
     }
 
-    const list = (
-        <List>
-            <ListItem disablePadding>
-                <Link href="/" passHref legacyBehavior>
-                    <ListItemButton component="a" onClick={handleListItemClick}>
-                        <ListItemIcon>
-                            <MapIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Map" />
-                    </ListItemButton>
-                </Link>
-            </ListItem>
-            <ListItem disablePadding>
-                <Link href="/donate" passHref legacyBehavior>
-                    <ListItemButton component="a" onClick={handleListItemClick}>
-                        <ListItemIcon>
-                            <PaidIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Donate" />
-                    </ListItemButton>
-                </Link>
-            </ListItem>
-            <ListItem disablePadding>
-                <Link href="/about" passHref legacyBehavior>
-                    <ListItemButton component="a" onClick={handleListItemClick}>
-                        <ListItemIcon>
-                            <InfoIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="About" />
-                    </ListItemButton>
-                </Link>
-            </ListItem>
-        </List>
-    );
-
     return (
         <Drawer open={open} onClose={onClose}>
-            {list}
+            <List>
+                {menuItems.map(({ text, href, icon }) => (
+                    <ListItem key={href} disablePadding>
+                        <Link href={href} className="w-full">
+                            <ListItemButton onClick={onClose}>
+                                <ListItemIcon>{icon}</ListItemIcon>
+                                <ListItemText primary={text} />
+                            </ListItemButton>
+                        </Link>
+                    </ListItem>
+                ))}
+            </List>
         </Drawer>
     );
 };
