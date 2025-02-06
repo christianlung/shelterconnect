@@ -1,3 +1,3 @@
 export default function Page(){
-    return <h1>Display general shelters list page here</h1>
+    return <h1>Shelters page</h1>
 }
