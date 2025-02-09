@@ -6,6 +6,12 @@ Disaster Relief Platform for connecting Evacuees and Volunteers to Shelters
 
 ### Setting up
 
+Create a `.env.local` file in the root directory with the following values (get them from our "Secrets" google doc):
+
+```
+NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1I...
+```
+
 Install dependencies using:
 
 ```

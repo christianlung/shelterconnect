@@ -1,9 +1,9 @@
-import Map from "../components/Map";
-import ShelterList from "../components/ShelterList";
+import Map from '../components/Map';
+import ShelterList from '../components/ShelterList';
 
 export default function Page() {
   return (
-    <div>
+    <div className="h-dvh">
       <Map />
       <ShelterList />
     </div>

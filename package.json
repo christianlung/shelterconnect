@@ -21,9 +21,13 @@
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@mui/icons-material": "^6.4.3",
     "@mui/material": "^6.4.3",
+    "@types/mapbox-gl": "^3.4.1",
+    "classnames": "^2.5.1",
+    "mapbox-gl": "^3.9.4",
     "next": "15.1.6",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-map-gl": "^8.0.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.4",
