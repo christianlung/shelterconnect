@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  VOLUNTEER
+  COORDINATOR
+}
+
+enum Language {
+  ENGLISH
+  SPANISH
+  FRENCH
+  MANDARIN
+  CANTONESE
+  VIETNAMESE
+  TAGALOG
+  KOREAN
+  JAPANESE
+  ARABIC
+  OTHER
+}
+
+type Address {
+  street    String
+  city      String
+  state     String
+  zipCode   String
+  country   String
+}
+
+type Coordinate {
+  latitude  Float
+  longitude Float
+}
+
+type TimeSlot {
+  start DateTime
+  end   DateTime
+}
+
+model Volunteer {
+  id              String            @id @default(auto()) @map("_id") @db.ObjectId
+  role            Role             @default(VOLUNTEER)
+  name            String
+  email           String           @unique
+  phoneNumber     String
+  profilePicture  String?
+  languages       Language[]
+  canLiftHeavy    Boolean          @default(false)
+  signups         VolunteerSignup[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model Shelter {
+  id                  String            @id @default(auto()) @map("_id") @db.ObjectId
+  name                String
+  location            Coordinate?
+  address             Address
+  picture             String?
+  volunteerCapacity   Int?
+  evacueeCapacity     Int?
+  accommodations      String[]
+  wheelchairAccessible Boolean          @default(false)
+  housesLargeAnimals  Boolean          @default(false)
+  housesSmallAnimals  Boolean          @default(false)
+  hasCounselingUnit   Boolean          @default(false)
+  foodProvided        Boolean          @default(false)
+  waterProvided       Boolean          @default(false)
+  volunteerPreferences Json?
+  requiredLanguages   Language[]
+  signups             VolunteerSignup[]
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+}
+
+model VolunteerSignup {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  shelterId   String    @db.ObjectId
+  volunteerId String    @db.ObjectId
+  timeSlot    TimeSlot
+  status      String    @default("pending") // pending, confirmed, cancelled
+  shelter     Shelter   @relation(fields: [shelterId], references: [id])
+  volunteer   Volunteer @relation(fields: [volunteerId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([shelterId])
+  @@index([volunteerId])
+}
