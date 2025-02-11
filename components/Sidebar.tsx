@@ -6,7 +6,6 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import MapIcon from '@mui/icons-material/Map';
 import PaidIcon from '@mui/icons-material/Paid';
-import InfoIcon from '@mui/icons-material/Info';
 import Link from 'next/link'; // Import Link for Next.js routing
 
 interface SidebarProps {
@@ -17,14 +16,9 @@ interface SidebarProps {
 const menuItems = [
     { text: 'Map', href: '/', icon: <MapIcon /> },
     { text: 'Donate', href: '/donate', icon: <PaidIcon /> },
-    { text: 'About', href: '/about', icon: <InfoIcon /> },
 ]
 
 export default function Sidebar({ open, onClose }: SidebarProps) {
-    const handleListItemClick = (event: React.MouseEvent) => {
-        onClose();
-    }
-
     return (
         <Drawer open={open} onClose={onClose}>
             <List>
