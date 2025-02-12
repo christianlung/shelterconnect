@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 /** TODO: Build this component */
 export default function ShelterList() {
   const tempShelters = [
@@ -17,8 +19,10 @@ export default function ShelterList() {
             key={shelter.id}
             className="rounded-lg border-2 border-gray-900 p-4 text-gray-600"
           >
-            <h2 className="text-xl font-semibold">{shelter.name}</h2>
-            <p>{shelter.location}</p>
+            <Link href={`/shelters/${shelter.id}`}>
+              <h2 className="text-xl font-semibold">{shelter.name}</h2>
+              <p>{shelter.location}</p>
+            </Link>
           </div>
         ))}
       </div>
