@@ -1,3 +1,9 @@
-export default function Page(){
-    return <h1>Admin Dashboard</h1>
+import AdminList from '@/components/AdminList';
+
+export default function Page() {
+    return (
+        <div>
+            <AdminList />
+        </div>
+    );
 }

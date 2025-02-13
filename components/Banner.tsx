@@ -17,7 +17,7 @@ export default function Banner() {
   };
 
   return (
-    <div className="from-primary-300 to-primary-500 fixed z-50 flex h-20 w-full items-center gap-4 bg-gradient-to-tr px-6 py-4 shadow-lg">
+    <div className="from-primary-300 to-primary-500 fixed z-50 flex h-20 w-full items-center gap-4 bg-gradient-to-tr px-6 py-4 shadow-lg top-0">
       <button onClick={handleMenuClick}>
         <MenuIcon sx={{ fontSize: 30, color: 'white' }} />
       </button>
