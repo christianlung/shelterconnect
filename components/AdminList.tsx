@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import { Box, Card, CardContent, Typography, IconButton, Collapse, List, ListItem, LinearProgress } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 // Sample data
 const shelters = [
@@ -33,10 +34,18 @@ const shelters = [
 export default function ShelterList() {
     const [expanded, setExpanded] = useState<number | null>(null);
 
+    const handleExpand = (index: number) => {
+        setExpanded(expanded === index ? null : index);
+    };
+
     return (
         <Box sx={{ maxWidth: 600, margin: "auto", display: "flex", flexDirection: "column", gap: 2 }}>
             {shelters.map((shelter, index) => (
-                <Card key={index} sx={{ position: "relative", p: 2 }}>
+                <Card 
+                    key={index} 
+                    sx={{ position: "relative", p: 2, cursor: "pointer" }} 
+                    onClick={() => handleExpand(index)}
+                >
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         {/* Shelter Name & Address */}
                         <Box>
@@ -44,16 +53,23 @@ export default function ShelterList() {
                             <Typography sx={{ color: "gray" }}>{shelter.address}</Typography>
                         </Box>
 
-                        {/* Action Buttons */}
+                        {/* Action Buttons (Prevent Click from Expanding) */}
                         <Box>
-                            <IconButton onClick={() => console.log("Edit", shelter)}>
+                            <IconButton 
+                                onClick={(e) => { e.stopPropagation(); console.log("Edit", shelter); }}
+                            >
                                 <EditIcon />
                             </IconButton>
-                            <IconButton onClick={() => console.log("Delete", shelter)} color="error">
+                            <IconButton 
+                                onClick={(e) => { e.stopPropagation(); console.log("Delete", shelter); }} 
+                                color="error"
+                            >
                                 <DeleteIcon />
                             </IconButton>
-                            <IconButton onClick={() => setExpanded(expanded === index ? null : index)}>
-                                <ExpandMoreIcon />
+                            <IconButton 
+                                onClick={(e) => { e.stopPropagation(); handleExpand(index); }}
+                            >
+                                {expanded === index ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                             </IconButton>
                         </Box>
                     </Box>
@@ -67,7 +83,7 @@ export default function ShelterList() {
                                     const progress = (item.received / item.needed) * 100;
 
                                     return (
-                                        <ListItem key={idx} sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+                                        <ListItem key={idx} sx={{ flexDirection: "column", alignItems: "flex-start" }}>
                                             <Box sx={{ display: "flex", width: "100%", justifyContent: "space-between", mb: 1 }}>
                                                 <Typography>{item.category}</Typography>
                                                 <Typography sx={{ color: "gray" }}>
