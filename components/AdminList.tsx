@@ -76,7 +76,7 @@ export default function ShelterList() {
 
                     {/* Expandable Section */}
                     <Collapse in={expanded === index}>
-                        <CardContent>
+                        <CardContent sx={{ bgcolor: "#e0f2fe", borderRadius: "10px", m: 1, mt: 3 }}>
                             {/* Category List */}
                             <List>
                                 {shelter.categories.map((item, idx) => {
