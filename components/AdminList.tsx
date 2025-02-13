@@ -47,13 +47,10 @@ export default function ShelterList() {
                     onClick={() => handleExpand(index)}
                 >
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        {/* Shelter Name & Address */}
                         <Box>
                             <Typography variant="h6">{shelter.name}</Typography>
                             <Typography sx={{ color: "gray" }}>{shelter.address}</Typography>
                         </Box>
-
-                        {/* Action Buttons (Prevent Click from Expanding) */}
                         <Box>
                             <IconButton 
                                 onClick={(e) => { e.stopPropagation(); console.log("Edit", shelter); }}
@@ -74,10 +71,8 @@ export default function ShelterList() {
                         </Box>
                     </Box>
 
-                    {/* Expandable Section */}
                     <Collapse in={expanded === index}>
                         <CardContent sx={{ bgcolor: "#e0f2fe", borderRadius: "10px", m: 1, mt: 3 }}>
-                            {/* Category List */}
                             <List>
                                 {shelter.categories.map((item, idx) => {
                                     const progress = (item.received / item.needed) * 100;
