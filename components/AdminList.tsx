@@ -39,7 +39,7 @@ export default function ShelterList() {
     };
 
     return (
-        <Box sx={{ maxWidth: 600, margin: "auto", display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box sx={{ maxWidth: 600, margin: "auto", display: "flex", flexDirection: "column", gap: 2, px: 1.5}}>
             {shelters.map((shelter, index) => (
                 <Card 
                     key={index} 
