@@ -6,6 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import { useRouter, useParams } from "next/navigation";
 
 interface Address {
   street: string;
@@ -27,6 +28,7 @@ interface Supply {
 
 
 interface Shelter {
+  id: string;
   name: string;
   location?: Location;
   address: Address;
@@ -39,10 +41,11 @@ interface Shelter {
 
 interface AdminListProps {
   shelters: Shelter[];
-  onDelete: (index: number) => void;
+  onDelete: (id: string) => void;
 }
 
 export default function ShelterList({ shelters, onDelete }: AdminListProps) {
+  const router = useRouter();
 
   const [expanded, setExpanded] = useState<number | null>(null);
 
@@ -55,17 +58,17 @@ export default function ShelterList({ shelters, onDelete }: AdminListProps) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
       {shelters.map((shelter, index) => (
-        <Card key={index} sx={{ p: 2, cursor: "pointer" }} onClick={() => toggleExpand(index)}>
+        <Card key={shelter.id} sx={{ p: 2, cursor: "pointer" }} onClick={() => toggleExpand(index)}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Box>
               <Typography variant="h6">{shelter.name}</Typography>
               <Typography sx={{ color: "gray" }}>{formatAddress(shelter.address)}</Typography>
             </Box>
             <Box>
-              <IconButton onClick={(e) => { e.stopPropagation(); }}>
+              <IconButton onClick={(e) => { e.stopPropagation(); router.push('/admin/edit/${shelter.id}') }}>
                 <EditIcon />
               </IconButton>
-              <IconButton onClick={(e) => { e.stopPropagation(); onDelete(index) }}>
+              <IconButton onClick={(e) => { e.stopPropagation(); onDelete(shelter.id) }}>
                 <DeleteIcon color="error" />
               </IconButton>
               <IconButton onClick={(e) => { e.stopPropagation(); toggleExpand(index); }}>
