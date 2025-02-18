@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Card, CardContent, Typography, IconButton, Collapse, Divider } from "@mui/material";
+import { Box, Card, CardContent, Typography, IconButton, Collapse, Chip } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -81,18 +81,29 @@ export default function ShelterList({ shelters, onDelete }: AdminListProps) {
                 </Typography>
               )} */}
               {shelter.volunteerCapacity && shelter.evacueeCapacity && (
-                <Typography variant="body2" sx={{ mb: 1 }}>
-                  Capacity: {shelter.volunteerCapacity} volunteers, {shelter.evacueeCapacity} evacuees
-                </Typography>
+                <div>
+                  <Typography variant="body2" sx={{ mb: 1, fontWeight: "bold" }}>
+                    Capacity:
+                  </Typography>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    {shelter.volunteerCapacity} volunteers, {shelter.evacueeCapacity} evacuees
+                  </Typography>
+                </div>
+
               )}
               {shelter.accommodations && shelter.accommodations.length > 0 && (
-                <Typography variant="body2" sx={{ mb: 1 }}>
-                  Accommodations: {shelter.accommodations.join(", ")}
-                </Typography>
+                <div>
+                  <Typography variant="body2" sx={{ mb: 1, fontWeight: "bold" }}> Accommodations:</Typography>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 1 }}>
+                    {shelter.accommodations.map((acc, idx) => (
+                      <Chip key={idx} label={`#${acc}`} sx={{ bgcolor: "#b3e5fc", color: "#01579b" }} />
+                    ))}
+                  </Box>
+                </div>
               )}
               {shelter.suppliesNeeded && shelter.suppliesNeeded.length > 0 && (
                 <Box>
-                  <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                  <Typography variant="subtitle2" sx={{ mb: 1, fontWeight: "bold" }}>
                     Supplies Needed:
                   </Typography>
                   {shelter.suppliesNeeded.map((supply, idx) => {
@@ -116,7 +127,7 @@ export default function ShelterList({ shelters, onDelete }: AdminListProps) {
                             sx={{
                               width: `${progress}%`,
                               height: "100%",
-                              bgcolor: progress >= 100 ? "green" : "orange",
+                              bgcolor: progress >= 100 ? "green" : "#2196f3",
                             }}
                           />
                         </Box>

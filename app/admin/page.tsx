@@ -5,6 +5,7 @@ import { useState } from "react";
 import AdminList from '@/components/AdminList';
 import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, IconButton } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function Page() {
   const [shelters, setShelters] = useState([
@@ -63,7 +64,6 @@ export default function Page() {
     });
   };
 
-  // Delete a shelter by filtering it out of the list
   const handleDeleteShelter = (index: number) => {
     setShelters(shelters.filter((_, i) => i !== index));
   };
@@ -81,6 +81,12 @@ export default function Page() {
     setNewShelter({ ...newShelter, accommodations: updated });
   };
 
+  const deleteAccommodation = (index: number) => {
+    const updated = [...newShelter.accommodations];
+    updated.splice(index, 1);
+    setNewShelter({ ...newShelter, accommodations: updated });
+  };
+
   const addSupply = () => {
     setNewShelter({
       ...newShelter,
@@ -93,6 +99,13 @@ export default function Page() {
     updated[index] = { ...updated[index], [field]: value };
     setNewShelter({ ...newShelter, suppliesNeeded: updated });
   };
+
+  const deleteSupply = (index: number) => {
+    const updated = [...newShelter.suppliesNeeded];
+    updated.splice(index, 1);
+    setNewShelter({ ...newShelter, suppliesNeeded: updated });
+  };
+
 
   return (
     <div>
@@ -195,41 +208,48 @@ export default function Page() {
               sx={{ mb: 2 }}
             />
              <Typography variant="subtitle1">Accommodations (optional):</Typography>
-            {newShelter.accommodations.map((acc, index) => (
-              <TextField
-                key={index}
-                label={`Accommodation ${index + 1}`}
-                fullWidth
-                value={acc}
-                onChange={(e) => updateAccommodation(index, e.target.value)}
-                sx={{ mb: 2 }}
-              />
+             {newShelter.accommodations.map((acc, index) => (
+              <Box key={index} sx={{ display: "flex", alignItems: "center", mb: 2, gap: 1 }}>
+                <TextField
+                  label={`Accommodation ${index + 1}`}
+                  fullWidth
+                  value={acc}
+                  onChange={(e) => updateAccommodation(index, e.target.value)}
+                />
+                <IconButton onClick={() => deleteAccommodation(index)} color="error">
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
             ))}
             <IconButton onClick={addAccommodation} sx={{ mb: 2 }}>
               <AddIcon />
             </IconButton>
+
             <Typography variant="subtitle1">Supplies Needed (optional):</Typography>
             {newShelter.suppliesNeeded.map((supply, index) => (
-             <Box key={index} sx={{ display: "flex", gap: 1, alignItems: "center", mb: 2 }}>
-             <TextField
-               label={`Item ${index + 1}`}
-               fullWidth
-               value={supply.item}
-               onChange={(e) => updateSupply(index, "item", e.target.value)}
-             />
-             <TextField
-               label="Received"
-               fullWidth
-               value={supply.received}
-               onChange={(e) => updateSupply(index, "received", e.target.value)}
-             />
-             <TextField
-               label="Needed"
-               fullWidth
-               value={supply.needed}
-               onChange={(e) => updateSupply(index, "needed", e.target.value)}
-             />
-           </Box>
+              <Box key={index} sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+                <TextField
+                  label={`Item ${index + 1}`}
+                  fullWidth
+                  value={supply.item}
+                  onChange={(e) => updateSupply(index, "item", e.target.value)}
+                />
+                <TextField
+                  label="Received"
+                  fullWidth
+                  value={supply.received}
+                  onChange={(e) => updateSupply(index, "received", e.target.value)}
+                />
+                <TextField
+                  label="Needed"
+                  fullWidth
+                  value={supply.needed}
+                  onChange={(e) => updateSupply(index, "needed", e.target.value)}
+                />
+                <IconButton onClick={() => deleteSupply(index)} color="error">
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
             ))}
             <IconButton onClick={addSupply} sx={{ mb: 2 }}>
               <AddIcon />
