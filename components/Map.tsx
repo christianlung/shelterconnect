@@ -39,7 +39,7 @@ const Map: React.FunctionComponent<MapProps> = (props: MapProps) => {
   }, []);
 
   return (
-    <div className={'w-full'} style={{ height: height || '100%' }}>
+    <div className="w-full pt-20" style={{ height: height || '100%' }}>
       <ReactMapGL
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
         {...viewState}
