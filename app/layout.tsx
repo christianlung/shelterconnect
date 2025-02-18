@@ -15,7 +15,9 @@ export default function RootLayout({
     <html lang="en">
       <body id="root">
         <Banner />
-        {children}
+        <div className="mt-20">
+          {children}
+        </div>
       </body>
     </html>
   );
