@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 import AdminList from '@/components/AdminList';
 import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, IconButton } from '@mui/material';
@@ -10,6 +11,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 export default function Page() {
   const [shelters, setShelters] = useState([
     {
+      id: uuidv4(),
       name: "Shelter A",
       location: { latitude: "34.0000", longitude: "-118.0000" },
       address: { street: "123 Main St", city: "Springfield", state: "CA", zip: "12345" },
@@ -38,6 +40,7 @@ export default function Page() {
     if (newShelter.name.trim() && newShelter.address.street.trim()) {
       const formattedShelter = {
         ...newShelter,
+        id: uuidv4(),
         suppliesNeeded: newShelter.suppliesNeeded?.map(supply => ({
           ...supply,
           received: Number(supply.received),
@@ -64,8 +67,8 @@ export default function Page() {
     });
   };
 
-  const handleDeleteShelter = (index: number) => {
-    setShelters(shelters.filter((_, i) => i !== index));
+  const handleDeleteShelter = (id: string) => {
+    setShelters(shelters.filter((shelter) => shelter.id !== id));
   };
 
   const addAccommodation = () => {
