@@ -7,6 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import MapIcon from '@mui/icons-material/Map';
 import PaidIcon from '@mui/icons-material/Paid';
 import HomeIcon from '@mui/icons-material/Home';
+import PeopleIcon from '@mui/icons-material/People';
 import Link from 'next/link'; // Import Link for Next.js routing
 
 interface SidebarProps {
@@ -17,7 +18,8 @@ interface SidebarProps {
 const menuItems = [
     { text: 'Map', href: '/', icon: <MapIcon /> },
     { text: 'Donate', href: '/donate', icon: <PaidIcon /> },
-    { text: 'Admin', href: '/admin', icon: <HomeIcon />}
+    { text: 'Admin', href: '/admin', icon: <HomeIcon />},
+    { text: 'Volunteer', href: '/volunteer', icon: <PeopleIcon />}
 ]
 
 export default function Sidebar({ open, onClose }: SidebarProps) {
