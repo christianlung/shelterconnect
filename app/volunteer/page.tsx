@@ -111,9 +111,6 @@ export default function VolunteerDashboard() {
             </Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="body2" sx={{ fontWeight: "bold", color: statusColor }}>
-              {signup.status.toUpperCase()}
-            </Typography>
             <IconButton onClick={(e) => { e.stopPropagation(); toggleExpand(signup.id); }}>
               {expanded === signup.id ? <ExpandLessIcon /> : <ExpandMoreIcon />}
             </IconButton>
