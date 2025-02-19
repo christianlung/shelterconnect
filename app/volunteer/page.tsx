@@ -76,9 +76,11 @@ export default function Page() {
   };
 
   const formatTimeSlot = (timeSlot: TimeSlot) => {
-    const start = new Date(timeSlot.start).toLocaleString();
-    const end = new Date(timeSlot.end).toLocaleString();
-    return `${start} - ${end}`;
+    const start = new Date(timeSlot.start);
+    const end = new Date(timeSlot.end);
+    const formatTime = (date: Date) =>
+      date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+    return `${start.getMonth() + 1}/${start.getDate()}: ${formatTime(start)} - ${formatTime(end)}`;
   };
 
   const renderSignups = (signups: VolunteerSignup[], labelColor: string) => (
