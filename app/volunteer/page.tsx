@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Box, Card, CardContent, Typography, IconButton, Collapse } from "@mui/material";
+import { 
+  Box, 
+  Card, 
+  CardContent, 
+  Typography, 
+  IconButton, 
+  Collapse 
+} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 
@@ -30,9 +37,10 @@ interface VolunteerSignup {
   shelter: Shelter;
   timeSlot: TimeSlot;
   status: SignupStatus;
+  tasks: string[];
 }
 
-export default function Page() {
+export default function VolunteerDashboard() {
   const [signups] = useState<VolunteerSignup[]>([
     {
       id: "1",
@@ -41,8 +49,9 @@ export default function Page() {
         name: "Shelter A",
         address: { street: "123 Main St", city: "Springfield", state: "CA", zip: "12345" },
       },
-      timeSlot: { start: "2023-03-25T09:00:00", end: "2023-03-25T12:00:00" },
+      timeSlot: { start: "2023-03-25T09:00:00", end: "2023-03-25T12:30:00" },
       status: "pending",
+      tasks: ["Bring blankets", "Set up chairs"],
     },
     {
       id: "2",
@@ -51,8 +60,9 @@ export default function Page() {
         name: "Shelter B",
         address: { street: "456 Oak Rd", city: "Springfield", state: "CA", zip: "12345" },
       },
-      timeSlot: { start: "2023-03-26T09:00:00", end: "2023-03-26T12:00:00" },
-      status: "cancelled",
+      timeSlot: { start: "2023-03-27T09:00:00", end: "2023-03-27T12:30:00" },
+      status: "confirmed",
+      tasks: ["Volunteer check-in", "Distribute food"],
     },
     {
       id: "3",
@@ -61,31 +71,38 @@ export default function Page() {
         name: "Shelter C",
         address: { street: "789 Pine St", city: "Springfield", state: "CA", zip: "12345" },
       },
-      timeSlot: { start: "2023-03-27T09:00:00", end: "2023-03-27T12:00:00" },
-      status: "confirmed",
+      timeSlot: { start: "2023-03-28T09:00:00", end: "2023-03-28T12:30:00" },
+      status: "cancelled",
+      tasks: ["Setup sign-in desk"],
     },
   ]);
 
-  const confirmedSignups = signups.filter((signup) => signup.status === "confirmed");
-  const pendingSignups = signups.filter((signup) => signup.status === "pending");
+  const filteredSignups = signups.filter(
+    (signup) => signup.status === "pending" || signup.status === "confirmed"
+  );
+  const confirmedSignups = filteredSignups.filter((signup) => signup.status === "confirmed");
+  const pendingSignups = filteredSignups.filter((signup) => signup.status === "pending");
 
   const [expanded, setExpanded] = useState<string | null>(null);
-
-  const toggleExpand = (id: string) => {
-    setExpanded(expanded === id ? null : id);
-  };
+  const toggleExpand = (id: string) => setExpanded(expanded === id ? null : id);
 
   const formatTimeSlot = (timeSlot: TimeSlot) => {
     const start = new Date(timeSlot.start);
     const end = new Date(timeSlot.end);
+    const month = start.getMonth() + 1;
+    const day = start.getDate();
     const formatTime = (date: Date) =>
-      date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
-    return `${start.getMonth() + 1}/${start.getDate()}: ${formatTime(start)} - ${formatTime(end)}`;
+      date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+    return `${month}/${day}: ${formatTime(start)} - ${formatTime(end)}`;
   };
 
-  const renderSignups = (signups: VolunteerSignup[], labelColor: string) => (
+  const renderSignups = (signups: VolunteerSignup[], statusColor: string) =>
     signups.map((signup) => (
-      <Card key={signup.id} sx={{ p: 2, cursor: "pointer", mb: 2 }} onClick={() => toggleExpand(signup.id)}>
+      <Card
+        key={signup.id}
+        sx={{ p: 2, cursor: "pointer", mb: 2, borderLeft: `6px solid ${statusColor}` }}
+        onClick={() => toggleExpand(signup.id)}
+      >
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box>
             <Typography variant="h6">{signup.shelter.name}</Typography>
@@ -94,7 +111,7 @@ export default function Page() {
             </Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="body2" sx={{ fontWeight: "bold", color: labelColor }}>
+            <Typography variant="body2" sx={{ fontWeight: "bold", color: statusColor }}>
               {signup.status.toUpperCase()}
             </Typography>
             <IconButton onClick={(e) => { e.stopPropagation(); toggleExpand(signup.id); }}>
@@ -104,22 +121,45 @@ export default function Page() {
         </Box>
         <Collapse in={expanded === signup.id}>
           <CardContent sx={{ bgcolor: "#e0f2fe", borderRadius: "10px", mt: 2 }}>
-            <Typography variant="body2">
-              Time Slot: {formatTimeSlot(signup.timeSlot)}
-            </Typography>
+            <Typography variant="body2">Time Slot: {formatTimeSlot(signup.timeSlot)}</Typography>
+            {signup.tasks && signup.tasks.length > 0 && (
+              <Box sx={{ mt: 2 }}>
+                <Typography variant="subtitle2" sx={{ fontWeight: "bold", mb: 1 }}>
+                  Tasks:
+                </Typography>
+                {signup.tasks.map((task, idx) => (
+                  <Typography key={idx} variant="body2" sx={{ ml: 2 }}>
+                    • {task}
+                  </Typography>
+                ))}
+              </Box>
+            )}
           </CardContent>
         </Collapse>
       </Card>
-    ))
-  );
+    ));
 
   return (
     <Box sx={{ maxWidth: 600, margin: "auto", pt: 4 }}>
-      <Typography variant="h4" sx={{ fontWeight: "bold", margin: 2 }}>
-        My Signups
+      <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2 }}>
+        My Volunteer Signups
       </Typography>
-      {renderSignups(confirmedSignups, "green")}
-      {renderSignups(pendingSignups, "orange")}
+      {confirmedSignups.length > 0 && (
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "green", mb: 1 }}>
+            Confirmed
+          </Typography>
+          {renderSignups(confirmedSignups, "green")}
+        </Box>
+      )}
+      {pendingSignups.length > 0 && (
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "goldenrod", mb: 1 }}>
+            Pending
+          </Typography>
+          {renderSignups(pendingSignups, "goldenrod")}
+        </Box>
+      )}
     </Box>
   );
 }
