@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { FormEvent, useState } from "react";
 import {
@@ -30,7 +30,7 @@ function PaymentForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: "http://localhost:3000/success",
+        return_url: "http://localhost:3000/donate/success",
       },
     });
 
@@ -58,7 +58,7 @@ function PaymentForm() {
         id="submit"
         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition disabled:bg-gray-400 disabled:cursor-not-allowed">
         <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+          {isLoading ? <div className="spinner" id="spinner"></div> : "Donate now"}
         </span>
       </button>
       {/* Show any error or success messages */}
