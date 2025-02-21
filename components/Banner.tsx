@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import MenuIcon from '@mui/icons-material/Menu';
 import Sidebar from './Sidebar';
+import { UserButton, SignedOut, SignedIn } from "@clerk/nextjs";
+import Link from 'next/link';
 
 export default function Banner() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -34,6 +36,23 @@ export default function Banner() {
       />
 
       <h1 className="text-2xl font-semibold text-white">ShelterConnect</h1>
+      
+      <div className="ml-auto flex items-center gap-4">
+        <SignedOut>
+          <Link href="/sign-in" className="text-white hover:text-gray-200">Sign in</Link>
+          <Link href="/sign-up" className="bg-white text-primary-500 px-4 py-2 rounded-lg hover:bg-gray-100">Sign up</Link>
+        </SignedOut>
+
+        <SignedIn>
+          <UserButton 
+            appearance={{
+              elements: {
+                avatarBox: "w-10 h-10"
+              }
+            }}
+          />
+        </SignedIn>
+      </div>
     </div>
   );
 }
