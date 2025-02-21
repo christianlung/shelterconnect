@@ -5,7 +5,7 @@ Disaster Relief Platform for connecting Evacuees and Volunteers to Shelters
 ## Directory Structure
 app/: Contains the main application code for the platform, including React components and pages.
 
-components/: Contains reusable UI components for the platform.
+components/: Contains reusable UI components for the platform (made with Material UI components).
 
 lib/: Includes utility functions and libraries used across the project.
 
