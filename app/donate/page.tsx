@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import CheckoutForm from './payment/Checkout';
+import CheckoutForm from '../../components/Checkout';
 
 import {
   Select,
