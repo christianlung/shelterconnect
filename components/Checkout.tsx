@@ -45,12 +45,18 @@ function PaymentForm() {
 
   const paymentElementOptions = {
     layout: "accordion" as const,
+    defaultCollapsed: false,
+    radios: true,
+    spacedAccordionItems: false
   };
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
+      <button 
+        disabled={isLoading || !stripe || !elements} 
+        id="submit"
+        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition disabled:bg-gray-400 disabled:cursor-not-allowed">
         <span id="button-text">
           {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
         </span>
@@ -67,10 +73,10 @@ interface CheckoutFormProps {
 
 export default function CheckoutForm({ clientSecret }: CheckoutFormProps) {
   const appearance = {
-    theme: 'stripe',
+    theme: 'stripe' as const,
   };
   return (
-    <Elements stripe={stripePromise} options={{ clientSecret }}>
+    <Elements stripe={stripePromise} options={{ appearance, clientSecret }}>
       <PaymentForm />
     </Elements>
   )
