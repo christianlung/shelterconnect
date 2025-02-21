@@ -2,6 +2,24 @@
 
 Disaster Relief Platform for connecting Evacuees and Volunteers to Shelters
 
+## Directory Structure
+app/: Contains the main application code for the platform, including React components and pages.
+
+components/: Contains reusable UI components for the platform.
+
+lib/: Includes utility functions and libraries used across the project.
+
+prisma/: Manages database schema and migrations using Prisma ORM.
+
+public/: Stores static assets such as images, fonts, and icons.
+
+stories/: Houses Storybook stories for UI component testing.
+
+types/: Contains TypeScript type definitions for the project.
+
+.storybook/: Configuration files for Storybook, a tool for developing UI components in isolation.
+
+
 ## To run locally
 
 ### Setting up
