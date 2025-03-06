@@ -8,10 +8,16 @@ import {
   Elements
 } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
+import { StringToBoolean } from "class-variance-authority/types";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
-function PaymentForm() {
+interface PaymentFormProps {
+  donorName: string;
+  finalDonorAmount: string;
+}
+
+function PaymentForm( { donorName, finalDonorAmount} : PaymentFormProps ) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -38,6 +44,29 @@ function PaymentForm() {
       setMessage(error.message as string);
     } else {
       setMessage("An unexpected error occurred.");
+    }
+    
+    try {
+      const response = await fetch("/api/donor", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          donorName,
+          finalDonorAmount,
+        }),
+      })
+  
+      if (response.ok) {
+        const data = await response.json()
+        console.log("Donor posted", data)
+      } else {
+        console.error("Failed to post donor name")
+      }
+    }
+    catch (e) {
+
     }
 
     setIsLoading(false);
@@ -69,15 +98,17 @@ function PaymentForm() {
 
 interface CheckoutFormProps {
   clientSecret: string;
+  donorName: string;
+  finalDonorAmount: string;
 }
 
-export default function CheckoutForm({ clientSecret }: CheckoutFormProps) {
+export default function CheckoutForm({ clientSecret, donorName, finalDonorAmount }: CheckoutFormProps) {
   const appearance = {
     theme: 'stripe' as const,
   };
   return (
     <Elements stripe={stripePromise} options={{ appearance, clientSecret }}>
-      <PaymentForm />
+      <PaymentForm donorName={donorName} finalDonorAmount={finalDonorAmount}/>
     </Elements>
   )
 }
