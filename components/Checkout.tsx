@@ -8,6 +8,7 @@ import {
   Elements
 } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
+import { useRouter } from 'next/navigation';
 import { createDonor } from "@/lib/actions/donor";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
@@ -18,6 +19,7 @@ interface PaymentFormProps {
 }
 
 function PaymentForm( { donorName, finalDonorAmount} : PaymentFormProps ) {
+  const router = useRouter();
   const stripe = useStripe();
   const elements = useElements();
 
@@ -46,10 +48,6 @@ function PaymentForm( { donorName, finalDonorAmount} : PaymentFormProps ) {
     } else {
       setMessage("An unexpected error occurred.");
     }
-
-    if (!error) {
-      console.log("paid!")
-    }
     
     const donor = await createDonor(donorName, finalDonorAmount);
 
@@ -59,6 +57,11 @@ function PaymentForm( { donorName, finalDonorAmount} : PaymentFormProps ) {
     else {
       console.log("Created donor")
     }
+
+    if (!error && donor.success) {
+      router.push("/donate/success")
+    }
+
     setIsLoading(false);
   };
 
