@@ -3,22 +3,19 @@
 Disaster Relief Platform for connecting Evacuees and Volunteers to Shelters
 
 ## Directory Structure
-app/: Contains the main application code for the platform, including React components and pages.
 
-components/: Contains reusable UI components for the platform (made with Material UI components).
-
-lib/: Includes utility functions and libraries used across the project.
-
-prisma/: Manages database schema and migrations using Prisma ORM.
-
-public/: Stores static assets such as images, fonts, and icons.
-
-stories/: Houses Storybook stories for UI component testing.
-
-types/: Contains TypeScript type definitions for the project.
-
-.storybook/: Configuration files for Storybook, a tool for developing UI components in isolation.
-
+```
+shelterconnect/
+├── app/                 # Main application code, React components and pages
+├── components/         # Reusable UI components (Material UI)
+├── lib/               # Utility functions and libraries
+├── prisma/            # Database schema (Prisma ORM)
+├── public/            # Static assets (images, fonts, icons)
+├── stories/           # Storybook stories for UI component testing
+├── types/             # TypeScript type definitions
+├── utils/             # Utility functions and helpers
+└── .storybook/        # Storybook configuration files
+```
 
 ## To run locally
 
@@ -37,6 +34,7 @@ CLERK_SECRET_KEY=...
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/role-selection
+SENTRY_AUTH_TOKEN=sntrys_...
 ```
 
 Run the setup command to install dependencies and generate the Prisma client:
