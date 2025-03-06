@@ -37,16 +37,16 @@ NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL=/role-selection
 SENTRY_AUTH_TOKEN=sntrys_...
 ```
 
+Create a `.env` file in the `prisma` directory with this value:
+
+```
+DATABASE_URL="mongodb://..."
+```
+
 Run the setup command to install dependencies and generate the Prisma client:
 
 ```
 npm run setup
-```
-
-Install dependencies using:
-
-```
-npm install
 ```
 
 ### Storybook testing
@@ -61,4 +61,22 @@ npm run storybook
 
 ```
 npm run dev
+```
+
+### Seeding the database
+
+While developing, you can reset the database to a clean state by running:
+
+```
+npm run seed
+```
+
+This will delete all existing data from the database and replace it with the data in the `data` folder.
+
+### Running scripts
+
+If you want to run a script (to upload data to the database just once, for example), you can run:
+
+```
+npm run node-script <path-to-script>
 ```
