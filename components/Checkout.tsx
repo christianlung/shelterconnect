@@ -35,14 +35,19 @@ function PaymentForm( { donorName, finalDonorAmount} : PaymentFormProps ) {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: "if_required",
+        return_url: "http://localhost:3000/donate/success",
       },
-    });
+      redirect: "if_required",
+    });    
 
-    if (error.type === "card_error" || error.type === "validation_error") {
+    if (error?.type === "card_error" || error?.type === "validation_error") {
       setMessage(error.message as string);
     } else {
       setMessage("An unexpected error occurred.");
+    }
+
+    if (!error) {
+      console.log("paid!")
     }
     
     try {
@@ -102,6 +107,7 @@ interface CheckoutFormProps {
 }
 
 export default function CheckoutForm({ clientSecret, donorName, finalDonorAmount }: CheckoutFormProps) {
+  console.log({donorName, finalDonorAmount})
   const appearance = {
     theme: 'stripe' as const,
   };
