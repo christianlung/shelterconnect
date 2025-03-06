@@ -8,57 +8,177 @@ import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, TextField,
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+interface Address {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+}
+
+interface Coordinate {
+  latitude: number;
+  longitude: number;
+}
+
+interface Supply {
+  item: string;
+  received: number;
+  needed: number;
+}
+
+interface Shelter {
+  id: string;
+  name: string;
+  location?: Coordinate;
+  address: Address;
+  picture?: string;
+  volunteerCapacity?: number;
+  evacueeCapacity?: number;
+  accommodations?: string[];
+  suppliesNeeded?: Supply[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface NewShelterForm {
+  name: string;
+  location: { latitude: string; longitude: string };
+  address: { street: string; city: string; state: string; zipCode: string; country: string };
+  picture: string;
+  volunteerCapacity: string;
+  evacueeCapacity: string;
+  accommodations: string[];
+  suppliesNeeded: { item: string; received: string; needed: string }[];
+}
+
 export default function Page() {
-  const [shelters, setShelters] = useState([
+  const [shelters, setShelters] = useState<Shelter[]>([
     {
       id: uuidv4(),
       name: "Shelter A",
-      location: { latitude: "34.0000", longitude: "-118.0000" },
-      address: { street: "123 Main St", city: "Springfield", state: "CA", zip: "12345" },
+      location: { latitude: 34.0000, longitude: -118.0000 },
+      address: { street: "123 Main St", city: "Springfield", state: "CA", zipCode: "12345", country: "USA" },
       picture: "",
-      volunteerCapacity: "50",
-      evacueeCapacity: "200",
+      volunteerCapacity: 50,
+      evacueeCapacity: 200,
       accommodations: ["wheelchair_accessible"],
       suppliesNeeded: [{ item: "blankets", received: 5, needed: 10 }],
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
   ]);
 
   const [open, setOpen] = useState(false);
-  const [newShelter, setNewShelter] = useState({
+  const [newShelter, setNewShelter] = useState<NewShelterForm>({
     name: "",
     location: { latitude: "", longitude: "" },
-    address: { street: "", city: "", state: "", zip: "" },
+    address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
     picture: "",
     volunteerCapacity: "",
     evacueeCapacity: "",
-    accommodations: [] as string[],
-    suppliesNeeded: [] as { item: string; received: string; needed: string }[],
+    accommodations: [],
+    suppliesNeeded: [],
   });
 
+  const [editingShelterId, setEditingShelterId] = useState<string | null>(null);
 
-  const handleAddShelter = () => {
-    if (newShelter.name.trim() && newShelter.address.street.trim()) {
-      const formattedShelter = {
-        ...newShelter,
-        id: uuidv4(),
-        suppliesNeeded: newShelter.suppliesNeeded?.map(supply => ({
-          ...supply,
-          received: Number(supply.received),
-          needed: Number(supply.needed),
-        })) || [],
-      };
-  
-      setShelters([...shelters, formattedShelter]);
-      handleClose();
+  const handleOpen = (shelter?: Shelter) => {
+    if (shelter) {
+      setEditingShelterId(shelter.id);
+      setNewShelter({
+        name: shelter.name,
+        location: {
+          latitude: shelter.location ? String(shelter.location.latitude) : "",
+          longitude: shelter.location ? String(shelter.location.longitude) : "",
+        },
+        address: {
+          street: shelter.address.street,
+          city: shelter.address.city,
+          state: shelter.address.state,
+          zipCode: shelter.address.zipCode,
+          country: shelter.address.country || "USA",
+        },
+        picture: shelter.picture ?? "",
+        volunteerCapacity: shelter.volunteerCapacity ? String(shelter.volunteerCapacity) : "",
+        evacueeCapacity: shelter.evacueeCapacity ? String(shelter.evacueeCapacity) : "",
+        accommodations: shelter.accommodations ?? [],
+        suppliesNeeded: shelter.suppliesNeeded
+          ? shelter.suppliesNeeded.map(supply => ({
+            item: supply.item,
+            received: String(supply.received),
+            needed: String(supply.needed),
+          }))
+          : [],
+      });
+    } else {
+      setEditingShelterId(null);
+      setNewShelter({
+        name: "",
+        location: { latitude: "", longitude: "" },
+        address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
+        picture: "",
+        volunteerCapacity: "",
+        evacueeCapacity: "",
+        accommodations: [],
+        suppliesNeeded: [],
+      });
     }
+    setOpen(true);
   };
+
+  const handleAddOrUpdateShelter = () => {
+    if (!newShelter.name.trim() || !newShelter.address.street.trim()) return;
+  
+    // If editing, try to retrieve the original createdAt value
+    const existingShelter = editingShelterId ? shelters.find(s => s.id === editingShelterId) : undefined;
+  
+    const formattedShelter: Shelter = {
+      id: editingShelterId ?? uuidv4(),
+      name: newShelter.name,
+      location: (newShelter.location.latitude && newShelter.location.longitude)
+        ? {
+            latitude: Number(newShelter.location.latitude),
+            longitude: Number(newShelter.location.longitude),
+          }
+        : undefined,
+      address: {
+        street: newShelter.address.street,
+        city: newShelter.address.city,
+        state: newShelter.address.state,
+        zipCode: newShelter.address.zipCode,
+        country: newShelter.address.country,
+      },
+      picture: newShelter.picture || undefined,
+      volunteerCapacity: newShelter.volunteerCapacity ? Number(newShelter.volunteerCapacity) : undefined,
+      evacueeCapacity: newShelter.evacueeCapacity ? Number(newShelter.evacueeCapacity) : undefined,
+      accommodations: newShelter.accommodations,
+      suppliesNeeded: newShelter.suppliesNeeded.map(supply => ({
+        item: supply.item,
+        received: Number(supply.received),
+        needed: Number(supply.needed),
+      })),
+      createdAt: existingShelter ? existingShelter.createdAt : new Date(),
+      updatedAt: new Date(),
+    };
+  
+    if (editingShelterId) {
+      // Editing an existing shelter
+      setShelters(shelters.map(s => (s.id === editingShelterId ? formattedShelter : s)));
+    } else {
+      // Adding a new shelter
+      setShelters([...shelters, formattedShelter]);
+    }
+  
+    handleClose();
+  };  
 
   const handleClose = () => {
     setOpen(false);
     setNewShelter({
       name: "",
       location: { latitude: "", longitude: "" },
-      address: { street: "", city: "", state: "", zip: "" },
+      address: { street: "", city: "", state: "", zipCode: "", country: "" },
       picture: "",
       volunteerCapacity: "",
       evacueeCapacity: "",
@@ -122,7 +242,7 @@ export default function Page() {
             + New
           </Button>
         </Box>
-        <AdminList shelters={shelters} onDelete={handleDeleteShelter}/>
+        <AdminList shelters={shelters} onDelete={handleDeleteShelter} onEdit={handleOpen} />
 
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
           <DialogTitle>Add New Shelter</DialogTitle>
@@ -165,9 +285,9 @@ export default function Page() {
             <TextField
               label="ZIP"
               fullWidth
-              value={newShelter.address.zip}
+              value={newShelter.address.zipCode}
               onChange={(e) =>
-                setNewShelter({ ...newShelter, address: { ...newShelter.address, zip: e.target.value } })
+                setNewShelter({ ...newShelter, address: { ...newShelter.address, zipCode: e.target.value } })
               }
               sx={{ mb: 2 }}
             />
@@ -210,8 +330,8 @@ export default function Page() {
               }
               sx={{ mb: 2 }}
             />
-             <Typography variant="subtitle1">Accommodations (optional):</Typography>
-             {newShelter.accommodations.map((acc, index) => (
+            <Typography variant="subtitle1">Accommodations (optional):</Typography>
+            {newShelter.accommodations.map((acc, index) => (
               <Box key={index} sx={{ display: "flex", alignItems: "center", mb: 2, gap: 1 }}>
                 <TextField
                   label={`Accommodation ${index + 1}`}
@@ -260,7 +380,9 @@ export default function Page() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="error">Cancel</Button>
-            <Button onClick={handleAddShelter} variant="contained" color="primary">Add</Button>
+            <Button onClick={handleAddOrUpdateShelter} variant="contained" color="primary">
+              {editingShelterId ? "Update" : "Add"}
+            </Button>
           </DialogActions>
         </Dialog>
       </Box>
