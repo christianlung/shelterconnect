@@ -17,7 +17,7 @@ const ShelterDetailsPage = async ({
 
   const shelter = result.data;
 
-  return <ShelterDetails shelter={shelter} />;
+  return <ShelterDetails shelter={shelter} role="admin" />;
 };
 
 export default ShelterDetailsPage;
