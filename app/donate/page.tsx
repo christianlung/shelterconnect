@@ -15,9 +15,9 @@ import { Input } from "@/components/ui/input";
 
 export default function Page() {
   const [amount, setAmount] = useState<string>('');
-  const [anon, setAnon] = useState<"indeterminate" | boolean>(false)
+  const [anonymous, setAnonymous] = useState<"indeterminate" | boolean>(false)
   const [customAmount, setCustomAmount] = useState<string>('');
-  const [donorName, setDonorName] = useState<string>('Anon');
+  const [donorName, setDonorName] = useState<string>('Anonymous');
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [finalDonorAmount, setFinalDonorAmount] = useState<string>('');
@@ -44,7 +44,7 @@ export default function Page() {
   };
 
   const handleCheckboxChange = () => {
-    setAnon((anon) => !anon);
+    setAnonymous((anonymous) => !anonymous);
   };
 
   return (
@@ -69,7 +69,7 @@ export default function Page() {
                 <SelectItem value="custom">Custom Amount</SelectItem>
               </SelectContent>
             </Select>
-            {!anon ? (             
+            {!anonymous ? (             
               <Input 
                 type="string" 
                 placeholder='Name'
@@ -78,7 +78,7 @@ export default function Page() {
               />
             ) : null}
             <div className="items-top flex space-x-2">
-              <Checkbox id="terms1" checked={anon} onCheckedChange={handleCheckboxChange}/>
+              <Checkbox id="terms1" checked={anonymous} onCheckedChange={handleCheckboxChange}/>
               <div className="grid gap-1.5 leading-none">
                 <label
                   htmlFor="terms1"

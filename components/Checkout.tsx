@@ -8,6 +8,7 @@ import {
   Elements
 } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
+import { createDonor } from "@/lib/actions/donor";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
@@ -50,29 +51,14 @@ function PaymentForm( { donorName, finalDonorAmount} : PaymentFormProps ) {
       console.log("paid!")
     }
     
-    try {
-      const response = await fetch("/api/donor", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          donorName,
-          finalDonorAmount,
-        }),
-      })
-  
-      if (response.ok) {
-        const data = await response.json()
-        console.log("Donor posted", data)
-      } else {
-        console.error("Failed to post donor name")
-      }
-    }
-    catch (e) {
+    const donor = await createDonor(donorName, finalDonorAmount);
 
+    if (!donor.success) {
+      console.error("Could not create donor")
     }
-
+    else {
+      console.log("Created donor")
+    }
     setIsLoading(false);
   };
 
