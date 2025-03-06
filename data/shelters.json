@@ -1,0 +1,324 @@
+{
+  "shelters": [
+    {
+      "id": "65f0f8b47d654321b9876543",
+      "name": "Downtown LA Emergency Shelter",
+      "location": {
+        "latitude": 34.0407,
+        "longitude": -118.2468
+      },
+      "address": {
+        "street": "123 Main Street",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90012",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/downtown.jpg",
+      "volunteerCapacity": 50,
+      "evacueeCapacity": 200,
+      "accommodations": ["Beds", "Showers", "Kitchen"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["First Aid", "CPR"]
+      },
+      "requiredLanguages": ["ENGLISH", "SPANISH"],
+      "createdAt": "2024-03-12T08:00:00.000Z",
+      "updatedAt": "2024-03-12T08:00:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b9876544",
+      "name": "Hollywood Community Center",
+      "location": {
+        "latitude": 34.0928,
+        "longitude": -118.3287
+      },
+      "address": {
+        "street": "456 Hollywood Blvd",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90028",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/hollywood.jpg",
+      "volunteerCapacity": 30,
+      "evacueeCapacity": 150,
+      "accommodations": ["Beds", "Medical Station"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": false,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 21,
+        "requiredTraining": ["Emergency Response"]
+      },
+      "requiredLanguages": ["ENGLISH", "SPANISH", "KOREAN"],
+      "createdAt": "2024-03-12T08:01:00.000Z",
+      "updatedAt": "2024-03-12T08:01:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b9876545",
+      "name": "Koreatown Relief Center",
+      "location": {
+        "latitude": 34.061,
+        "longitude": -118.3012
+      },
+      "address": {
+        "street": "789 Western Ave",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90020",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/ktown.jpg",
+      "volunteerCapacity": 40,
+      "evacueeCapacity": 175,
+      "accommodations": ["Beds", "Kitchen", "Children's Area"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Cultural Sensitivity"]
+      },
+      "requiredLanguages": ["ENGLISH", "KOREAN"],
+      "createdAt": "2024-03-12T08:02:00.000Z",
+      "updatedAt": "2024-03-12T08:02:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b9876546",
+      "name": "East LA Family Shelter",
+      "location": {
+        "latitude": 34.0224,
+        "longitude": -118.1677
+      },
+      "address": {
+        "street": "321 Cesar E Chavez Ave",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90033",
+        "country": "USA"
+      },
+      "picture": null,
+      "volunteerCapacity": 25,
+      "evacueeCapacity": 120,
+      "accommodations": ["Beds", "Family Rooms"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Child Care"]
+      },
+      "requiredLanguages": ["ENGLISH", "SPANISH"],
+      "createdAt": "2024-03-12T08:03:00.000Z",
+      "updatedAt": "2024-03-12T08:03:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b9876547",
+      "name": "Chinatown Community Center",
+      "location": {
+        "latitude": 34.0623,
+        "longitude": -118.2383
+      },
+      "address": {
+        "street": "567 N Broadway",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90012",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/chinatown.jpg",
+      "volunteerCapacity": 35,
+      "evacueeCapacity": 160,
+      "accommodations": ["Beds", "Cultural Center"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": false,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Language Skills"]
+      },
+      "requiredLanguages": ["ENGLISH", "MANDARIN", "CANTONESE"],
+      "createdAt": "2024-03-12T08:04:00.000Z",
+      "updatedAt": "2024-03-12T08:04:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b9876548",
+      "name": "South LA Resource Center",
+      "location": {
+        "latitude": 33.989,
+        "longitude": -118.2987
+      },
+      "address": {
+        "street": "890 W Vernon Ave",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90037",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/southla.jpg",
+      "volunteerCapacity": 45,
+      "evacueeCapacity": 190,
+      "accommodations": ["Beds", "Education Center"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Community Outreach"]
+      },
+      "requiredLanguages": ["ENGLISH", "SPANISH"],
+      "createdAt": "2024-03-12T08:05:00.000Z",
+      "updatedAt": "2024-03-12T08:05:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b9876549",
+      "name": "Valley Emergency Center",
+      "location": {
+        "latitude": 34.1687,
+        "longitude": -118.3782
+      },
+      "address": {
+        "street": "123 Van Nuys Blvd",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "91401",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/valley.jpg",
+      "volunteerCapacity": 55,
+      "evacueeCapacity": 225,
+      "accommodations": ["Beds", "Outdoor Space"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": true,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Animal Care"]
+      },
+      "requiredLanguages": ["ENGLISH", "SPANISH", "ARABIC"],
+      "createdAt": "2024-03-12T08:06:00.000Z",
+      "updatedAt": "2024-03-12T08:06:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b987654a",
+      "name": "Little Tokyo Support Center",
+      "location": {
+        "latitude": 34.0505,
+        "longitude": -118.24
+      },
+      "address": {
+        "street": "456 E 1st St",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90012",
+        "country": "USA"
+      },
+      "picture": null,
+      "volunteerCapacity": 30,
+      "evacueeCapacity": 140,
+      "accommodations": ["Beds", "Cultural Center"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Cultural Awareness"]
+      },
+      "requiredLanguages": ["ENGLISH", "JAPANESE"],
+      "createdAt": "2024-03-12T08:07:00.000Z",
+      "updatedAt": "2024-03-12T08:07:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b987654b",
+      "name": "Westside Relief Station",
+      "location": {
+        "latitude": 34.0211,
+        "longitude": -118.4814
+      },
+      "address": {
+        "street": "789 Santa Monica Blvd",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90025",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/westside.jpg",
+      "volunteerCapacity": 40,
+      "evacueeCapacity": 180,
+      "accommodations": ["Beds", "Beach Access"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Water Safety"]
+      },
+      "requiredLanguages": ["ENGLISH", "SPANISH", "OTHER"],
+      "createdAt": "2024-03-12T08:08:00.000Z",
+      "updatedAt": "2024-03-12T08:08:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b987654c",
+      "name": "Echo Park Crisis Center",
+      "location": {
+        "latitude": 34.0781,
+        "longitude": -118.2606
+      },
+      "address": {
+        "street": "321 Sunset Blvd",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90026",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/echopark.jpg",
+      "volunteerCapacity": 35,
+      "evacueeCapacity": 165,
+      "accommodations": ["Beds", "Lake View"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Crisis Management"]
+      },
+      "requiredLanguages": ["ENGLISH", "SPANISH", "TAGALOG"],
+      "createdAt": "2024-03-12T08:09:00.000Z",
+      "updatedAt": "2024-03-12T08:09:00.000Z"
+    }
+  ]
+}
