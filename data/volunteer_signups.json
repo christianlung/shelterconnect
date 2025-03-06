@@ -1,0 +1,204 @@
+{
+  "volunteer_signups": [
+    {
+      "id": "65f0f8b47d654321c9876543",
+      "timeSlot": {
+        "start": "2024-03-15T09:00:00.000Z",
+        "end": "2024-03-15T17:00:00.000Z"
+      },
+      "status": "confirmed",
+      "createdAt": "2024-03-12T08:00:00.000Z",
+      "updatedAt": "2024-03-12T08:00:00.000Z",
+      "shelter": {
+        "connect": {
+          "id": "65f0f8b47d654321b9876543"
+        }
+      },
+      "volunteer": {
+        "connect": {
+          "id": "65f0f8b47d654321a9876543"
+        }
+      }
+    },
+    {
+      "id": "65f0f8b47d654321c9876544",
+      "timeSlot": {
+        "start": "2024-03-16T10:00:00.000Z",
+        "end": "2024-03-16T18:00:00.000Z"
+      },
+      "status": "confirmed",
+      "createdAt": "2024-03-12T08:01:00.000Z",
+      "updatedAt": "2024-03-12T08:01:00.000Z",
+      "shelter": {
+        "connect": {
+          "id": "65f0f8b47d654321b9876544"
+        }
+      },
+      "volunteer": {
+        "connect": {
+          "id": "65f0f8b47d654321a9876544"
+        }
+      }
+    },
+    {
+      "id": "65f0f8b47d654321c9876545",
+      "timeSlot": {
+        "start": "2024-03-17T08:00:00.000Z",
+        "end": "2024-03-17T16:00:00.000Z"
+      },
+      "status": "pending",
+      "createdAt": "2024-03-12T08:02:00.000Z",
+      "updatedAt": "2024-03-12T08:02:00.000Z",
+      "shelter": {
+        "connect": {
+          "id": "65f0f8b47d654321b9876545"
+        }
+      },
+      "volunteer": {
+        "connect": {
+          "id": "65f0f8b47d654321a9876545"
+        }
+      }
+    },
+    {
+      "id": "65f0f8b47d654321c9876546",
+      "timeSlot": {
+        "start": "2024-03-18T09:00:00.000Z",
+        "end": "2024-03-18T17:00:00.000Z"
+      },
+      "status": "confirmed",
+      "createdAt": "2024-03-12T08:03:00.000Z",
+      "updatedAt": "2024-03-12T08:03:00.000Z",
+      "shelter": {
+        "connect": {
+          "id": "65f0f8b47d654321b9876546"
+        }
+      },
+      "volunteer": {
+        "connect": {
+          "id": "65f0f8b47d654321a9876546"
+        }
+      }
+    },
+    {
+      "id": "65f0f8b47d654321c9876547",
+      "timeSlot": {
+        "start": "2024-03-19T10:00:00.000Z",
+        "end": "2024-03-19T18:00:00.000Z"
+      },
+      "status": "cancelled",
+      "createdAt": "2024-03-12T08:04:00.000Z",
+      "updatedAt": "2024-03-12T08:04:00.000Z",
+      "shelter": {
+        "connect": {
+          "id": "65f0f8b47d654321b9876547"
+        }
+      },
+      "volunteer": {
+        "connect": {
+          "id": "65f0f8b47d654321a9876547"
+        }
+      }
+    },
+    {
+      "id": "65f0f8b47d654321c9876548",
+      "timeSlot": {
+        "start": "2024-03-20T08:00:00.000Z",
+        "end": "2024-03-20T16:00:00.000Z"
+      },
+      "status": "confirmed",
+      "createdAt": "2024-03-12T08:05:00.000Z",
+      "updatedAt": "2024-03-12T08:05:00.000Z",
+      "shelter": {
+        "connect": {
+          "id": "65f0f8b47d654321b9876548"
+        }
+      },
+      "volunteer": {
+        "connect": {
+          "id": "65f0f8b47d654321a9876548"
+        }
+      }
+    },
+    {
+      "id": "65f0f8b47d654321c9876549",
+      "timeSlot": {
+        "start": "2024-03-21T09:00:00.000Z",
+        "end": "2024-03-21T17:00:00.000Z"
+      },
+      "status": "pending",
+      "createdAt": "2024-03-12T08:06:00.000Z",
+      "updatedAt": "2024-03-12T08:06:00.000Z",
+      "shelter": {
+        "connect": {
+          "id": "65f0f8b47d654321b9876549"
+        }
+      },
+      "volunteer": {
+        "connect": {
+          "id": "65f0f8b47d654321a9876549"
+        }
+      }
+    },
+    {
+      "id": "65f0f8b47d654321c987654a",
+      "timeSlot": {
+        "start": "2024-03-22T10:00:00.000Z",
+        "end": "2024-03-22T18:00:00.000Z"
+      },
+      "status": "confirmed",
+      "createdAt": "2024-03-12T08:07:00.000Z",
+      "updatedAt": "2024-03-12T08:07:00.000Z",
+      "shelter": {
+        "connect": {
+          "id": "65f0f8b47d654321b987654a"
+        }
+      },
+      "volunteer": {
+        "connect": {
+          "id": "65f0f8b47d654321a987654a"
+        }
+      }
+    },
+    {
+      "id": "65f0f8b47d654321c987654b",
+      "timeSlot": {
+        "start": "2024-03-23T08:00:00.000Z",
+        "end": "2024-03-23T16:00:00.000Z"
+      },
+      "status": "confirmed",
+      "createdAt": "2024-03-12T08:08:00.000Z",
+      "updatedAt": "2024-03-12T08:08:00.000Z",
+      "shelter": {
+        "connect": {
+          "id": "65f0f8b47d654321b987654b"
+        }
+      },
+      "volunteer": {
+        "connect": {
+          "id": "65f0f8b47d654321a987654b"
+        }
+      }
+    },
+    {
+      "id": "65f0f8b47d654321c987654c",
+      "timeSlot": {
+        "start": "2024-03-24T09:00:00.000Z",
+        "end": "2024-03-24T17:00:00.000Z"
+      },
+      "status": "pending",
+      "createdAt": "2024-03-12T08:09:00.000Z",
+      "updatedAt": "2024-03-12T08:09:00.000Z",
+      "shelter": {
+        "connect": {
+          "id": "65f0f8b47d654321b987654c"
+        }
+      },
+      "volunteer": {
+        "connect": {
+          "id": "65f0f8b47d654321a987654c"
+        }
+      }
+    }
+  ]
+}

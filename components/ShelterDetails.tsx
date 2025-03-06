@@ -4,13 +4,9 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TempShelter } from '@/app/shelters/[shelterId]/page';
+import { Shelter } from '@prisma/client';
 
-export default function ShelterDetails({
-  shelter,
-}: {
-  shelter: TempShelter | null;
-}) {
+export default function ShelterDetails({ shelter }: { shelter: Shelter }) {
   const router = useRouter();
 
   return (

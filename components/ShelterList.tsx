@@ -1,12 +1,15 @@
+import { getShelters } from '@/lib/actions/shelter';
+import { Shelter } from '@prisma/client';
 import Link from 'next/link';
 
-/** TODO: Build this component */
-export default function ShelterList() {
-  const tempShelters = [
-    { id: 1, name: 'UCLA Animal Shelter', location: 'Westwood' },
-    { id: 2, name: 'Boelter Shelter', location: 'Westwood' },
-    { id: 3, name: 'Westwood Shelter', location: 'Westwood' },
-  ];
+export default async function ShelterList() {
+  const result = await getShelters();
+
+  let shelters: Shelter[] = [];
+
+  if (result.success) {
+    shelters = result.data;
+  }
 
   return (
     <div>
@@ -14,14 +17,14 @@ export default function ShelterList() {
         ShelterList functionality
       </h1>
       <div className="space-y-4 px-4">
-        {tempShelters.map((shelter) => (
+        {shelters.map((shelter) => (
           <div
             key={shelter.id}
             className="rounded-lg border-2 border-gray-900 p-4 text-gray-600"
           >
             <Link href={`/shelters/${shelter.id}`}>
               <h2 className="text-xl font-semibold">{shelter.name}</h2>
-              <p>{shelter.location}</p>
+              <p>{shelter.address.city}</p>
             </Link>
           </div>
         ))}
