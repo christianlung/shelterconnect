@@ -6,18 +6,19 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface Address {
   street: string;
   city: string;
   state: string;
-  zip: string;
+  zipCode: string;
+  country: string;
 }
 
-interface Location {
-  latitude: string;
-  longitude: string;
+interface Coordinate {
+  latitude: number;
+  longitude: number;
 }
 
 interface Supply {
@@ -26,15 +27,14 @@ interface Supply {
   needed: number;
 }
 
-
 interface Shelter {
   id: string;
   name: string;
-  location?: Location;
+  location?: Coordinate;
   address: Address;
   picture?: string;
-  volunteerCapacity?: string;
-  evacueeCapacity?: string;
+  volunteerCapacity?: number;
+  evacueeCapacity?: number;
   accommodations?: string[];
   suppliesNeeded?: Supply[];
 }
@@ -53,7 +53,7 @@ export default function ShelterList({ shelters, onDelete, onEdit }: AdminListPro
   const toggleExpand = (index: number) => setExpanded(expanded === index ? null : index);
 
   const formatAddress = (address: Address) =>
-    `${address.street}, ${address.city}, ${address.state} ${address.zip}`;
+    `${address.street}, ${address.city}, ${address.state} ${address.zipCode}, ${address.country}`;  
 
 
   return (
