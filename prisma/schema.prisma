@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "mongodb"
-  url      = env("DATABASE_URL")
+  url      = env("NEXT_PUBLIC_DATABASE_URL")
 }
 
 enum Role {
@@ -103,7 +103,7 @@ model VolunteerSignup {
 
 model Donor {
   id               String   @id @default(auto()) @map("_id") @db.ObjectId
-  donorName        String   @db.ObjectId
-  finalDonorAmount String   @db.ObjectId
+  donorName        String
+  finalDonorAmount String
   createdAt        DateTime @default(now())
 }

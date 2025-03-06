@@ -25,7 +25,6 @@ export default function Page() {
   const handleDonationRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     const finalAmount = amount === 'custom' ? Number(customAmount) : Number(amount);
-
     if (!finalAmount || finalAmount < 1) {
       alert('Please enter a valid donation amount.');
       return;

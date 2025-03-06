@@ -56,7 +56,7 @@ type SuccessPageProps = {
 };
 
 export default async function SuccessPage({ searchParams }: SuccessPageProps) {
-  const paymentIntentId = searchParams.payment_intent;
+  const paymentIntentId = await searchParams.payment_intent;
   
   if (!paymentIntentId) redirect('/');
 

@@ -8,7 +8,6 @@ import {
   Elements
 } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
-import { StringToBoolean } from "class-variance-authority/types";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK!);
 
@@ -36,7 +35,7 @@ function PaymentForm( { donorName, finalDonorAmount} : PaymentFormProps ) {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: "http://localhost:3000/donate/success",
+        return_url: "if_required",
       },
     });
 
