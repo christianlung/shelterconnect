@@ -37,6 +37,8 @@ interface Shelter {
   evacueeCapacity?: number;
   accommodations?: string[];
   suppliesNeeded?: Supply[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface AdminListProps {
@@ -53,7 +55,7 @@ export default function ShelterList({ shelters, onDelete, onEdit }: AdminListPro
   const toggleExpand = (index: number) => setExpanded(expanded === index ? null : index);
 
   const formatAddress = (address: Address) =>
-    `${address.street}, ${address.city}, ${address.state} ${address.zipCode}, ${address.country}`;  
+    `${address.street}, ${address.city}, ${address.state} ${address.zipCode}, ${address.country}`;
 
 
   return (
@@ -142,6 +144,22 @@ export default function ShelterList({ shelters, onDelete, onEdit }: AdminListPro
               )}
             </CardContent>
           </Collapse>
+          <Box
+            sx={{
+              bgcolor: "#f5f5f5",
+              p: 1,
+              borderRadius: 1,
+              mt: 1,
+              textAlign: "right",
+            }}
+          >
+            <Typography variant="caption" sx={{ color: "gray" }}>
+              {shelter.updatedAt &&
+                shelter.updatedAt.getTime() !== shelter.createdAt.getTime()
+                ? `Updated on: ${new Date(shelter.updatedAt).toLocaleDateString()} ${new Date(shelter.updatedAt).toLocaleTimeString()}`
+                : `Created on: ${new Date(shelter.createdAt).toLocaleDateString()} ${new Date(shelter.createdAt).toLocaleTimeString()}`}
+            </Typography>
+          </Box>
         </Card>
       ))}
     </Box>

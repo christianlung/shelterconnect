@@ -37,6 +37,8 @@ interface Shelter {
   evacueeCapacity?: number;
   accommodations?: string[];
   suppliesNeeded?: Supply[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface NewShelterForm {
@@ -62,8 +64,10 @@ export default function Page() {
       evacueeCapacity: 200,
       accommodations: ["wheelchair_accessible"],
       suppliesNeeded: [{ item: "blankets", received: 5, needed: 10 }],
+      createdAt: new Date(),
+      updatedAt: new Date(),
     },
-  ]);  
+  ]);
 
   const [open, setOpen] = useState(false);
   const [newShelter, setNewShelter] = useState<NewShelterForm>({
@@ -75,7 +79,7 @@ export default function Page() {
     evacueeCapacity: "",
     accommodations: [],
     suppliesNeeded: [],
-  });  
+  });
 
   const [editingShelterId, setEditingShelterId] = useState<string | null>(null);
 
@@ -101,10 +105,10 @@ export default function Page() {
         accommodations: shelter.accommodations ?? [],
         suppliesNeeded: shelter.suppliesNeeded
           ? shelter.suppliesNeeded.map(supply => ({
-              item: supply.item,
-              received: String(supply.received),
-              needed: String(supply.needed),
-            }))
+            item: supply.item,
+            received: String(supply.received),
+            needed: String(supply.needed),
+          }))
           : [],
       });
     } else {
@@ -121,10 +125,13 @@ export default function Page() {
       });
     }
     setOpen(true);
-  };  
+  };
 
   const handleAddOrUpdateShelter = () => {
     if (!newShelter.name.trim() || !newShelter.address.street.trim()) return;
+  
+    // If editing, try to retrieve the original createdAt value
+    const existingShelter = editingShelterId ? shelters.find(s => s.id === editingShelterId) : undefined;
   
     const formattedShelter: Shelter = {
       id: editingShelterId ?? uuidv4(),
@@ -151,6 +158,8 @@ export default function Page() {
         received: Number(supply.received),
         needed: Number(supply.needed),
       })),
+      createdAt: existingShelter ? existingShelter.createdAt : new Date(),
+      updatedAt: new Date(),
     };
   
     if (editingShelterId) {
