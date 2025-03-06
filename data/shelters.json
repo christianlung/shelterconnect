@@ -28,6 +28,13 @@
         "minAge": 18,
         "requiredTraining": ["First Aid", "CPR"]
       },
+      "suppliesNeeded": [
+        { "item": "Blankets", "received": 7, "needed": 25 },
+        { "item": "T-shirts", "received": 12, "needed": 15 },
+        { "item": "Water bottles", "received": 43, "needed": 75 },
+        { "item": "Towels", "received": 2, "needed": 10 },
+        { "item": "Sleeping bags", "received": 1, "needed": 10 }
+      ],
       "requiredLanguages": ["ENGLISH", "SPANISH"],
       "createdAt": "2024-03-12T08:00:00.000Z",
       "updatedAt": "2024-03-12T08:00:00.000Z"
@@ -60,6 +67,13 @@
         "minAge": 21,
         "requiredTraining": ["Emergency Response"]
       },
+      "suppliesNeeded": [
+        { "item": "Blankets", "received": 7, "needed": 15 },
+        { "item": "T-shirts", "received": 12, "needed": 20 },
+        { "item": "Water bottles", "received": 43, "needed": 100 },
+        { "item": "Towels", "received": 2, "needed": 5 },
+        { "item": "Sleeping bags", "received": 1, "needed": 30 }
+      ],
       "requiredLanguages": ["ENGLISH", "SPANISH", "KOREAN"],
       "createdAt": "2024-03-12T08:01:00.000Z",
       "updatedAt": "2024-03-12T08:01:00.000Z"
@@ -92,6 +106,13 @@
         "minAge": 18,
         "requiredTraining": ["Cultural Sensitivity"]
       },
+      "suppliesNeeded": [
+        { "item": "Blankets", "received": 10, "needed": 25 },
+        { "item": "T-shirts", "received": 13, "needed": 15 },
+        { "item": "Water bottles", "received": 11, "needed": 75 },
+        { "item": "Towels", "received": 3, "needed": 10 },
+        { "item": "Sleeping bags", "received": 6, "needed": 10 }
+      ],
       "requiredLanguages": ["ENGLISH", "KOREAN"],
       "createdAt": "2024-03-12T08:02:00.000Z",
       "updatedAt": "2024-03-12T08:02:00.000Z"
@@ -124,6 +145,13 @@
         "minAge": 18,
         "requiredTraining": ["Child Care"]
       },
+      "suppliesNeeded": [
+        { "item": "Blankets", "received": 7, "needed": 25 },
+        { "item": "T-shirts", "received": 12, "needed": 15 },
+        { "item": "Water bottles", "received": 43, "needed": 75 },
+        { "item": "Towels", "received": 2, "needed": 10 },
+        { "item": "Sleeping bags", "received": 1, "needed": 10 }
+      ],
       "requiredLanguages": ["ENGLISH", "SPANISH"],
       "createdAt": "2024-03-12T08:03:00.000Z",
       "updatedAt": "2024-03-12T08:03:00.000Z"
@@ -156,6 +184,13 @@
         "minAge": 18,
         "requiredTraining": ["Language Skills"]
       },
+      "suppliesNeeded": [
+        { "item": "Blankets", "received": 7, "needed": 25 },
+        { "item": "T-shirts", "received": 12, "needed": 15 },
+        { "item": "Water bottles", "received": 43, "needed": 75 },
+        { "item": "Towels", "received": 2, "needed": 10 },
+        { "item": "Sleeping bags", "received": 1, "needed": 10 }
+      ],
       "requiredLanguages": ["ENGLISH", "MANDARIN", "CANTONESE"],
       "createdAt": "2024-03-12T08:04:00.000Z",
       "updatedAt": "2024-03-12T08:04:00.000Z"
@@ -188,6 +223,13 @@
         "minAge": 18,
         "requiredTraining": ["Community Outreach"]
       },
+      "suppliesNeeded": [
+        { "item": "Blankets", "received": 7, "needed": 25 },
+        { "item": "T-shirts", "received": 12, "needed": 15 },
+        { "item": "Water bottles", "received": 43, "needed": 75 },
+        { "item": "Towels", "received": 2, "needed": 10 },
+        { "item": "Sleeping bags", "received": 1, "needed": 10 }
+      ],
       "requiredLanguages": ["ENGLISH", "SPANISH"],
       "createdAt": "2024-03-12T08:05:00.000Z",
       "updatedAt": "2024-03-12T08:05:00.000Z"
@@ -220,6 +262,13 @@
         "minAge": 18,
         "requiredTraining": ["Animal Care"]
       },
+      "suppliesNeeded": [
+        { "item": "Blankets", "received": 7, "needed": 25 },
+        { "item": "T-shirts", "received": 12, "needed": 15 },
+        { "item": "Water bottles", "received": 43, "needed": 75 },
+        { "item": "Towels", "received": 2, "needed": 10 },
+        { "item": "Sleeping bags", "received": 1, "needed": 10 }
+      ],
       "requiredLanguages": ["ENGLISH", "SPANISH", "ARABIC"],
       "createdAt": "2024-03-12T08:06:00.000Z",
       "updatedAt": "2024-03-12T08:06:00.000Z"
@@ -252,6 +301,13 @@
         "minAge": 18,
         "requiredTraining": ["Cultural Awareness"]
       },
+      "suppliesNeeded": [
+        { "item": "Blankets", "received": 7, "needed": 25 },
+        { "item": "T-shirts", "received": 12, "needed": 15 },
+        { "item": "Water bottles", "received": 43, "needed": 75 },
+        { "item": "Towels", "received": 2, "needed": 10 },
+        { "item": "Sleeping bags", "received": 1, "needed": 10 }
+      ],
       "requiredLanguages": ["ENGLISH", "JAPANESE"],
       "createdAt": "2024-03-12T08:07:00.000Z",
       "updatedAt": "2024-03-12T08:07:00.000Z"
@@ -284,6 +340,13 @@
         "minAge": 18,
         "requiredTraining": ["Water Safety"]
       },
+      "suppliesNeeded": [
+        { "item": "Blankets", "received": 7, "needed": 25 },
+        { "item": "T-shirts", "received": 12, "needed": 15 },
+        { "item": "Water bottles", "received": 43, "needed": 75 },
+        { "item": "Towels", "received": 2, "needed": 10 },
+        { "item": "Sleeping bags", "received": 1, "needed": 10 }
+      ],
       "requiredLanguages": ["ENGLISH", "SPANISH", "OTHER"],
       "createdAt": "2024-03-12T08:08:00.000Z",
       "updatedAt": "2024-03-12T08:08:00.000Z"
@@ -316,6 +379,13 @@
         "minAge": 18,
         "requiredTraining": ["Crisis Management"]
       },
+      "suppliesNeeded": [
+        { "item": "Blankets", "received": 7, "needed": 25 },
+        { "item": "T-shirts", "received": 12, "needed": 15 },
+        { "item": "Water bottles", "received": 43, "needed": 75 },
+        { "item": "Towels", "received": 2, "needed": 10 },
+        { "item": "Sleeping bags", "received": 1, "needed": 10 }
+      ],
       "requiredLanguages": ["ENGLISH", "SPANISH", "TAGALOG"],
       "createdAt": "2024-03-12T08:09:00.000Z",
       "updatedAt": "2024-03-12T08:09:00.000Z"

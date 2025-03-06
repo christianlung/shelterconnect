@@ -12,3 +12,14 @@ export interface SignupDetails extends Pick<VolunteerSignup, 'status'> {
   shelter: ShelterDetails;
   timeSlot: Interval;
 }
+
+export interface Supply {
+  item: string;
+  received: number;
+  needed: number;
+}
+
+export interface VolunteerPreferences {
+  minAge: number;
+  requiredTraining: string[];
+}
