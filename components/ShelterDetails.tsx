@@ -18,7 +18,7 @@ export default function ShelterDetails({ shelter }: { shelter: Shelter }) {
         <CardContent>
           {shelter ? (
             <div className="space-y-4">
-              {shelter.picture && (
+              {/* {shelter.picture && (
                 <div className="relative h-64 w-full">
                   <Image
                     src={shelter.picture}
@@ -28,7 +28,7 @@ export default function ShelterDetails({ shelter }: { shelter: Shelter }) {
                     className="rounded-lg"
                   />
                 </div>
-              )}
+              )} */}
 
               <p>
                 <strong>Address:</strong> {shelter.address.street},{' '}

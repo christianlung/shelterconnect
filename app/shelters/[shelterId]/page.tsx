@@ -7,7 +7,7 @@ const ShelterDetailsPage = async ({
 }: {
   params: { shelterId: string };
 }) => {
-  const { shelterId } = params;
+  const { shelterId } = await params;
 
   const result = await getShelterById(shelterId);
 
