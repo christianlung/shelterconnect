@@ -1,8 +1,8 @@
-'use client';
+'use server';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
-import ReactMapGL, { ViewState, Marker } from 'react-map-gl/mapbox';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import { ViewState } from 'react-map-gl/mapbox';
+import { headers } from 'next/headers';
+import ClientMap from './ClientMap';
 
 export interface MapProps {
   /** Height of the map in the container. Defaults to 100% */
@@ -12,53 +12,35 @@ export interface MapProps {
 export interface LatLng extends Pick<ViewState, 'longitude' | 'latitude'> {}
 
 /**
- * Renders a map using ReactMapGL
+ * Server component that wraps the client-side map functionality
  */
-const Map: React.FunctionComponent<MapProps> = (props: MapProps) => {
-  const { height } = props;
-  const [viewState, setViewState] = useState<LatLng | null>(null);
+export default async function Map(props: MapProps) {
+  const initialLocation = await getLocationFromIP();
+  return <ClientMap {...props} initialCoordinates={initialLocation} />;
+}
 
-  const [initialLocation, setInitialLocation] = useState<LatLng | null>(null);
+async function getLocationFromIP(): Promise<LatLng | null> {
+  try {
+    const headersList = await headers();
+    const forwardedFor = headersList.get('x-forwarded-for') || '';
+    const realIp = headersList.get('x-real-ip') || '';
+    const ip = forwardedFor.split(',')[0] || realIp;
 
-  useEffect(() => {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const location = {
-            longitude: position.coords.longitude,
-            latitude: position.coords.latitude,
-          };
-          setViewState(location);
-          setInitialLocation(location);
-        },
-        (error) => {
-          console.error('Error getting location:', error);
-        },
-      );
+    if (!ip) return null;
+
+    // Using ipapi.co which has a free tier and doesn't require API key for low volume
+    const response = await fetch(`https://ipapi.co/${ip}/json/`);
+    const data = await response.json();
+
+    if (data.latitude && data.longitude) {
+      return {
+        latitude: data.latitude,
+        longitude: data.longitude,
+      };
     }
-  }, []);
-
-  return (
-    <div className="w-full pt-20" style={{ height: height || '100%' }}>
-      <ReactMapGL
-        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
-        {...viewState}
-        initialViewState={{
-          zoom: 14,
-        }}
-        onMove={(evt) => setViewState(evt.viewState)}
-        style={{ width: '100%', height: '100%' }}
-        mapStyle="mapbox://styles/mapbox/streets-v12"
-      >
-        {initialLocation && (
-          <Marker
-            longitude={initialLocation.longitude}
-            latitude={initialLocation.latitude}
-          />
-        )}
-      </ReactMapGL>
-    </div>
-  );
-};
-
-export default Map;
+    return null;
+  } catch (error) {
+    console.error('Error getting location from IP:', error);
+    return null;
+  }
+}
