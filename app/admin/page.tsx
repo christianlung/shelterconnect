@@ -8,6 +8,36 @@ import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, TextField,
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 
+interface Address {
+  street: string;
+  city: string;
+  state: string;
+  zip: string;
+}
+
+interface Location {
+  latitude: string;
+  longitude: string;
+}
+
+interface Supply {
+  item: string;
+  received: number;
+  needed: number;
+}
+
+interface Shelter {
+  id: string;
+  name: string;
+  location?: Location;
+  address: Address;
+  picture?: string;
+  volunteerCapacity?: string;
+  evacueeCapacity?: string;
+  accommodations?: string[];
+  suppliesNeeded?: Supply[];
+}
+
 export default function Page() {
   const [shelters, setShelters] = useState([
     {
@@ -34,23 +64,75 @@ export default function Page() {
     accommodations: [] as string[],
     suppliesNeeded: [] as { item: string; received: string; needed: string }[],
   });
+  const [editingShelterId, setEditingShelterId] = useState<string | null>(null);
 
+  const handleOpen = (shelter?: Shelter) => {
+    if (shelter) {
+      setEditingShelterId(shelter.id);
+      setNewShelter({
+        name: shelter.name,
+        location: {
+          latitude: shelter.location?.latitude ?? "",
+          longitude: shelter.location?.longitude ?? "",
+        },
+        address: {
+          street: shelter.address.street,
+          city: shelter.address.city,
+          state: shelter.address.state,
+          zip: shelter.address.zip,
+        },
+        picture: shelter.picture ?? "", 
+        volunteerCapacity: shelter.volunteerCapacity ?? "",
+        evacueeCapacity: shelter.evacueeCapacity ?? "",
+        accommodations: shelter.accommodations ?? [],
+        suppliesNeeded: shelter.suppliesNeeded
+          ? shelter.suppliesNeeded.map(supply => ({
+            item: supply.item,
+            received: String(supply.received), // Ensure it's a string
+            needed: String(supply.needed), // Ensure it's a string
+          }))
+          : [],
 
-  const handleAddShelter = () => {
-    if (newShelter.name.trim() && newShelter.address.street.trim()) {
-      const formattedShelter = {
-        ...newShelter,
-        id: uuidv4(),
-        suppliesNeeded: newShelter.suppliesNeeded?.map(supply => ({
-          ...supply,
-          received: Number(supply.received),
-          needed: Number(supply.needed),
-        })) || [],
-      };
-  
-      setShelters([...shelters, formattedShelter]);
-      handleClose();
+      });
+
+    } else {
+      setEditingShelterId(null);
+      setNewShelter({
+        name: "",
+        location: { latitude: "", longitude: "" },
+        address: { street: "", city: "", state: "", zip: "" },
+        picture: "",
+        volunteerCapacity: "",
+        evacueeCapacity: "",
+        accommodations: [],
+        suppliesNeeded: [],
+      });
     }
+    setOpen(true);
+  };
+
+  const handleAddOrUpdateShelter = () => {
+    if (!newShelter.name.trim() || !newShelter.address.street.trim()) return;
+
+    const formattedShelter = {
+      ...newShelter,
+      id: editingShelterId ?? uuidv4(),
+      suppliesNeeded: newShelter.suppliesNeeded?.map(supply => ({
+        ...supply,
+        received: Number(supply.received),
+        needed: Number(supply.needed),
+      })) || [],
+    };
+
+    if (editingShelterId) {
+      // Editing an existing shelter
+      setShelters(shelters.map(s => (s.id === editingShelterId ? formattedShelter : s)));
+    } else {
+      // Adding a new shelter
+      setShelters([...shelters, formattedShelter]);
+    }
+
+    handleClose();
   };
 
   const handleClose = () => {
@@ -122,7 +204,7 @@ export default function Page() {
             + New
           </Button>
         </Box>
-        <AdminList shelters={shelters} onDelete={handleDeleteShelter}/>
+        <AdminList shelters={shelters} onDelete={handleDeleteShelter} onEdit={handleOpen} />
 
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
           <DialogTitle>Add New Shelter</DialogTitle>
@@ -210,8 +292,8 @@ export default function Page() {
               }
               sx={{ mb: 2 }}
             />
-             <Typography variant="subtitle1">Accommodations (optional):</Typography>
-             {newShelter.accommodations.map((acc, index) => (
+            <Typography variant="subtitle1">Accommodations (optional):</Typography>
+            {newShelter.accommodations.map((acc, index) => (
               <Box key={index} sx={{ display: "flex", alignItems: "center", mb: 2, gap: 1 }}>
                 <TextField
                   label={`Accommodation ${index + 1}`}
@@ -260,7 +342,9 @@ export default function Page() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="error">Cancel</Button>
-            <Button onClick={handleAddShelter} variant="contained" color="primary">Add</Button>
+            <Button onClick={handleAddOrUpdateShelter} variant="contained" color="primary">
+              {editingShelterId ? "Update" : "Add"}
+            </Button>
           </DialogActions>
         </Dialog>
       </Box>

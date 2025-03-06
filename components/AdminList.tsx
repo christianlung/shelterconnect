@@ -42,9 +42,10 @@ interface Shelter {
 interface AdminListProps {
   shelters: Shelter[];
   onDelete: (id: string) => void;
+  onEdit: (shelter: Shelter) => void;
 }
 
-export default function ShelterList({ shelters, onDelete }: AdminListProps) {
+export default function ShelterList({ shelters, onDelete, onEdit }: AdminListProps) {
   const router = useRouter();
 
   const [expanded, setExpanded] = useState<number | null>(null);
@@ -65,7 +66,7 @@ export default function ShelterList({ shelters, onDelete }: AdminListProps) {
               <Typography sx={{ color: "gray" }}>{formatAddress(shelter.address)}</Typography>
             </Box>
             <Box>
-              <IconButton onClick={(e) => { e.stopPropagation(); router.push('/admin/edit/${shelter.id}') }}>
+              <IconButton onClick={(e) => { e.stopPropagation(); onEdit(shelter); }}>
                 <EditIcon />
               </IconButton>
               <IconButton onClick={(e) => { e.stopPropagation(); onDelete(shelter.id) }}>
