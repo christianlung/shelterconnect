@@ -30,10 +30,10 @@ export default function VolunteerSignUpPage() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Replace with your actual API call or further processing
+    //Replace with actual API call or further processing
     console.log("Volunteer Info:", volunteer);
     alert("Thank you for signing up as a volunteer!");
-    // Optionally, reset the form after submission
+    //Reset the form after submission
     setVolunteer({
       firstName: "",
       lastName: "",
