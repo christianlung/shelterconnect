@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { getShelters, deleteShelter } from '@/lib/actions/shelter';
+import { getShelters, deleteShelter, addShelter } from '@/lib/actions/shelter';
 import type { Shelter } from '@prisma/client';
 import type { ActionResult } from '@/types/models';
 
@@ -10,26 +10,27 @@ export function useShelters() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchShelters = async () => {
-      try {
-        const result = await getShelters();
-        if (result.success) {
-          setShelters(result.data);
-        } else {
-          setError('Failed to fetch shelters');
-        }
-      } catch (err) {
-        setError('An error occurred while fetching shelters');
-      } finally {
-        setLoading(false);
+  const fetchShelters = async () => {
+    setLoading(true);
+    try {
+      const result = await getShelters();
+      if (result.success) {
+        setShelters(result.data);
+      } else {
+        setError('Failed to fetch shelters');
       }
-    };
+    } catch (err) {
+      setError('An error occurred while fetching shelters');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchShelters();
   }, []);
-
-  return { shelters, loading, error };
+  
+  return { shelters, loading, error, refetch: fetchShelters };
 }
 
 /** Hook for deleting specific shelter */
@@ -55,4 +56,34 @@ export function useDeleteShelter() {
   };
 
   return { handleDelete, loading, error };
+}
+
+export function useAddShelter() {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<boolean>(false);
+
+  const handleAddShelter = async (shelter: any) => {
+    setLoading(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      const result = await addShelter(shelter);
+      if (result.success) {
+        setSuccess(true);
+        return result.data;
+      } else {
+        setError('Failed to add shelter');
+      }
+    } catch (err) {
+      setError('An error occurred while adding the shelter');
+      console.error('Error adding shelter:', err);
+      return { success: false, message: 'Error occurred', error: err };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { handleAddShelter, loading, error, success };
 }

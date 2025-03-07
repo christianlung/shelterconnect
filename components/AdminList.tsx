@@ -6,8 +6,6 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { useRouter } from "next/navigation";
-import { useDeleteShelter } from "@/lib/hooks/useShelters";
 
 interface Address {
   street: string;
@@ -44,23 +42,15 @@ interface Shelter {
 
 interface AdminListProps {
   shelters: Shelter[];
-  onDelete: (id: string) => void;
-  // onEdit: (shelter: Shelter) => void;
+  onDelete: (id: string) => Promise<void>;
 }
 
-// export default function AdminList({ shelters, onDelete, onEdit }: AdminListProps) {
-export default function AdminList({ shelters, onDelete }: AdminListProps) {
-  const router = useRouter();
-  const { handleDelete } = useDeleteShelter();
-
-
+export default function AdminList({ shelters, onDelete } : AdminListProps) {
   const [expanded, setExpanded] = useState<number | null>(null);
-
   const toggleExpand = (index: number) => setExpanded(expanded === index ? null : index);
 
   const formatAddress = (address: Address) =>
     `${address.street}, ${address.city}, ${address.state} ${address.zipCode}, ${address.country}`;
-
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -76,7 +66,7 @@ export default function AdminList({ shelters, onDelete }: AdminListProps) {
               <IconButton onClick={(e) => { e.stopPropagation(); }}>
                 <EditIcon />
               </IconButton>
-              <IconButton onClick={(e) => { e.stopPropagation(); handleDelete(shelter.id); onDelete(shelter.id); }}>
+              <IconButton onClick={(e) => { e.stopPropagation(); onDelete(shelter.id); }}>
                 <DeleteIcon color="error" />
               </IconButton>
               <IconButton onClick={(e) => { e.stopPropagation(); toggleExpand(index); }}>

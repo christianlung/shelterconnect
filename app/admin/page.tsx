@@ -1,6 +1,5 @@
 "use client"
-import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { useState } from "react";
 
 import AdminList from '@/components/AdminList';
 import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, IconButton } from '@mui/material';
@@ -8,40 +7,9 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { Shelter } from '@prisma/client';
-import { useShelters } from "@/lib/hooks/useShelters";
+import { useShelters, useAddShelter, useDeleteShelter } from "@/lib/hooks/useShelters";
 
-// interface Address {
-//   street: string;
-//   city: string;
-//   state: string;
-//   zipCode: string;
-//   country: string;
-// }
-
-// interface Coordinate {
-//   latitude: number;
-//   longitude: number;
-// }
-
-interface Supply {
-  item: string;
-  received: number;
-  needed: number;
-}
-
-// interface Shelter {
-//   id: string;
-//   name: string;
-//   location?: Coordinate;
-//   address: Address;
-//   picture?: string;
-//   volunteerCapacity?: number;
-//   evacueeCapacity?: number;
-//   accommodations?: string[];
-//   suppliesNeeded?: Supply[];
-//   createdAt: Date;
-//   updatedAt: Date;
-// }
+import type { ActionResult } from '@/types/models';
 
 interface NewShelterForm {
   name: string;
@@ -55,52 +23,44 @@ interface NewShelterForm {
 }
 
 export default function Page() {
-  const { shelters: fetchedShelters, loading, error } = useShelters();
-  const [shelters, setShelters] = useState<Shelter[]>([]);
+  const { shelters, loading, error, refetch } = useShelters();
+  const { handleAddShelter: addShelterAction, loading: addLoading } = useAddShelter();
+  const { handleDelete } = useDeleteShelter();
+
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    if (fetchedShelters) {
-      setShelters(fetchedShelters);
-    }
-  }, [fetchedShelters]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  // const [shelters, setShelters] = useState<Shelter[]>([
-  //   {
-  //     id: uuidv4(),
-  //     name: "Shelter A",
-  //     location: { latitude: 34.0000, longitude: -118.0000 },
-  //     address: { street: "123 Main St", city: "Springfield", state: "CA", zipCode: "12345", country: "USA" },
-  //     picture: "",
-  //     volunteerCapacity: 50,
-  //     evacueeCapacity: 200,
-  //     accommodations: ["wheelchair_accessible"],
-  //     suppliesNeeded: [{ item: "blankets", received: 5, needed: 10 }],
-  //     createdAt: new Date(),
-  //     updatedAt: new Date(),
-  //   },
-  // ]);
-
   // const [editingShelterId, setEditingShelterId] = useState<string | null>(null);
-  // const [newShelter, setNewShelter] = useState<NewShelterForm>({
-  //   name: "",
-  //   location: { latitude: "", longitude: "" },
-  //   address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
-  //   picture: "",
-  //   volunteerCapacity: "",
-  //   evacueeCapacity: "",
-  //   accommodations: [],
-  //   suppliesNeeded: [],
-  // });
+  const [newShelter, setNewShelter] = useState<NewShelterForm>({
+    name: "",
+    location: { latitude: "", longitude: "" },
+    address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
+    picture: "",
+    volunteerCapacity: "",
+    evacueeCapacity: "",
+    accommodations: [],
+    suppliesNeeded: [],
+  });
 
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
+
+  // if (error) {
+  //   return <div>Error: {error}</div>;
+  // }
+  // Opens the modal. If a shelter is passed, we're editing; otherwise, we're adding a new one.
+  const handleOpen = () => {
+    setNewShelter({
+      name: "",
+      location: { latitude: "", longitude: "" },
+      address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
+      picture: "",
+      volunteerCapacity: "",
+      evacueeCapacity: "",
+      accommodations: [],
+      suppliesNeeded: [],
+    });
+    setOpen(true);
+  };
 
   // const handleOpen = (shelter?: Shelter) => {
   //   if (shelter) {
@@ -146,20 +106,80 @@ export default function Page() {
   //   setOpen(true);
   // };
 
-  // const handleAddOrUpdateShelter = () => {
+  const handleClose = () => {
+    setOpen(false);
+    // setEditingShelterId(null);
+    setNewShelter({
+      name: "",
+      location: { latitude: "", longitude: "" },
+      address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
+      picture: "",
+      volunteerCapacity: "",
+      evacueeCapacity: "",
+      accommodations: [],
+      suppliesNeeded: [],
+    });
+  };
+
+  // Called when the "Add" button is clicked
+  const handleAdd = async () => {
+    // Validate required fields
+    if (!newShelter.name.trim() || !newShelter.address.street.trim()) return;
+
+    // Format the new shelter from the form values.
+    const formattedShelter = {
+      name: newShelter.name,
+      location:
+        newShelter.location.latitude && newShelter.location.longitude
+          ? {
+            latitude: parseFloat(newShelter.location.latitude),
+            longitude: parseFloat(newShelter.location.longitude),
+          }
+          : null,
+      address: {
+        street: newShelter.address.street,
+        city: newShelter.address.city,
+        state: newShelter.address.state,
+        zipCode: newShelter.address.zipCode,
+        country: newShelter.address.country,
+      },
+      picture: newShelter.picture || null,
+      volunteerCapacity: newShelter.volunteerCapacity
+        ? parseInt(newShelter.volunteerCapacity, 10)
+        : null,
+      evacueeCapacity: newShelter.evacueeCapacity
+        ? parseInt(newShelter.evacueeCapacity, 10)
+        : null,
+      accommodations: newShelter.accommodations,
+      suppliesNeeded: newShelter.suppliesNeeded.map((supply) => ({
+        item: supply.item,
+        received: parseInt(supply.received, 10),
+        needed: parseInt(supply.needed, 10),
+      })),
+    };
+
+    const result = await addShelterAction(formattedShelter) as ActionResult<Shelter>;
+    if (result.success && result.data) {
+      await refetch();
+    }
+
+    handleClose();
+  };
+
+  // const handleAddOrUpdateShelter = async () => {
   //   if (!newShelter.name.trim() || !newShelter.address.street.trim()) return;
-  
+
   //   // If editing, try to retrieve the original createdAt value
   //   const existingShelter = editingShelterId ? shelters.find(s => s.id === editingShelterId) : undefined;
-  
+
   //   const formattedShelter: Shelter = {
   //     id: editingShelterId ?? uuidv4(),
   //     name: newShelter.name,
   //     location: (newShelter.location.latitude && newShelter.location.longitude)
   //       ? {
-  //           latitude: Number(newShelter.location.latitude),
-  //           longitude: Number(newShelter.location.longitude),
-  //         }
+  //         latitude: Number(newShelter.location.latitude),
+  //         longitude: Number(newShelter.location.longitude),
+  //       }
   //       : undefined,
   //     address: {
   //       street: newShelter.address.street,
@@ -180,7 +200,7 @@ export default function Page() {
   //     createdAt: existingShelter ? existingShelter.createdAt : new Date(),
   //     updatedAt: new Date(),
   //   };
-  
+
   //   if (editingShelterId) {
   //     // Editing an existing shelter
   //     setShelters(shelters.map(s => (s.id === editingShelterId ? formattedShelter : s)));
@@ -188,65 +208,52 @@ export default function Page() {
   //     // Adding a new shelter
   //     setShelters([...shelters, formattedShelter]);
   //   }
-  
-  //   handleClose();
-  // };  
 
-  // const handleClose = () => {
-  //   setOpen(false);
-  //   setNewShelter({
-  //     name: "",
-  //     location: { latitude: "", longitude: "" },
-  //     address: { street: "", city: "", state: "", zipCode: "", country: "" },
-  //     picture: "",
-  //     volunteerCapacity: "",
-  //     evacueeCapacity: "",
-  //     accommodations: [],
-  //     suppliesNeeded: [],
-  //   });
+  //   handleClose();
   // };
 
-  const handleDeleteShelter = (id: string) => {
-    setShelters(shelters.filter((shelter) => shelter.id !== id));
+  const handleDeleteShelter = async (id: string) => {
+    await handleDelete(id);
+    await refetch();
   };
 
-  // const addAccommodation = () => {
-  //   setNewShelter({
-  //     ...newShelter,
-  //     accommodations: [...newShelter.accommodations, ""],
-  //   });
-  // };
+  const addAccommodation = () => {
+    setNewShelter({
+      ...newShelter,
+      accommodations: [...newShelter.accommodations, ""],
+    });
+  };
 
-  // const updateAccommodation = (index: number, value: string) => {
-  //   const updated = [...newShelter.accommodations];
-  //   updated[index] = value;
-  //   setNewShelter({ ...newShelter, accommodations: updated });
-  // };
+  const updateAccommodation = (index: number, value: string) => {
+    const updated = [...newShelter.accommodations];
+    updated[index] = value;
+    setNewShelter({ ...newShelter, accommodations: updated });
+  };
 
-  // const deleteAccommodation = (index: number) => {
-  //   const updated = [...newShelter.accommodations];
-  //   updated.splice(index, 1);
-  //   setNewShelter({ ...newShelter, accommodations: updated });
-  // };
+  const deleteAccommodation = (index: number) => {
+    const updated = [...newShelter.accommodations];
+    updated.splice(index, 1);
+    setNewShelter({ ...newShelter, accommodations: updated });
+  };
 
-  // const addSupply = () => {
-  //   setNewShelter({
-  //     ...newShelter,
-  //     suppliesNeeded: [...newShelter.suppliesNeeded, { item: "", received: "", needed: "" }],
-  //   });
-  // };
+  const addSupply = () => {
+    setNewShelter({
+      ...newShelter,
+      suppliesNeeded: [...newShelter.suppliesNeeded, { item: "", received: "", needed: "" }],
+    });
+  };
 
-  // const updateSupply = (index: number, field: "item" | "received" | "needed", value: string) => {
-  //   const updated = [...newShelter.suppliesNeeded];
-  //   updated[index] = { ...updated[index], [field]: value };
-  //   setNewShelter({ ...newShelter, suppliesNeeded: updated });
-  // };
+  const updateSupply = (index: number, field: "item" | "received" | "needed", value: string) => {
+    const updated = [...newShelter.suppliesNeeded];
+    updated[index] = { ...updated[index], [field]: value };
+    setNewShelter({ ...newShelter, suppliesNeeded: updated });
+  };
 
-  // const deleteSupply = (index: number) => {
-  //   const updated = [...newShelter.suppliesNeeded];
-  //   updated.splice(index, 1);
-  //   setNewShelter({ ...newShelter, suppliesNeeded: updated });
-  // };
+  const deleteSupply = (index: number) => {
+    const updated = [...newShelter.suppliesNeeded];
+    updated.splice(index, 1);
+    setNewShelter({ ...newShelter, suppliesNeeded: updated });
+  };
 
 
   return (
@@ -262,9 +269,9 @@ export default function Page() {
           </Button>
         </Box>
         {/* <AdminList shelters={shelters} onDelete={handleDeleteShelter} onEdit={handleOpen} /> */}
-        <AdminList shelters={shelters} onDelete={handleDeleteShelter} /> 
+        <AdminList shelters={shelters} onDelete={handleDeleteShelter}/>
 
-        {/* <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
           <DialogTitle>Add New Shelter</DialogTitle>
           <DialogContent>
             <TextField
@@ -400,11 +407,14 @@ export default function Page() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="error">Cancel</Button>
-            <Button onClick={handleAddOrUpdateShelter} variant="contained" color="primary">
-              {editingShelterId ? "Update" : "Add"}
+            <Button onClick={handleAdd} variant="contained" color="primary" disabled={addLoading}>
+              Add
             </Button>
+            {/* <Button onClick={handleAddOrUpdateShelter} variant="contained" color="primary">
+              {editingShelterId ? "Update" : "Add"}
+            </Button> */}
           </DialogActions>
-        </Dialog> */}
+        </Dialog>
       </Box>
     </div>
   );

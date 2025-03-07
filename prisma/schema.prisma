@@ -83,17 +83,17 @@ model Shelter {
   picture             String?
   volunteerCapacity   Int?
   evacueeCapacity     Int?
-  accommodations      String[]
-  wheelchairAccessible Boolean          @default(false)
+  accommodations      String[]         @default([])
+  wheelchairAccessible Boolean         @default(false)
   housesLargeAnimals  Boolean          @default(false)
   housesSmallAnimals  Boolean          @default(false)
   hasCounselingUnit   Boolean          @default(false)
   foodProvided        Boolean          @default(false)
   waterProvided       Boolean          @default(false)
   volunteerPreferences Json?
-  suppliesNeeded      Supply[]
-  requiredLanguages   Language[]
-  signups             VolunteerSignup[]
+  suppliesNeeded      Supply[]         @default([])
+  requiredLanguages   Language[]       @default([])
+  signups             VolunteerSignup[] @default([])
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
 }

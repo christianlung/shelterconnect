@@ -2,7 +2,7 @@
 import { prisma } from '@/lib/prisma';
 import type { Shelter } from '@prisma/client';
 import type { ActionResult } from '@/types/models';
-import { ObjectId } from "mongodb";
+import { AnyBulkWriteOperation, ObjectId } from "mongodb";
 
 /**
  * Action that fetches all shelters from the database
@@ -58,5 +58,36 @@ export async function deleteShelter(shelterId: string) {
   } catch (error) {
     console.error("Error deleting shelter:", error);
     return { success: false, message: "Failed to delete shelter", error };
+  }
+}
+
+export async function addShelter(shelter: any): Promise<ActionResult<Shelter>> {
+  try {
+    console.log("Adding new shelter...");
+    const newShelter = await prisma.shelter.create({
+      data: {
+        name: shelter.name,
+        location: shelter.location ? { set: shelter.location } : undefined,
+        address: { set: shelter.address },
+        picture: shelter.picture,
+        volunteerCapacity: shelter.volunteerCapacity,
+        evacueeCapacity: shelter.evacueeCapacity,
+        accommodations: shelter.accommodations || [],
+        wheelchairAccessible: shelter.wheelchairAccessible,
+        housesLargeAnimals: shelter.housesLargeAnimals,
+        housesSmallAnimals: shelter.housesSmallAnimals,
+        hasCounselingUnit: shelter.hasCounselingUnit,
+        foodProvided: shelter.foodProvided,
+        waterProvided: shelter.waterProvided,
+        volunteerPreferences: shelter.volunteerPreferences,
+        suppliesNeeded: shelter.suppliesNeeded || [],
+        requiredLanguages: shelter.requiredLanguages || [],
+      },
+    });
+    console.log("Inserted shelter:", newShelter);
+    return { success: true, data: newShelter };;
+  } catch (error) {
+    console.error("Error inserting shelter:", error);
+    return { success: false };
   }
 }
