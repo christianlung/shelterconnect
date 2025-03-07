@@ -10,26 +10,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input";
 
 export default function Page() {
   const [amount, setAmount] = useState<string>('');
+  const [anonymous, setAnonymous] = useState<"indeterminate" | boolean>(false)
   const [customAmount, setCustomAmount] = useState<string>('');
+  const [donorName, setDonorName] = useState<string>('Anonymous');
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [finalDonorAmount, setFinalDonorAmount] = useState<string>('');
 
   const handleDonationRequest = async (e: React.FormEvent) => {
     e.preventDefault();
     const finalAmount = amount === 'custom' ? Number(customAmount) : Number(amount);
-
     if (!finalAmount || finalAmount < 1) {
       alert('Please enter a valid donation amount.');
       return;
     }
 
     setLoading(true);
-
+    setFinalDonorAmount(finalAmount.toString());
     const res = await fetch('/api/payment-intent', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -39,6 +41,10 @@ export default function Page() {
     const data = await res.json();
     setClientSecret(data.clientSecret);
     setLoading(false);
+  };
+
+  const handleCheckboxChange = () => {
+    setAnonymous((anonymous) => !anonymous);
   };
 
   return (
@@ -63,7 +69,25 @@ export default function Page() {
                 <SelectItem value="custom">Custom Amount</SelectItem>
               </SelectContent>
             </Select>
-
+            {!anonymous ? (             
+              <Input 
+                type="string" 
+                placeholder='Name'
+                onChange={(e) => setDonorName(e.target.value)}
+                className="w-[200px]"
+              />
+            ) : null}
+            <div className="items-top flex space-x-2">
+              <Checkbox id="terms1" checked={anonymous} onCheckedChange={handleCheckboxChange}/>
+              <div className="grid gap-1.5 leading-none">
+                <label
+                  htmlFor="terms1"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Donate Anonymously
+                </label>
+              </div>
+            </div>
             {amount === 'custom' && (
               <Input
                 type="number"
@@ -80,7 +104,7 @@ export default function Page() {
           </form>
         </div>
       ) : (
-        <CheckoutForm clientSecret={clientSecret} />
+        <CheckoutForm clientSecret={clientSecret} donorName={donorName} finalDonorAmount={finalDonorAmount}/>
       )}
     </div>
   );
