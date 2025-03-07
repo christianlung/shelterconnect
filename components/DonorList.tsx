@@ -13,13 +13,25 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
 export default function DonorList() {
   const [donors, setDonors] = useState<Donor[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const donorsPerPage = 10;
 
   useEffect(() => {
     async function fetchDonors() {
-      const result = await getDonor();
+      const result = await getDonor(); // change to cacheDonors();
       if (result.success) {
         setDonors(result.data);
       }
@@ -30,25 +42,123 @@ export default function DonorList() {
 
   if (loading) return <p>Loading donors...</p>;
 
+  const totalPages = Math.ceil(donors.length / donorsPerPage);
+  const indexOfLastDonor = currentPage * donorsPerPage;
+  const indexOfFirstDonor = indexOfLastDonor - donorsPerPage;
+  const currentDonors = donors.slice(indexOfFirstDonor, indexOfLastDonor);
+
+  const getPaginationItems = () => {
+    const pages = [];
+    const numVisiblePages = 4;
+
+    if (totalPages <= numVisiblePages + 2) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(
+          <PaginationItem key={i}>
+            <PaginationLink isActive={currentPage === i} onClick={() => setCurrentPage(i)}>
+              {i}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+    } else {
+      pages.push(
+        <PaginationItem key={1}>
+          <PaginationLink isActive={currentPage === 1} onClick={() => setCurrentPage(1)}>
+            1
+          </PaginationLink>
+        </PaginationItem>
+      );
+
+      if (currentPage > numVisiblePages) {
+        pages.push(<PaginationEllipsis key="start-ellipsis" />);
+      }
+
+      let startPage = Math.max(2, currentPage - Math.floor(numVisiblePages / 2));
+      let endPage = Math.min(totalPages - 1, startPage + numVisiblePages - 1);
+
+      if (endPage >= totalPages - 1) {
+        startPage = totalPages - numVisiblePages;
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(
+          <PaginationItem key={i}>
+            <PaginationLink isActive={currentPage === i} onClick={() => setCurrentPage(i)}>
+              {i}
+            </PaginationLink>
+          </PaginationItem>
+        );
+      }
+
+      if (currentPage < totalPages - numVisiblePages) {
+        pages.push(<PaginationEllipsis key="end-ellipsis" />);
+      }
+
+      pages.push(
+        <PaginationItem key={totalPages}>
+          <PaginationLink isActive={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>
+            {totalPages}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+    return pages;
+  };
+
   return (
-    <Table>
-      <TableCaption>A list of our amazing donors!</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Donor</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-          <TableHead className="text-right">Date</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {donors.map((donor) => (
-          <TableRow key={donor.id}>
-            <TableCell className="font-medium">{donor.donorName}</TableCell>
-            <TableCell className="text-right">${donor.finalDonorAmount}</TableCell>
-            <TableCell className="text-right">{new Date(donor.createdAt).toLocaleDateString()}</TableCell>
+    <div>
+      <Table>
+        <TableCaption>A list of our amazing donors!</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Donor</TableHead>
+            <TableHead className="text-right">Amount</TableHead>
+            <TableHead className="text-right">Date</TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {currentDonors.length > 0 ? (
+            currentDonors.map((donor) => (
+              <TableRow key={donor.id}>
+                <TableCell className="font-medium">{donor.donorName}</TableCell>
+                <TableCell className="text-right">${donor.finalDonorAmount}</TableCell>
+                <TableCell className="text-right">
+                  {new Date(donor.createdAt).toLocaleDateString()}
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={3} className="text-center">
+                No donors found.
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+
+      {totalPages > 1 && (
+        <Pagination className="mt-4">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+
+            {getPaginationItems()}
+
+            <PaginationItem>
+              <PaginationNext
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
+    </div>
   );
 }
