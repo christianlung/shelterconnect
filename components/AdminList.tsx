@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { useRouter } from "next/navigation";
+import { useDeleteShelter } from "@/lib/hooks/useShelters";
 
 interface Address {
   street: string;
@@ -43,13 +44,15 @@ interface Shelter {
 
 interface AdminListProps {
   shelters: Shelter[];
-  // onDelete: (id: string) => void;
+  onDelete: (id: string) => void;
   // onEdit: (shelter: Shelter) => void;
 }
 
-// export default function ShelterList({ shelters, onDelete, onEdit }: AdminListProps) {
-  export default function ShelterList({ shelters }: AdminListProps) {
+// export default function AdminList({ shelters, onDelete, onEdit }: AdminListProps) {
+export default function AdminList({ shelters, onDelete }: AdminListProps) {
   const router = useRouter();
+  const { handleDelete } = useDeleteShelter();
+
 
   const [expanded, setExpanded] = useState<number | null>(null);
 
@@ -73,8 +76,7 @@ interface AdminListProps {
               <IconButton onClick={(e) => { e.stopPropagation(); }}>
                 <EditIcon />
               </IconButton>
-              {/* <IconButton onClick={(e) => { e.stopPropagation(); onDelete(shelter.id) }}> */}
-              <IconButton onClick={(e) => { e.stopPropagation(); }}>
+              <IconButton onClick={(e) => { e.stopPropagation(); handleDelete(shelter.id); onDelete(shelter.id); }}>
                 <DeleteIcon color="error" />
               </IconButton>
               <IconButton onClick={(e) => { e.stopPropagation(); toggleExpand(index); }}>
@@ -84,11 +86,6 @@ interface AdminListProps {
           </Box>
           <Collapse in={expanded === index}>
             <CardContent sx={{ bgcolor: "#e0f2fe", borderRadius: "10px", mt: 2 }}>
-              {/* {shelter.location && (
-                <Typography variant="body2" sx={{ mb: 1 }}>
-                  Location: {shelter.location.latitude}, {shelter.location.longitude}
-                </Typography>
-              )} */}
               {shelter.volunteerCapacity && shelter.evacueeCapacity && (
                 <div>
                   <Typography variant="body2" sx={{ mb: 1, fontWeight: "bold" }}>

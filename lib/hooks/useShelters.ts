@@ -1,8 +1,8 @@
 'use client';
-import { use } from 'react';
 import { useState, useEffect } from 'react';
-import { getShelters } from '@/lib/actions/shelter';
+import { getShelters, deleteShelter } from '@/lib/actions/shelter';
 import type { Shelter } from '@prisma/client';
+import type { ActionResult } from '@/types/models';
 
 /** Hook for fetching shelters */
 export function useShelters() {
@@ -30,4 +30,29 @@ export function useShelters() {
   }, []);
 
   return { shelters, loading, error };
+}
+
+/** Hook for deleting specific shelter */
+export function useDeleteShelter() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleDelete = async (id: string): Promise<void> => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await deleteShelter(id);
+      if (!result.success) {
+        setError('Failed to delete shelter');
+        console.log('Failed to delete shelter');
+      }
+    } catch (err) {
+      setError('An error occurred while deleting the shelter');
+      console.log('An error occurred while deleting the shelter');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { handleDelete, loading, error };
 }

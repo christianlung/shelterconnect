@@ -57,8 +57,8 @@ type TimeSlot {
 
 type Supply {
   item      String
-  received  Integer
-  needed    Integer
+  received  Int
+  needed    Int
 }
 
 model Volunteer {
@@ -91,7 +91,7 @@ model Shelter {
   foodProvided        Boolean          @default(false)
   waterProvided       Boolean          @default(false)
   volunteerPreferences Json?
-  suppliesNeeded      Supply[]?
+  suppliesNeeded      Supply[]
   requiredLanguages   Language[]
   signups             VolunteerSignup[]
   createdAt           DateTime         @default(now())

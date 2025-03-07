@@ -206,9 +206,9 @@ export default function Page() {
   //   });
   // };
 
-  // const handleDeleteShelter = (id: string) => {
-  //   setShelters(shelters.filter((shelter) => shelter.id !== id));
-  // };
+  const handleDeleteShelter = (id: string) => {
+    setShelters(shelters.filter((shelter) => shelter.id !== id));
+  };
 
   // const addAccommodation = () => {
   //   setNewShelter({
@@ -262,7 +262,7 @@ export default function Page() {
           </Button>
         </Box>
         {/* <AdminList shelters={shelters} onDelete={handleDeleteShelter} onEdit={handleOpen} /> */}
-        <AdminList shelters={shelters} /> 
+        <AdminList shelters={shelters} onDelete={handleDeleteShelter} /> 
 
         {/* <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
           <DialogTitle>Add New Shelter</DialogTitle>
