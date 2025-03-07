@@ -55,6 +55,12 @@ type TimeSlot {
   end   DateTime
 }
 
+type Supply {
+  item      String
+  received  Integer
+  needed    Integer
+}
+
 model Volunteer {
   id              String            @id @default(auto()) @map("_id") @db.ObjectId
   role            Role             @default(VOLUNTEER)
@@ -85,7 +91,7 @@ model Shelter {
   foodProvided        Boolean          @default(false)
   waterProvided       Boolean          @default(false)
   volunteerPreferences Json?
-  suppliesNeeded      Json?
+  suppliesNeeded      Supply[]?
   requiredLanguages   Language[]
   signups             VolunteerSignup[]
   createdAt           DateTime         @default(now())

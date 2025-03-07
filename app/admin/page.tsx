@@ -1,6 +1,5 @@
 "use client"
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 
 import AdminList from '@/components/AdminList';
@@ -8,18 +7,21 @@ import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, TextField,
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-interface Address {
-  street: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-}
+import { Shelter } from '@prisma/client';
+import { useShelters } from "@/lib/hooks/useShelters";
 
-interface Coordinate {
-  latitude: number;
-  longitude: number;
-}
+// interface Address {
+//   street: string;
+//   city: string;
+//   state: string;
+//   zipCode: string;
+//   country: string;
+// }
+
+// interface Coordinate {
+//   latitude: number;
+//   longitude: number;
+// }
 
 interface Supply {
   item: string;
@@ -27,19 +29,19 @@ interface Supply {
   needed: number;
 }
 
-interface Shelter {
-  id: string;
-  name: string;
-  location?: Coordinate;
-  address: Address;
-  picture?: string;
-  volunteerCapacity?: number;
-  evacueeCapacity?: number;
-  accommodations?: string[];
-  suppliesNeeded?: Supply[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+// interface Shelter {
+//   id: string;
+//   name: string;
+//   location?: Coordinate;
+//   address: Address;
+//   picture?: string;
+//   volunteerCapacity?: number;
+//   evacueeCapacity?: number;
+//   accommodations?: string[];
+//   suppliesNeeded?: Supply[];
+//   createdAt: Date;
+//   updatedAt: Date;
+// }
 
 interface NewShelterForm {
   name: string;
@@ -53,181 +55,198 @@ interface NewShelterForm {
 }
 
 export default function Page() {
-  const [shelters, setShelters] = useState<Shelter[]>([
-    {
-      id: uuidv4(),
-      name: "Shelter A",
-      location: { latitude: 34.0000, longitude: -118.0000 },
-      address: { street: "123 Main St", city: "Springfield", state: "CA", zipCode: "12345", country: "USA" },
-      picture: "",
-      volunteerCapacity: 50,
-      evacueeCapacity: 200,
-      accommodations: ["wheelchair_accessible"],
-      suppliesNeeded: [{ item: "blankets", received: 5, needed: 10 }],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  ]);
-
+  const { shelters: fetchedShelters, loading, error } = useShelters();
+  const [shelters, setShelters] = useState<Shelter[]>([]);
   const [open, setOpen] = useState(false);
-  const [newShelter, setNewShelter] = useState<NewShelterForm>({
-    name: "",
-    location: { latitude: "", longitude: "" },
-    address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
-    picture: "",
-    volunteerCapacity: "",
-    evacueeCapacity: "",
-    accommodations: [],
-    suppliesNeeded: [],
-  });
 
-  const [editingShelterId, setEditingShelterId] = useState<string | null>(null);
-
-  const handleOpen = (shelter?: Shelter) => {
-    if (shelter) {
-      setEditingShelterId(shelter.id);
-      setNewShelter({
-        name: shelter.name,
-        location: {
-          latitude: shelter.location ? String(shelter.location.latitude) : "",
-          longitude: shelter.location ? String(shelter.location.longitude) : "",
-        },
-        address: {
-          street: shelter.address.street,
-          city: shelter.address.city,
-          state: shelter.address.state,
-          zipCode: shelter.address.zipCode,
-          country: shelter.address.country || "USA",
-        },
-        picture: shelter.picture ?? "",
-        volunteerCapacity: shelter.volunteerCapacity ? String(shelter.volunteerCapacity) : "",
-        evacueeCapacity: shelter.evacueeCapacity ? String(shelter.evacueeCapacity) : "",
-        accommodations: shelter.accommodations ?? [],
-        suppliesNeeded: shelter.suppliesNeeded
-          ? shelter.suppliesNeeded.map(supply => ({
-            item: supply.item,
-            received: String(supply.received),
-            needed: String(supply.needed),
-          }))
-          : [],
-      });
-    } else {
-      setEditingShelterId(null);
-      setNewShelter({
-        name: "",
-        location: { latitude: "", longitude: "" },
-        address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
-        picture: "",
-        volunteerCapacity: "",
-        evacueeCapacity: "",
-        accommodations: [],
-        suppliesNeeded: [],
-      });
+  useEffect(() => {
+    if (fetchedShelters) {
+      setShelters(fetchedShelters);
     }
-    setOpen(true);
-  };
+  }, [fetchedShelters]);
 
-  const handleAddOrUpdateShelter = () => {
-    if (!newShelter.name.trim() || !newShelter.address.street.trim()) return;
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  // const [shelters, setShelters] = useState<Shelter[]>([
+  //   {
+  //     id: uuidv4(),
+  //     name: "Shelter A",
+  //     location: { latitude: 34.0000, longitude: -118.0000 },
+  //     address: { street: "123 Main St", city: "Springfield", state: "CA", zipCode: "12345", country: "USA" },
+  //     picture: "",
+  //     volunteerCapacity: 50,
+  //     evacueeCapacity: 200,
+  //     accommodations: ["wheelchair_accessible"],
+  //     suppliesNeeded: [{ item: "blankets", received: 5, needed: 10 }],
+  //     createdAt: new Date(),
+  //     updatedAt: new Date(),
+  //   },
+  // ]);
+
+  // const [editingShelterId, setEditingShelterId] = useState<string | null>(null);
+  // const [newShelter, setNewShelter] = useState<NewShelterForm>({
+  //   name: "",
+  //   location: { latitude: "", longitude: "" },
+  //   address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
+  //   picture: "",
+  //   volunteerCapacity: "",
+  //   evacueeCapacity: "",
+  //   accommodations: [],
+  //   suppliesNeeded: [],
+  // });
+
+
+  // const handleOpen = (shelter?: Shelter) => {
+  //   if (shelter) {
+  //     setEditingShelterId(shelter.id);
+  //     setNewShelter({
+  //       name: shelter.name,
+  //       location: {
+  //         latitude: shelter.location ? String(shelter.location.latitude) : "",
+  //         longitude: shelter.location ? String(shelter.location.longitude) : "",
+  //       },
+  //       address: {
+  //         street: shelter.address.street,
+  //         city: shelter.address.city,
+  //         state: shelter.address.state,
+  //         zipCode: shelter.address.zipCode,
+  //         country: shelter.address.country || "USA",
+  //       },
+  //       picture: shelter.picture ?? "",
+  //       volunteerCapacity: shelter.volunteerCapacity ? String(shelter.volunteerCapacity) : "",
+  //       evacueeCapacity: shelter.evacueeCapacity ? String(shelter.evacueeCapacity) : "",
+  //       accommodations: shelter.accommodations ?? [],
+  //       suppliesNeeded: shelter.suppliesNeeded
+  //         ? shelter.suppliesNeeded.map(supply => ({
+  //           item: supply.item,
+  //           received: String(supply.received),
+  //           needed: String(supply.needed),
+  //         }))
+  //         : [],
+  //     });
+  //   } else {
+  //     setEditingShelterId(null);
+  //     setNewShelter({
+  //       name: "",
+  //       location: { latitude: "", longitude: "" },
+  //       address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
+  //       picture: "",
+  //       volunteerCapacity: "",
+  //       evacueeCapacity: "",
+  //       accommodations: [],
+  //       suppliesNeeded: [],
+  //     });
+  //   }
+  //   setOpen(true);
+  // };
+
+  // const handleAddOrUpdateShelter = () => {
+  //   if (!newShelter.name.trim() || !newShelter.address.street.trim()) return;
   
-    // If editing, try to retrieve the original createdAt value
-    const existingShelter = editingShelterId ? shelters.find(s => s.id === editingShelterId) : undefined;
+  //   // If editing, try to retrieve the original createdAt value
+  //   const existingShelter = editingShelterId ? shelters.find(s => s.id === editingShelterId) : undefined;
   
-    const formattedShelter: Shelter = {
-      id: editingShelterId ?? uuidv4(),
-      name: newShelter.name,
-      location: (newShelter.location.latitude && newShelter.location.longitude)
-        ? {
-            latitude: Number(newShelter.location.latitude),
-            longitude: Number(newShelter.location.longitude),
-          }
-        : undefined,
-      address: {
-        street: newShelter.address.street,
-        city: newShelter.address.city,
-        state: newShelter.address.state,
-        zipCode: newShelter.address.zipCode,
-        country: newShelter.address.country,
-      },
-      picture: newShelter.picture || undefined,
-      volunteerCapacity: newShelter.volunteerCapacity ? Number(newShelter.volunteerCapacity) : undefined,
-      evacueeCapacity: newShelter.evacueeCapacity ? Number(newShelter.evacueeCapacity) : undefined,
-      accommodations: newShelter.accommodations,
-      suppliesNeeded: newShelter.suppliesNeeded.map(supply => ({
-        item: supply.item,
-        received: Number(supply.received),
-        needed: Number(supply.needed),
-      })),
-      createdAt: existingShelter ? existingShelter.createdAt : new Date(),
-      updatedAt: new Date(),
-    };
+  //   const formattedShelter: Shelter = {
+  //     id: editingShelterId ?? uuidv4(),
+  //     name: newShelter.name,
+  //     location: (newShelter.location.latitude && newShelter.location.longitude)
+  //       ? {
+  //           latitude: Number(newShelter.location.latitude),
+  //           longitude: Number(newShelter.location.longitude),
+  //         }
+  //       : undefined,
+  //     address: {
+  //       street: newShelter.address.street,
+  //       city: newShelter.address.city,
+  //       state: newShelter.address.state,
+  //       zipCode: newShelter.address.zipCode,
+  //       country: newShelter.address.country,
+  //     },
+  //     picture: newShelter.picture || undefined,
+  //     volunteerCapacity: newShelter.volunteerCapacity ? Number(newShelter.volunteerCapacity) : undefined,
+  //     evacueeCapacity: newShelter.evacueeCapacity ? Number(newShelter.evacueeCapacity) : undefined,
+  //     accommodations: newShelter.accommodations,
+  //     suppliesNeeded: newShelter.suppliesNeeded.map(supply => ({
+  //       item: supply.item,
+  //       received: Number(supply.received),
+  //       needed: Number(supply.needed),
+  //     })),
+  //     createdAt: existingShelter ? existingShelter.createdAt : new Date(),
+  //     updatedAt: new Date(),
+  //   };
   
-    if (editingShelterId) {
-      // Editing an existing shelter
-      setShelters(shelters.map(s => (s.id === editingShelterId ? formattedShelter : s)));
-    } else {
-      // Adding a new shelter
-      setShelters([...shelters, formattedShelter]);
-    }
+  //   if (editingShelterId) {
+  //     // Editing an existing shelter
+  //     setShelters(shelters.map(s => (s.id === editingShelterId ? formattedShelter : s)));
+  //   } else {
+  //     // Adding a new shelter
+  //     setShelters([...shelters, formattedShelter]);
+  //   }
   
-    handleClose();
-  };  
+  //   handleClose();
+  // };  
 
-  const handleClose = () => {
-    setOpen(false);
-    setNewShelter({
-      name: "",
-      location: { latitude: "", longitude: "" },
-      address: { street: "", city: "", state: "", zipCode: "", country: "" },
-      picture: "",
-      volunteerCapacity: "",
-      evacueeCapacity: "",
-      accommodations: [],
-      suppliesNeeded: [],
-    });
-  };
+  // const handleClose = () => {
+  //   setOpen(false);
+  //   setNewShelter({
+  //     name: "",
+  //     location: { latitude: "", longitude: "" },
+  //     address: { street: "", city: "", state: "", zipCode: "", country: "" },
+  //     picture: "",
+  //     volunteerCapacity: "",
+  //     evacueeCapacity: "",
+  //     accommodations: [],
+  //     suppliesNeeded: [],
+  //   });
+  // };
 
-  const handleDeleteShelter = (id: string) => {
-    setShelters(shelters.filter((shelter) => shelter.id !== id));
-  };
+  // const handleDeleteShelter = (id: string) => {
+  //   setShelters(shelters.filter((shelter) => shelter.id !== id));
+  // };
 
-  const addAccommodation = () => {
-    setNewShelter({
-      ...newShelter,
-      accommodations: [...newShelter.accommodations, ""],
-    });
-  };
+  // const addAccommodation = () => {
+  //   setNewShelter({
+  //     ...newShelter,
+  //     accommodations: [...newShelter.accommodations, ""],
+  //   });
+  // };
 
-  const updateAccommodation = (index: number, value: string) => {
-    const updated = [...newShelter.accommodations];
-    updated[index] = value;
-    setNewShelter({ ...newShelter, accommodations: updated });
-  };
+  // const updateAccommodation = (index: number, value: string) => {
+  //   const updated = [...newShelter.accommodations];
+  //   updated[index] = value;
+  //   setNewShelter({ ...newShelter, accommodations: updated });
+  // };
 
-  const deleteAccommodation = (index: number) => {
-    const updated = [...newShelter.accommodations];
-    updated.splice(index, 1);
-    setNewShelter({ ...newShelter, accommodations: updated });
-  };
+  // const deleteAccommodation = (index: number) => {
+  //   const updated = [...newShelter.accommodations];
+  //   updated.splice(index, 1);
+  //   setNewShelter({ ...newShelter, accommodations: updated });
+  // };
 
-  const addSupply = () => {
-    setNewShelter({
-      ...newShelter,
-      suppliesNeeded: [...newShelter.suppliesNeeded, { item: "", received: "", needed: "" }],
-    });
-  };
+  // const addSupply = () => {
+  //   setNewShelter({
+  //     ...newShelter,
+  //     suppliesNeeded: [...newShelter.suppliesNeeded, { item: "", received: "", needed: "" }],
+  //   });
+  // };
 
-  const updateSupply = (index: number, field: "item" | "received" | "needed", value: string) => {
-    const updated = [...newShelter.suppliesNeeded];
-    updated[index] = { ...updated[index], [field]: value };
-    setNewShelter({ ...newShelter, suppliesNeeded: updated });
-  };
+  // const updateSupply = (index: number, field: "item" | "received" | "needed", value: string) => {
+  //   const updated = [...newShelter.suppliesNeeded];
+  //   updated[index] = { ...updated[index], [field]: value };
+  //   setNewShelter({ ...newShelter, suppliesNeeded: updated });
+  // };
 
-  const deleteSupply = (index: number) => {
-    const updated = [...newShelter.suppliesNeeded];
-    updated.splice(index, 1);
-    setNewShelter({ ...newShelter, suppliesNeeded: updated });
-  };
+  // const deleteSupply = (index: number) => {
+  //   const updated = [...newShelter.suppliesNeeded];
+  //   updated.splice(index, 1);
+  //   setNewShelter({ ...newShelter, suppliesNeeded: updated });
+  // };
 
 
   return (
@@ -242,9 +261,10 @@ export default function Page() {
             + New
           </Button>
         </Box>
-        <AdminList shelters={shelters} onDelete={handleDeleteShelter} onEdit={handleOpen} />
+        {/* <AdminList shelters={shelters} onDelete={handleDeleteShelter} onEdit={handleOpen} /> */}
+        <AdminList shelters={shelters} /> 
 
-        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+        {/* <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
           <DialogTitle>Add New Shelter</DialogTitle>
           <DialogContent>
             <TextField
@@ -384,7 +404,7 @@ export default function Page() {
               {editingShelterId ? "Update" : "Add"}
             </Button>
           </DialogActions>
-        </Dialog>
+        </Dialog> */}
       </Box>
     </div>
   );

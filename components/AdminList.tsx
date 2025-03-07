@@ -30,11 +30,11 @@ interface Supply {
 interface Shelter {
   id: string;
   name: string;
-  location?: Coordinate;
+  location?: Coordinate | null;
   address: Address;
-  picture?: string;
-  volunteerCapacity?: number;
-  evacueeCapacity?: number;
+  picture?: string | null;
+  volunteerCapacity?: number | null;
+  evacueeCapacity?: number | null;
   accommodations?: string[];
   suppliesNeeded?: Supply[];
   createdAt: Date;
@@ -43,11 +43,12 @@ interface Shelter {
 
 interface AdminListProps {
   shelters: Shelter[];
-  onDelete: (id: string) => void;
-  onEdit: (shelter: Shelter) => void;
+  // onDelete: (id: string) => void;
+  // onEdit: (shelter: Shelter) => void;
 }
 
-export default function ShelterList({ shelters, onDelete, onEdit }: AdminListProps) {
+// export default function ShelterList({ shelters, onDelete, onEdit }: AdminListProps) {
+  export default function ShelterList({ shelters }: AdminListProps) {
   const router = useRouter();
 
   const [expanded, setExpanded] = useState<number | null>(null);
@@ -68,10 +69,12 @@ export default function ShelterList({ shelters, onDelete, onEdit }: AdminListPro
               <Typography sx={{ color: "gray" }}>{formatAddress(shelter.address)}</Typography>
             </Box>
             <Box>
-              <IconButton onClick={(e) => { e.stopPropagation(); onEdit(shelter); }}>
+              {/* <IconButton onClick={(e) => { e.stopPropagation(); onEdit(shelter); }}> */}
+              <IconButton onClick={(e) => { e.stopPropagation(); }}>
                 <EditIcon />
               </IconButton>
-              <IconButton onClick={(e) => { e.stopPropagation(); onDelete(shelter.id) }}>
+              {/* <IconButton onClick={(e) => { e.stopPropagation(); onDelete(shelter.id) }}> */}
+              <IconButton onClick={(e) => { e.stopPropagation(); }}>
                 <DeleteIcon color="error" />
               </IconButton>
               <IconButton onClick={(e) => { e.stopPropagation(); toggleExpand(index); }}>
