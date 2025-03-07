@@ -52,8 +52,8 @@ export default function Page() {
     <div>
       {!clientSecret ? (
         <div className='flex flex-row justify-center gap-5'>
-          <div id="checkout" className="flex flex-col items-center">
-            <p className="text-center text-gray-700 max-w-md mb-6 mt-4">
+          <div id="checkout" className="flex flex-col items-center mt-4">
+            <p className="text-center text-gray-700 max-w-md mb-6">
               Every year, countless families lose their homes and belongings due to devastating wildfires, hurricanes, and other natural disasters. 
               Your donation directly supports those in need by providing emergency shelter, food, medical aid, and essential supplies to help them rebuild their lives. 
               Even a small contribution can make a significant difference in bringing hope and relief to disaster victims. 
@@ -105,8 +105,8 @@ export default function Page() {
               </button>
             </form>
           </div>
-          <div className='w-1/2'>
-            <DonorList />
+          <div className='w-1/2 mt-3'>
+            <DonorList/>
           </div>
         </div>
       ) : (
