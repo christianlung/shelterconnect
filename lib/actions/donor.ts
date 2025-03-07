@@ -19,3 +19,16 @@ export async function createDonor(donorName: string, finalDonorAmount: string): 
     return { success: false };
   }
 }
+
+/**
+ * Action that fetches all donors from the database
+ */
+export async function getDonor(): Promise<ActionResult<Donor[]>> {
+  try {
+    const donors = await prisma.donor.findMany();
+    return { success: true, data: donors };
+  } catch (error) {
+    console.error("[getDonor] Failed to fetch donors:", error);
+    return { success: false };
+  }
+}
