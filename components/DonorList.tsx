@@ -49,7 +49,7 @@ export default function DonorList() {
 
   const getPaginationItems = () => {
     const pages = [];
-    const numVisiblePages = 4; // Always show 4 numbers in the middle
+    const numVisiblePages = 4;
 
     if (totalPages <= numVisiblePages + 2) {
       for (let i = 1; i <= totalPages; i++) {
