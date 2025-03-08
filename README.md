@@ -43,6 +43,15 @@ Create a `.env` file in the `prisma` directory with this value:
 DATABASE_URL="mongodb://..."
 ```
 
+If you want to run test, create a `.env.test` file in the root directory with the following values:
+
+```
+DATABASE_URL=mongodb+srv://...
+NEXT_PUBLIC_STRIPE_SK=sk_test_...
+NEXT_PUBLIC_STRIPE_PK=pk_test_...
+
+```
+
 Run the setup command to install dependencies and generate the Prisma client:
 
 ```
