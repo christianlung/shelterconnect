@@ -109,50 +109,6 @@ export default function Page() {
     });
   };
 
-  // Called when the "Add" button is clicked
-  // const handleAdd = async () => {
-  //   // Validate required fields
-  //   if (!newShelter.name.trim() || !newShelter.address.street.trim()) return;
-
-  //   // Format the new shelter from the form values.
-  //   const formattedShelter = {
-  //     name: newShelter.name,
-  //     location:
-  //       newShelter.location.latitude && newShelter.location.longitude
-  //         ? {
-  //           latitude: parseFloat(newShelter.location.latitude),
-  //           longitude: parseFloat(newShelter.location.longitude),
-  //         }
-  //         : null,
-  //     address: {
-  //       street: newShelter.address.street,
-  //       city: newShelter.address.city,
-  //       state: newShelter.address.state,
-  //       zipCode: newShelter.address.zipCode,
-  //       country: newShelter.address.country,
-  //     },
-  //     picture: newShelter.picture || null,
-  //     volunteerCapacity: newShelter.volunteerCapacity
-  //       ? parseInt(newShelter.volunteerCapacity, 10)
-  //       : null,
-  //     evacueeCapacity: newShelter.evacueeCapacity
-  //       ? parseInt(newShelter.evacueeCapacity, 10)
-  //       : null,
-  //     accommodations: newShelter.accommodations,
-  //     suppliesNeeded: newShelter.suppliesNeeded.map((supply) => ({
-  //       item: supply.item,
-  //       received: parseInt(supply.received, 10),
-  //       needed: parseInt(supply.needed, 10),
-  //     })),
-  //   };
-
-  //   const result = await addShelterAction(formattedShelter) as ActionResult<Shelter>;
-  //   if (result.success && result.data) {
-  //     await refetch();
-  //   }
-  //   handleClose();
-  // };
-
   const handleAddOrUpdateShelter = async () => {
     if (!newShelter.name.trim() || !newShelter.address.street.trim()) return;
 
