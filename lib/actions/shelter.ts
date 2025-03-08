@@ -91,3 +91,15 @@ export async function addShelter(shelter: any): Promise<ActionResult<Shelter>> {
     return { success: false };
   }
 }
+
+export async function updateShelter(shelterId: string, updatedData: Partial<Shelter>): Promise<ActionResult<Shelter>> {
+  try {
+    const shelter = await prisma.shelter.update({
+      where: { id: shelterId },
+      data: updatedData,
+    });
+    return { success: true, data: shelter};
+  } catch (error){
+    return { success: false };
+  }
+}

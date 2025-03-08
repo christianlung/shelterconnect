@@ -6,50 +6,19 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-
-interface Address {
-  street: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-}
-
-interface Coordinate {
-  latitude: number;
-  longitude: number;
-}
-
-interface Supply {
-  item: string;
-  received: number;
-  needed: number;
-}
-
-interface Shelter {
-  id: string;
-  name: string;
-  location?: Coordinate | null;
-  address: Address;
-  picture?: string | null;
-  volunteerCapacity?: number | null;
-  evacueeCapacity?: number | null;
-  accommodations?: string[];
-  suppliesNeeded?: Supply[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { Shelter } from '@prisma/client';
 
 interface AdminListProps {
   shelters: Shelter[];
   onDelete: (id: string) => Promise<void>;
+  onEdit: (shelter: Shelter) => void;
 }
 
-export default function AdminList({ shelters, onDelete } : AdminListProps) {
+export default function AdminList({ shelters, onDelete, onEdit } : AdminListProps) {
   const [expanded, setExpanded] = useState<number | null>(null);
   const toggleExpand = (index: number) => setExpanded(expanded === index ? null : index);
 
-  const formatAddress = (address: Address) =>
+  const formatAddress = (address: { street: string; city: string; state: string; zipCode: string; country: string }) =>
     `${address.street}, ${address.city}, ${address.state} ${address.zipCode}, ${address.country}`;
 
   return (
@@ -62,8 +31,7 @@ export default function AdminList({ shelters, onDelete } : AdminListProps) {
               <Typography sx={{ color: "gray" }}>{formatAddress(shelter.address)}</Typography>
             </Box>
             <Box>
-              {/* <IconButton onClick={(e) => { e.stopPropagation(); onEdit(shelter); }}> */}
-              <IconButton onClick={(e) => { e.stopPropagation(); }}>
+              <IconButton onClick={(e) => { e.stopPropagation(); onEdit(shelter); }}>
                 <EditIcon />
               </IconButton>
               <IconButton onClick={(e) => { e.stopPropagation(); onDelete(shelter.id); }}>

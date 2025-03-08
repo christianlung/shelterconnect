@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { getShelters, deleteShelter, addShelter } from '@/lib/actions/shelter';
+import { getShelters, deleteShelter, addShelter, updateShelter } from '@/lib/actions/shelter';
 import type { Shelter } from '@prisma/client';
 import type { ActionResult } from '@/types/models';
 
@@ -87,4 +87,17 @@ export function useAddShelter() {
   };
 
   return { handleAddShelter, loading, error, success };
+}
+
+export function useUpdateShelter() {
+  const [loading, setLoading] = useState(false);
+
+  const handleUpdateShelter = async (id: string, data: any): Promise<ActionResult<Shelter>> => {
+    setLoading(true);
+    const result = await updateShelter(id, data);
+    setLoading(false);
+    return result;
+  }
+  
+  return { handleUpdateShelter, loading };
 }
