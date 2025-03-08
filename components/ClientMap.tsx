@@ -5,6 +5,7 @@ import ReactMapGL, { ViewState, Marker } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { MapProps, LatLng } from './Map';
 import type { Shelter } from '@prisma/client';
+import { useRouter } from 'next/navigation';
 
 interface ClientMapProps extends MapProps {
   /**
@@ -20,6 +21,7 @@ interface ClientMapProps extends MapProps {
 
 export default function ClientMap(props: ClientMapProps) {
   const { height, initialCoordinates, shelters } = props;
+  const router = useRouter();
   const [viewState, setViewState] = useState<ViewState | null>({
     ...initialCoordinates,
     zoom: 14,
@@ -54,6 +56,10 @@ export default function ClientMap(props: ClientMapProps) {
     });
   };
 
+  const handleShelterClick = (shelterId: string) => {
+    router.push(`/shelters/${shelterId}`);
+  };
+
   return (
     <div className="relative w-full pt-20" style={{ height: height || '100%' }}>
       <ReactMapGL
@@ -81,6 +87,8 @@ export default function ClientMap(props: ClientMapProps) {
                 longitude={shelter.location.longitude}
                 latitude={shelter.location.latitude}
                 color="#FF0000"
+                onClick={() => handleShelterClick(shelter.id)}
+                style={{ cursor: 'pointer' }}
               />
             ),
         )}
