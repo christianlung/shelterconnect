@@ -91,9 +91,9 @@ model Shelter {
   foodProvided        Boolean          @default(false)
   waterProvided       Boolean          @default(false)
   volunteerPreferences Json?
-  suppliesNeeded      Supply[]         @default([])
-  requiredLanguages   Language[]       @default([])
-  signups             VolunteerSignup[] @default([])
+  suppliesNeeded      Supply[]         
+  requiredLanguages   Language[]       
+  signups             VolunteerSignup[]
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
 }
