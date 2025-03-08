@@ -80,3 +80,19 @@ If you want to run a script (to upload data to the database just once, for examp
 ```
 npm run node-script <path-to-script>
 ```
+
+
+### Unit testing
+To run all unit tests in the project, you can run:
+
+```
+npm run jest
+```
+
+To run unit tests for a specific file and, optionally, a specific test name, run:
+
+```
+npm run jest <filename> -t <testname>
+```
+
+Note, you don't need to include the whole path to the file, jest will search for the file in the project.

@@ -14,7 +14,8 @@
     "build-storybook": "storybook build",
     "setup": "npm install && prisma generate zod",
     "seed": "npm run node-script scripts/seed.ts",
-    "node-script": "ts-node -r tsconfig-paths/register"
+    "node-script": "ts-node -r tsconfig-paths/register",
+    "jest": "dotenv -e .env.test -- jest"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.0",
