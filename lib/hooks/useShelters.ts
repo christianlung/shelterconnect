@@ -15,6 +15,7 @@ export function useShelters() {
     try {
       const result = await getShelters();
       if (result.success) {
+        console.log("Fetched shelters: ", result.data);
         setShelters(result.data);
       } else {
         setError('Failed to fetch shelters');
@@ -72,7 +73,7 @@ export function useAddShelter() {
       const result = await addShelter(shelter);
       if (result.success) {
         setSuccess(true);
-        return result.data;
+        return { success: true, data: result.data };
       } else {
         setError('Failed to add shelter');
       }

@@ -162,7 +162,6 @@ export default function Page() {
     if (result.success && result.data) {
       await refetch();
     }
-
     handleClose();
   };
 
