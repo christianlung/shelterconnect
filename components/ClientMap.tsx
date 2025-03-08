@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import ReactMapGL, { ViewState, Marker } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { MapProps, LatLng } from './Map';
+import type { Shelter } from '@prisma/client';
 
 interface ClientMapProps extends MapProps {
   /**
@@ -11,10 +12,14 @@ interface ClientMapProps extends MapProps {
    * an arbitrary location.
    */
   initialCoordinates: LatLng | null;
+  /**
+   * List of shelters to display on the map
+   */
+  shelters: Shelter[];
 }
 
 export default function ClientMap(props: ClientMapProps) {
-  const { height, initialCoordinates } = props;
+  const { height, initialCoordinates, shelters } = props;
   const [viewState, setViewState] = useState<ViewState | null>({
     ...initialCoordinates,
     zoom: 14,
@@ -65,7 +70,19 @@ export default function ClientMap(props: ClientMapProps) {
           <Marker
             longitude={userLocation.longitude}
             latitude={userLocation.latitude}
+            color="#0000FF"
           />
+        )}
+        {shelters.map(
+          (shelter) =>
+            shelter.location && (
+              <Marker
+                key={shelter.id}
+                longitude={shelter.location.longitude}
+                latitude={shelter.location.latitude}
+                color="#FF0000"
+              />
+            ),
         )}
       </ReactMapGL>
       <div className="absolute right-4 top-24 hidden flex-col gap-2 md:flex">

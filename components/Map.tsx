@@ -3,6 +3,7 @@ import * as React from 'react';
 import { ViewState } from 'react-map-gl/mapbox';
 import { headers } from 'next/headers';
 import ClientMap from './ClientMap';
+import { getShelters } from '@/lib/actions/shelter';
 
 export interface MapProps {
   /** Height of the map in the container. Defaults to 100% */
@@ -16,7 +17,16 @@ export interface LatLng extends Pick<ViewState, 'longitude' | 'latitude'> {}
  */
 export default async function Map(props: MapProps) {
   const initialLocation = await getLocationFromIP();
-  return <ClientMap {...props} initialCoordinates={initialLocation} />;
+  const sheltersResult = await getShelters();
+  const shelters = sheltersResult.success ? sheltersResult.data : [];
+
+  return (
+    <ClientMap
+      {...props}
+      initialCoordinates={initialLocation}
+      shelters={shelters}
+    />
+  );
 }
 
 async function getLocationFromIP(): Promise<LatLng | null> {
