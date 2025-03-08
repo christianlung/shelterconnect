@@ -7,6 +7,7 @@ import {
   VolunteerCreateInputSchema,
   VolunteerSignupCreateInputSchema,
 } from '@/prisma/generated/zod';
+import { Prisma } from '@prisma/client';
 import { z } from 'zod';
 
 
@@ -26,3 +27,17 @@ const VolunteerSchema = z.object({
 export const volunteerData = VolunteerSchema.parse(VolunteersJSON).volunteers;
 export const shelterData = ShelterSchema.parse(SheltersJSON).shelters;
 export const signupData = SignupSchema.parse(SignupsJSON).volunteer_signups;
+
+export const shelterDataWithoutIds: Exclude<Prisma.ShelterCreateInput, 'id'>[] = shelterData.map((shelter) => {
+  return {
+    ...shelter,
+    id: undefined,
+  };
+});
+
+export const volunteerDataWithoutIds: Exclude<Prisma.VolunteerCreateInput, 'id'>[] = volunteerData.map((volunteer) => {
+  return {
+    ...volunteer,
+    id: undefined,
+  };
+});

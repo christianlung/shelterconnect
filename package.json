@@ -15,7 +15,7 @@
     "setup": "npm install && prisma generate zod",
     "seed": "npm run node-script scripts/seed.ts",
     "node-script": "ts-node -r tsconfig-paths/register",
-    "jest": "dotenv -e .env.test -- jest"
+    "jest": "dotenv -e .env.test -- jest --runInBand"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.0",

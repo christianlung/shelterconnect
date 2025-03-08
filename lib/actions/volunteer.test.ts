@@ -120,7 +120,7 @@ describe(signupVolunteer, () => {
 
   it('should throw error when time slot is invalid', async () => {
     const volunteer = await prisma.volunteer.create({
-      data: volunteerData[0],
+        data: volunteerData[0],
     });
     const shelter = await prisma.shelter.create({
       data: shelterData[0],
