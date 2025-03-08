@@ -22,6 +22,7 @@ describe(getShelters, () => {
   });
 
   it('should return empty array when no shelters exist', async () => {
+    await prisma.shelter.deleteMany();
     const result = await getShelters();
 
     expect(result.success).toBe(true);
@@ -30,23 +31,17 @@ describe(getShelters, () => {
   });
 
   it('should return all shelters from database', async () => {
-    // We use .create instead of .createMany so we have access
-    // to the created shelters
-    const shelters = await Promise.all([
-      prisma.shelter.create({
-        data: shelterData[0],
-      }),
-      prisma.shelter.create({
-        data: shelterData[1],
-      }),
-    ]);
+    const newShelters = shelterData.slice(0, 2);
+    await prisma.shelter.createMany({
+      data: newShelters,
+    });
 
     const result = await getShelters();
 
     expect(result.success).toBe(true);
     if (!result.success) return;
     expect(result.data).toHaveLength(2);
-    expect(result.data).toEqual(expect.arrayContaining(shelters));
+    expect(result.data).toEqual(expect.arrayContaining(newShelters));
   });
 
   it('should throw error when database operation fails', async () => {
@@ -77,7 +72,7 @@ describe(getShelterById, () => {
 
   it('should return shelter when it exists', async () => {
     const shelter = await prisma.shelter.create({
-      data: shelterData[0],
+      data: shelterData[3],
     });
 
     const result = await getShelterById(shelter.id);
