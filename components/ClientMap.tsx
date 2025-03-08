@@ -6,7 +6,11 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { MapProps, LatLng } from './Map';
 import type { Shelter } from '@prisma/client';
 import { useRouter } from 'next/navigation';
-import { faLocationPin, faHouseUser } from '@fortawesome/free-solid-svg-icons';
+import {
+  faLocationDot,
+  faHouse,
+  faSquareXmark,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface ClientMapProps extends MapProps {
@@ -29,7 +33,9 @@ export default function ClientMap(props: ClientMapProps) {
     zoom: 14,
   } as ViewState);
   const [userLocation, setUserLocation] = useState<LatLng | null>(null);
-  const [hoveredShelterId, setHoveredShelterId] = useState<string | null>(null);
+  const [selectedShelterId, setSelectedShelterId] = useState<string | null>(
+    null,
+  );
 
   useEffect(() => {
     if ('geolocation' in navigator) {
@@ -60,6 +66,10 @@ export default function ClientMap(props: ClientMapProps) {
   };
 
   const handleShelterClick = (shelterId: string) => {
+    setSelectedShelterId(shelterId === selectedShelterId ? null : shelterId);
+  };
+
+  const navigateToShelter = (shelterId: string) => {
     router.push(`/shelters/${shelterId}`);
   };
 
@@ -82,7 +92,7 @@ export default function ClientMap(props: ClientMapProps) {
             anchor="bottom"
           >
             <FontAwesomeIcon
-              icon={faHouseUser}
+              icon={faLocationDot}
               className="h-6 w-6 text-blue-500"
             />
           </Marker>
@@ -97,18 +107,16 @@ export default function ClientMap(props: ClientMapProps) {
                   anchor="bottom"
                 >
                   <div
-                    onMouseEnter={() => setHoveredShelterId(shelter.id)}
-                    onMouseLeave={() => setHoveredShelterId(null)}
                     onClick={() => handleShelterClick(shelter.id)}
                     className="cursor-pointer"
                   >
                     <FontAwesomeIcon
-                      icon={faLocationPin}
+                      icon={faHouse}
                       className="h-6 w-6 text-red-500 transition-colors hover:text-red-600"
                     />
                   </div>
                 </Marker>
-                {hoveredShelterId === shelter.id && (
+                {selectedShelterId === shelter.id && (
                   <Popup
                     longitude={shelter.location.longitude}
                     latitude={shelter.location.latitude}
@@ -117,8 +125,17 @@ export default function ClientMap(props: ClientMapProps) {
                     anchor="bottom"
                     offset={25}
                   >
-                    <div className="p-2">
-                      <h3 className="font-semibold text-gray-900">
+                    <div className="relative p-3">
+                      <button
+                        onClick={() => setSelectedShelterId(null)}
+                        className="absolute right-0 top-0 p-1 text-gray-500 transition-colors hover:text-gray-700"
+                      >
+                        <FontAwesomeIcon
+                          icon={faSquareXmark}
+                          className="h-5 w-5"
+                        />
+                      </button>
+                      <h3 className="pr-6 font-semibold text-gray-900">
                         {shelter.name}
                       </h3>
                       <div className="mt-1 text-sm text-gray-600">
@@ -134,6 +151,12 @@ export default function ClientMap(props: ClientMapProps) {
                           <p>♿ Wheelchair accessible</p>
                         )}
                       </div>
+                      <button
+                        onClick={() => navigateToShelter(shelter.id)}
+                        className="mt-3 w-full rounded-md bg-blue-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-600"
+                      >
+                        See Details
+                      </button>
                     </div>
                   </Popup>
                 )}
