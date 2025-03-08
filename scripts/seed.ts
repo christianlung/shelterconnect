@@ -3,33 +3,9 @@
  */
 
 import { PrismaClient } from '@prisma/client';
-import { z } from 'zod';
-import VolunteersJSON from '@/data/volunteers.json';
-import SheltersJSON from '@/data/shelters.json';
-import SignupsJSON from '@/data/volunteer_signups.json';
-import {
-  ShelterCreateInputSchema,
-  VolunteerCreateInputSchema,
-  VolunteerSignupCreateInputSchema,
-} from '@/prisma/generated/zod';
+import { volunteerData, shelterData, signupData } from '@/data';
 
 const prisma = new PrismaClient();
-
-const VolunteerSchema = z.object({
-  volunteers: VolunteerCreateInputSchema.array(),
-});
-
-const ShelterSchema = z.object({
-  shelters: ShelterCreateInputSchema.array(),
-});
-
-const SignupSchema = z.object({
-  volunteer_signups: VolunteerSignupCreateInputSchema.array(),
-});
-
-const volunteers = VolunteerSchema.parse(VolunteersJSON).volunteers;
-const shelters = ShelterSchema.parse(SheltersJSON).shelters;
-const signups = SignupSchema.parse(SignupsJSON).volunteer_signups;
 
 async function main() {
   try {
@@ -39,21 +15,21 @@ async function main() {
     await prisma.shelter.deleteMany();
 
     console.log('Creating volunteers...');
-    for (const volunteer of volunteers) {
+    for (const volunteer of volunteerData) {
       await prisma.volunteer.create({
         data: volunteer,
       });
     }
 
     console.log('Creating shelters...');
-    for (const shelter of shelters) {
+    for (const shelter of shelterData) {
       await prisma.shelter.create({
         data: shelter,
       });
     }
 
     console.log('Creating volunteer signups...');
-    for (const signup of signups) {
+    for (const signup of signupData) {
       await prisma.volunteerSignup.create({
         data: signup,
       });
