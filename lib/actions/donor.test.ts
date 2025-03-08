@@ -1,5 +1,5 @@
-import { prisma } from '../prisma';
-import { createDonor, getDonor } from './donor';
+import { prisma } from '@/lib/prisma';
+import { createDonor, getDonor } from '@/lib/actions/donor';
 
 const originalCreate = prisma.donor.create;
 const originalFindMany = prisma.donor.findMany;

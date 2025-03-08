@@ -1,6 +1,6 @@
-import redis from '../redis';
-import { prisma } from '../prisma';
-import { fetchWithCache, cacheDonors } from './cache';
+import redis from '@/lib/redis';
+import { prisma } from '@/lib/prisma';
+import { fetchWithCache, cacheDonors } from '@/lib/actions/cache';
 
 // Store original prisma.donor.findMany implementation
 const originalFindMany = prisma.donor.findMany;

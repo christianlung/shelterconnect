@@ -6,4 +6,12 @@ module.exports = {
   },
   moduleDirectories: ['node_modules', '<rootDir>'],
   setupFiles: ['<rootDir>/jest.setup.js'],
+  transform: {
+    '^.+\\.(t|j)sx?$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.json',
+      },
+    ],
+  },
 };
