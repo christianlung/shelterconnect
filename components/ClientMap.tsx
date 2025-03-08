@@ -1,11 +1,13 @@
 'use client';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import ReactMapGL, { ViewState, Marker } from 'react-map-gl/mapbox';
+import ReactMapGL, { ViewState, Marker, Popup } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { MapProps, LatLng } from './Map';
 import type { Shelter } from '@prisma/client';
 import { useRouter } from 'next/navigation';
+import { faLocationPin, faHouseUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface ClientMapProps extends MapProps {
   /**
@@ -27,6 +29,7 @@ export default function ClientMap(props: ClientMapProps) {
     zoom: 14,
   } as ViewState);
   const [userLocation, setUserLocation] = useState<LatLng | null>(null);
+  const [hoveredShelterId, setHoveredShelterId] = useState<string | null>(null);
 
   useEffect(() => {
     if ('geolocation' in navigator) {
@@ -76,20 +79,65 @@ export default function ClientMap(props: ClientMapProps) {
           <Marker
             longitude={userLocation.longitude}
             latitude={userLocation.latitude}
-            color="#0000FF"
-          />
+            anchor="bottom"
+          >
+            <FontAwesomeIcon
+              icon={faHouseUser}
+              className="h-6 w-6 text-blue-500"
+            />
+          </Marker>
         )}
         {shelters.map(
           (shelter) =>
             shelter.location && (
-              <Marker
-                key={shelter.id}
-                longitude={shelter.location.longitude}
-                latitude={shelter.location.latitude}
-                color="#FF0000"
-                onClick={() => handleShelterClick(shelter.id)}
-                style={{ cursor: 'pointer' }}
-              />
+              <React.Fragment key={shelter.id}>
+                <Marker
+                  longitude={shelter.location.longitude}
+                  latitude={shelter.location.latitude}
+                  anchor="bottom"
+                >
+                  <div
+                    onMouseEnter={() => setHoveredShelterId(shelter.id)}
+                    onMouseLeave={() => setHoveredShelterId(null)}
+                    onClick={() => handleShelterClick(shelter.id)}
+                    className="cursor-pointer"
+                  >
+                    <FontAwesomeIcon
+                      icon={faLocationPin}
+                      className="h-6 w-6 text-red-500 transition-colors hover:text-red-600"
+                    />
+                  </div>
+                </Marker>
+                {hoveredShelterId === shelter.id && (
+                  <Popup
+                    longitude={shelter.location.longitude}
+                    latitude={shelter.location.latitude}
+                    closeButton={false}
+                    closeOnClick={false}
+                    anchor="bottom"
+                    offset={25}
+                  >
+                    <div className="p-2">
+                      <h3 className="font-semibold text-gray-900">
+                        {shelter.name}
+                      </h3>
+                      <div className="mt-1 text-sm text-gray-600">
+                        <p>
+                          {shelter.address.city}, {shelter.address.state}
+                        </p>
+                        {shelter.evacueeCapacity && (
+                          <p>Capacity: {shelter.evacueeCapacity} evacuees</p>
+                        )}
+                        {shelter.foodProvided && <p>✓ Food provided</p>}
+                        {shelter.waterProvided && <p>✓ Water provided</p>}
+                        {shelter.wheelchairAccessible && (
+                          <p>♿ Wheelchair accessible</p>
+                        )}
+                      </div>
+                    </div>
+                  </Popup>
+                )}
+              </React.Fragment>
             ),
         )}
       </ReactMapGL>
