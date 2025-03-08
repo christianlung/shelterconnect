@@ -1,10 +1,21 @@
+import { unstable_cache } from 'next/cache'
+
 import DonorList from "@/components/DonorList";
 import { getDonor } from "@/lib/actions/donor";
-import Donation from "@/components/Donation";
+import Donation from "@/components/Donation"
+import { prisma } from "@/lib/prisma"
+
+const getDonors = unstable_cache(
+  async () => {
+    // console.log("caching!") // Using console log to show when it has to make a db query for the first time. Will not show up for subsequent requests
+    return await prisma.donor.findMany()
+  },
+  ['donors'],
+  { revalidate: 3600, tags: ['donors'] }
+)
 
 export default async function Page() {
-  const result = await getDonor();
-  const donors = result.success ? result.data : [];
+  const donors = await getDonors();
 
   return (
     <div className="flex flex-row justify-center gap-10 w-full p-6">
