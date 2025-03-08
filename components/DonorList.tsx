@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getDonor } from "@/lib/actions/donor";
-import { Donor } from "@prisma/client";
 import {
   Table,
   TableBody,
@@ -23,21 +21,19 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export default function DonorList() {
-  const [donors, setDonors] = useState<Donor[]>([]);
+import { Donor } from "@prisma/client";
+
+interface DonorListProps {
+  donors: Donor[];
+}
+
+export default function DonorList({ donors }: DonorListProps) {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const donorsPerPage = 10;
+  const donorsPerPage = 15;
 
   useEffect(() => {
-    async function fetchDonors() {
-      const result = await getDonor(); // change to cacheDonors();
-      if (result.success) {
-        setDonors(result.data);
-      }
-      setLoading(false);
-    }
-    fetchDonors();
+    setLoading(false);
   }, []);
 
   if (loading) return <p>Loading donors...</p>;
@@ -50,59 +46,49 @@ export default function DonorList() {
   const getPaginationItems = () => {
     const pages = [];
     const numVisiblePages = 4;
+    const halfRange = Math.floor(numVisiblePages / 2);
 
-    if (totalPages <= numVisiblePages + 2) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(
-          <PaginationItem key={i}>
-            <PaginationLink isActive={currentPage === i} onClick={() => setCurrentPage(i)}>
-              {i}
-            </PaginationLink>
-          </PaginationItem>
-        );
-      }
-    } else {
+    pages.push(
+      <PaginationItem key={1}>
+        <PaginationLink isActive={currentPage === 1} onClick={() => setCurrentPage(1)}>
+          1
+        </PaginationLink>
+      </PaginationItem>
+    );
+
+    let startPage = Math.max(2, currentPage - halfRange);
+    let endPage = Math.min(totalPages - 1, startPage + numVisiblePages - 1);
+
+    if (endPage >= totalPages - 1) {
+      startPage = Math.max(2, totalPages - numVisiblePages);
+    }
+
+    if (startPage > 2) {
+      pages.push(<PaginationEllipsis key="start-ellipsis" />);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
       pages.push(
-        <PaginationItem key={1}>
-          <PaginationLink isActive={currentPage === 1} onClick={() => setCurrentPage(1)}>
-            1
-          </PaginationLink>
-        </PaginationItem>
-      );
-
-      if (currentPage > numVisiblePages) {
-        pages.push(<PaginationEllipsis key="start-ellipsis" />);
-      }
-
-      let startPage = Math.max(2, currentPage - Math.floor(numVisiblePages / 2));
-      let endPage = Math.min(totalPages - 1, startPage + numVisiblePages - 1);
-
-      if (endPage >= totalPages - 1) {
-        startPage = totalPages - numVisiblePages;
-      }
-
-      for (let i = startPage; i <= endPage; i++) {
-        pages.push(
-          <PaginationItem key={i}>
-            <PaginationLink isActive={currentPage === i} onClick={() => setCurrentPage(i)}>
-              {i}
-            </PaginationLink>
-          </PaginationItem>
-        );
-      }
-
-      if (currentPage < totalPages - numVisiblePages) {
-        pages.push(<PaginationEllipsis key="end-ellipsis" />);
-      }
-
-      pages.push(
-        <PaginationItem key={totalPages}>
-          <PaginationLink isActive={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>
-            {totalPages}
+        <PaginationItem key={i}>
+          <PaginationLink isActive={currentPage === i} onClick={() => setCurrentPage(i)}>
+            {i}
           </PaginationLink>
         </PaginationItem>
       );
     }
+
+    if (endPage < totalPages - 1) {
+      pages.push(<PaginationEllipsis key="end-ellipsis" />);
+    }
+
+    pages.push(
+      <PaginationItem key={totalPages}>
+        <PaginationLink isActive={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>
+          {totalPages}
+        </PaginationLink>
+      </PaginationItem>
+    );
+
     return pages;
   };
 
