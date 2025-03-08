@@ -1,17 +1,14 @@
 'use client';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import ReactMapGL, { ViewState, Marker, Popup } from 'react-map-gl/mapbox';
+import ReactMapGL, { ViewState } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { MapProps, LatLng } from './Map';
 import type { Shelter } from '@prisma/client';
 import { useRouter } from 'next/navigation';
-import {
-  faLocationDot,
-  faHouse,
-  faSquareXmark,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import UserMarker from './map/UserMarker';
+import ShelterMarker from './map/ShelterMarker';
+import ShelterPopup from './map/ShelterPopup';
 
 interface ClientMapProps extends MapProps {
   /**
@@ -73,6 +70,8 @@ export default function ClientMap(props: ClientMapProps) {
     router.push(`/shelters/${shelterId}`);
   };
 
+  const selectedShelter = shelters.find((s) => s.id === selectedShelterId);
+
   return (
     <div className="relative w-full pt-20" style={{ height: height || '100%' }}>
       <ReactMapGL
@@ -85,85 +84,25 @@ export default function ClientMap(props: ClientMapProps) {
         style={{ width: '100%', height: '100%' }}
         mapStyle="mapbox://styles/mapbox/streets-v12"
       >
-        {userLocation && (
-          <Marker
-            longitude={userLocation.longitude}
-            latitude={userLocation.latitude}
-            anchor="bottom"
-          >
-            <FontAwesomeIcon
-              icon={faLocationDot}
-              className="h-6 w-6 text-blue-500"
-            />
-          </Marker>
-        )}
-        {shelters.map(
-          (shelter) =>
-            shelter.location && (
-              <React.Fragment key={shelter.id}>
-                <Marker
-                  longitude={shelter.location.longitude}
-                  latitude={shelter.location.latitude}
-                  anchor="bottom"
-                >
-                  <div
-                    onClick={() => handleShelterClick(shelter.id)}
-                    className="cursor-pointer"
-                  >
-                    <FontAwesomeIcon
-                      icon={faHouse}
-                      className="h-6 w-6 text-red-500 transition-colors hover:text-red-600"
-                    />
-                  </div>
-                </Marker>
-                {selectedShelterId === shelter.id && (
-                  <Popup
-                    longitude={shelter.location.longitude}
-                    latitude={shelter.location.latitude}
-                    closeButton={false}
-                    closeOnClick={false}
-                    anchor="bottom"
-                    offset={25}
-                  >
-                    <div className="relative p-3">
-                      <button
-                        onClick={() => setSelectedShelterId(null)}
-                        className="absolute right-0 top-0 p-1 text-gray-500 transition-colors hover:text-gray-700"
-                      >
-                        <FontAwesomeIcon
-                          icon={faSquareXmark}
-                          className="h-5 w-5"
-                        />
-                      </button>
-                      <h3 className="pr-6 font-semibold text-gray-900">
-                        {shelter.name}
-                      </h3>
-                      <div className="mt-1 text-sm text-gray-600">
-                        <p>
-                          {shelter.address.city}, {shelter.address.state}
-                        </p>
-                        {shelter.evacueeCapacity && (
-                          <p>Capacity: {shelter.evacueeCapacity} evacuees</p>
-                        )}
-                        {shelter.foodProvided && <p>✓ Food provided</p>}
-                        {shelter.waterProvided && <p>✓ Water provided</p>}
-                        {shelter.wheelchairAccessible && (
-                          <p>♿ Wheelchair accessible</p>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => navigateToShelter(shelter.id)}
-                        className="mt-3 w-full rounded-md bg-blue-500 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-600"
-                      >
-                        See Details
-                      </button>
-                    </div>
-                  </Popup>
-                )}
-              </React.Fragment>
-            ),
+        {userLocation && <UserMarker location={userLocation} />}
+
+        {shelters.map((shelter) => (
+          <ShelterMarker
+            key={shelter.id}
+            shelter={shelter}
+            onClick={handleShelterClick}
+          />
+        ))}
+
+        {selectedShelter && (
+          <ShelterPopup
+            shelter={selectedShelter}
+            onClose={() => setSelectedShelterId(null)}
+            onSeeDetails={navigateToShelter}
+          />
         )}
       </ReactMapGL>
+
       <div className="absolute right-4 top-24 hidden flex-col gap-2 md:flex">
         <button
           onClick={() => handleZoom('in')}
