@@ -73,7 +73,7 @@ export default function ClientMap(props: ClientMapProps) {
   const selectedShelter = shelters.find((s) => s.id === selectedShelterId);
 
   return (
-    <div className="relative w-full pt-20" style={{ height: height || '100%' }}>
+    <div className="relative w-full" style={{ height: height || '100%' }}>
       <ReactMapGL
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
         {...viewState}

@@ -1,70 +1,60 @@
 'use client';
 
-import { useState, useCallback } from 'react';
 import Image from 'next/image';
-import MenuIcon from '@mui/icons-material/Menu';
-import Sidebar from './Sidebar';
 import { UserButton, SignedOut, SignedIn } from '@clerk/nextjs';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHandHoldingDollar } from '@fortawesome/free-solid-svg-icons';
 
 export default function Banner() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const handleMenuClick = useCallback(() => {
-    setIsSidebarOpen(true);
-  }, []);
-
-  const handleSidebarClose = useCallback(() => {
-    setIsSidebarOpen(false);
-  }, []);
-
   return (
     <motion.div
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 100 }}
-      className="fixed top-0 z-50 flex h-20 w-full items-center gap-4 bg-gradient-to-tr from-primary-300 to-primary-500 px-6 py-4 shadow-lg"
+      className="sticky top-0 z-50 flex h-12 w-full items-center gap-2 bg-white px-4 py-2 shadow-lg md:h-20 md:gap-4 md:px-6 md:py-4"
     >
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={handleMenuClick}
-        className="rounded-full p-2 transition-colors hover:bg-white/10"
-      >
-        <MenuIcon sx={{ fontSize: 24, color: 'white' }} />
-      </motion.button>
-
-      <Sidebar open={isSidebarOpen} onClose={handleSidebarClose} />
-
       <Link
         href="/"
-        className="flex items-center gap-3 transition-opacity hover:opacity-90"
+        className="flex items-center gap-2 transition-opacity hover:opacity-80 md:gap-3"
       >
-        <Image
-          src="/favicon_white.png"
-          alt="ShelterConnect Logo"
-          width={48}
-          height={48}
-          className="h-12 w-12 object-contain"
-          priority
-        />
-        <h1 className="hidden text-2xl font-bold text-white sm:block">
+        <div className="flex items-center justify-center rounded-lg bg-primary-500 px-1.5 py-1 md:px-2 md:py-1.5">
+          <Image
+            src="/favicon_white.png"
+            alt="ShelterConnect Logo"
+            width={24}
+            height={24}
+            className="h-5 w-5 object-contain md:h-7 md:w-7"
+            priority
+          />
+        </div>
+        <h1 className="hidden text-2xl font-bold text-primary-500 sm:block">
           ShelterConnect
         </h1>
       </Link>
 
-      <div className="ml-auto flex items-center gap-4">
+      <div className="ml-auto flex items-center gap-2 md:gap-4">
+        <Link
+          href="/donate"
+          className="flex items-center gap-2 rounded-lg bg-primary-500 px-4 py-1.5 text-sm font-medium text-white shadow-md transition-colors hover:bg-primary-600 md:px-6 md:py-2 md:text-base"
+        >
+          <FontAwesomeIcon
+            icon={faHandHoldingDollar}
+            className="h-4 w-4 md:h-5 md:w-5"
+          />
+          Donate
+        </Link>
         <SignedOut>
           <Link
             href="/sign-in"
-            className="rounded-lg px-4 py-2 text-white transition-colors hover:bg-white/10 hover:text-gray-200"
+            className="rounded-lg px-3 py-1.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900 md:px-4 md:py-2 md:text-base"
           >
             Sign in
           </Link>
           <Link
             href="/sign-up"
-            className="rounded-lg bg-white px-6 py-2 font-medium text-primary-500 shadow-md transition-colors hover:bg-gray-100"
+            className="rounded-lg bg-primary-500 px-4 py-1.5 text-sm font-medium text-white shadow-md transition-colors hover:bg-primary-600 md:px-6 md:py-2 md:text-base"
           >
             Sign up
           </Link>
@@ -75,7 +65,7 @@ export default function Banner() {
             appearance={{
               elements: {
                 avatarBox:
-                  'w-10 h-10 ring-2 ring-white/20 hover:ring-white/40 transition-all',
+                  'w-8 h-8 ring-2 ring-primary-100 hover:ring-primary-200 transition-all md:w-10 md:h-10',
                 userButtonPopulator: 'hover:opacity-80 transition-opacity',
               },
             }}
