@@ -84,7 +84,7 @@ export async function addShelter(
 
 export async function updateShelter(
   shelterId: string,
-  updatedData: Partial<Shelter>,
+  updatedData: Prisma.ShelterUpdateInput,
 ): Promise<ActionResult<Shelter>> {
   try {
     const shelter = await prisma.shelter.update({

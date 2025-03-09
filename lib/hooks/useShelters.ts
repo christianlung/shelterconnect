@@ -6,7 +6,7 @@ import {
   addShelter,
   updateShelter,
 } from '@/lib/actions/shelter';
-import type { Shelter, Prisma, Language } from '@prisma/client';
+import type { Shelter, Prisma } from '@prisma/client';
 import type { ActionResult } from '@/types/models';
 import useOnMount from '@/src/hooks/useOnMount';
 import type { GetSheltersParams } from '@/lib/actions/shelter.schema';
@@ -65,35 +65,6 @@ export function useDeleteShelter() {
   return { handleDelete, loading, error };
 }
 
-export interface ShelterInput {
-  name: string;
-  location: { latitude: number; longitude: number } | null;
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    country: string;
-  };
-  picture?: string | null;
-  volunteerCapacity?: number | null;
-  evacueeCapacity?: number | null;
-  accommodations?: string[];
-  wheelchairAccessible?: boolean;
-  housesLargeAnimals?: boolean;
-  housesSmallAnimals?: boolean;
-  hasCounselingUnit?: boolean;
-  foodProvided?: boolean;
-  waterProvided?: boolean;
-  volunteerPreferences?: Prisma.JsonValue | null;
-  suppliesNeeded?: Array<{
-    item: string;
-    received: number;
-    needed: number;
-  }>;
-  requiredLanguages?: Language[];
-}
-
 export function useAddShelter() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -129,7 +100,7 @@ export function useUpdateShelter() {
 
   const handleUpdateShelter = async (
     id: string,
-    data: ShelterInput,
+    data: Prisma.ShelterUpdateInput,
   ): Promise<ActionResult<Shelter>> => {
     setLoading(true);
     const result = await updateShelter(id, data);
