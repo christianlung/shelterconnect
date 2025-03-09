@@ -125,7 +125,7 @@ export default function AdminList({ shelters, onDelete, onEdit } : AdminListProp
             >
               <Typography variant="caption" sx={{ color: "gray" }}>
                 {shelter.updatedAt &&
-                shelter.updatedAt.getTime() !== shelter.createdAt.getTime()
+                shelter.updatedAt !== shelter.createdAt
                   ? `Updated on: ${new Date(shelter.updatedAt).toLocaleDateString()} ${new Date(shelter.updatedAt).toLocaleTimeString()}`
                   : `Created on: ${new Date(shelter.createdAt).toLocaleDateString()} ${new Date(shelter.createdAt).toLocaleTimeString()}`}
               </Typography>
