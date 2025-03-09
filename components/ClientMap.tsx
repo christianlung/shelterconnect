@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import ReactMapGL, { ViewState } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { MapProps, LatLng } from './Map';
@@ -9,6 +9,7 @@ import UserMarker from './map/UserMarker';
 import ShelterMarker from './map/ShelterMarker';
 import ShelterPopup from './map/ShelterPopup';
 import { useShelterStore } from '@/lib/store/shelterStore';
+import useOnMount from '@/src/hooks/useOnMount';
 
 interface ClientMapProps extends MapProps {
   /**
@@ -20,7 +21,7 @@ interface ClientMapProps extends MapProps {
 
 export default function ClientMap(props: ClientMapProps) {
   const { height, initialCoordinates } = props;
-  const { shelters } = useShelterStore();
+  const { shelters, fetchShelters, setFilters } = useShelterStore();
   const router = useRouter();
   const [viewState, setViewState] = useState<ViewState | null>({
     ...initialCoordinates,
@@ -31,7 +32,7 @@ export default function ClientMap(props: ClientMapProps) {
     null,
   );
 
-  useEffect(() => {
+  useOnMount(() => {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -42,13 +43,23 @@ export default function ClientMap(props: ClientMapProps) {
           };
           setViewState(location as ViewState);
           setUserLocation(location);
+          setFilters((prev) => ({
+            ...prev,
+            coordinates: {
+              longitude: position.coords.longitude,
+              latitude: position.coords.latitude,
+            },
+          }));
+          setTimeout(() => {
+            fetchShelters();
+          }, 0);
         },
         (error) => {
           console.error('Error getting location:', error);
         },
       );
     }
-  }, [initialCoordinates]);
+  });
 
   const handleZoom = (direction: 'in' | 'out') => {
     if (!viewState) return;

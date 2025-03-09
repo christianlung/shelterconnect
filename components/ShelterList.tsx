@@ -10,13 +10,9 @@ import { useCallback } from 'react';
 import CheckboxGroup from '@/src/components/CheckboxGroup';
 import { useShelterStore } from '@/lib/store/shelterStore';
 import type { GetSheltersParams } from '@/lib/actions/shelter.schema';
-import useOnMount from '@/src/hooks/useOnMount';
 
 export default function ShelterList() {
   const { shelters, loading, setFilters, fetchShelters } = useShelterStore();
-  useOnMount(() => {
-    fetchShelters();
-  });
 
   const handleSearch = useCallback(() => {
     fetchShelters();

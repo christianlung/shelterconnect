@@ -3,27 +3,132 @@ import { prisma } from '@/lib/prisma';
 import type { Prisma, Shelter } from '@prisma/client';
 import type { ActionResult } from '@/types/models';
 import { unstable_cache } from 'next/cache';
-import { GetSheltersParams } from './shelter.schema';
+import type {
+  GetSheltersParams,
+  Coordinates,
+  PaginationParams,
+} from './shelter.schema';
+
+interface GeoNearResult {
+  cursor: {
+    firstBatch: Array<Shelter & { distance: number }>;
+  };
+  ok: number;
+}
+
+interface GeoNearStage {
+  $geoNear: {
+    near: {
+      type: 'Point';
+      coordinates: [number, number];
+    };
+    distanceField: string;
+    spherical: boolean;
+    query: Prisma.ShelterWhereInput;
+  };
+}
+
+interface SkipStage {
+  $skip: number;
+}
+
+interface LimitStage {
+  $limit: number;
+}
+
+type AggregationStage = GeoNearStage | SkipStage | LimitStage;
 
 /**
- * Action that fetches all shelters from the database
+ * Action that fetches all shelters from the database with optional geospatial sorting and pagination
  */
 export const getShelters = unstable_cache(
   async (params: GetSheltersParams = {}): Promise<ActionResult<Shelter[]>> => {
     try {
+      const { coordinates, pagination, ...whereParams } = params as {
+        coordinates?: Coordinates;
+        pagination?: PaginationParams;
+        [key: string]: unknown;
+      };
+
+      if (isValidCoordinates(coordinates)) {
+        // Use MongoDB's $geoNear for geospatial queries
+        const pipeline: AggregationStage[] = [
+          {
+            $geoNear: {
+              near: {
+                type: 'Point',
+                coordinates: [coordinates.longitude, coordinates.latitude],
+              },
+              distanceField: 'distance',
+              spherical: true,
+              query: whereParams,
+            },
+          },
+        ];
+
+        if (isValidPagination(pagination)) {
+          const skip = (pagination.page - 1) * pagination.limit;
+          pipeline.push({ $skip: skip }, { $limit: pagination.limit });
+        }
+
+        const shelters = (await prisma.$runCommandRaw({
+          aggregate: 'Shelter',
+          pipeline: pipeline as unknown as Prisma.InputJsonValue[],
+          cursor: {},
+        })) as unknown as GeoNearResult;
+
+        if (!shelters?.cursor?.firstBatch) {
+          return { success: true, data: [] };
+        }
+
+        return {
+          success: true,
+          data: shelters.cursor.firstBatch,
+        };
+      }
+
+      // If no coordinates provided, use regular findMany with pagination
+      const paginationOptions = isValidPagination(pagination)
+        ? {
+            skip: (pagination.page - 1) * pagination.limit,
+            take: pagination.limit,
+          }
+        : undefined;
+
       const shelters = await prisma.shelter.findMany({
-        where: params,
+        where: whereParams as Prisma.ShelterWhereInput,
+        ...paginationOptions,
       });
+
       return { success: true, data: shelters };
     } catch (e) {
-      console.log(e);
-
+      console.error('[ShelterList] Error:', e);
       throw new Error('[ShelterList] Failed to fetch shelters from database');
     }
   },
   ['shelters'],
   { revalidate: 3600, tags: ['shelters'] },
 );
+
+function isValidCoordinates(
+  coords: Coordinates | undefined,
+): coords is Coordinates {
+  return (
+    coords !== undefined &&
+    typeof coords.longitude === 'number' &&
+    typeof coords.latitude === 'number'
+  );
+}
+
+function isValidPagination(
+  pagination: PaginationParams | undefined,
+): pagination is PaginationParams {
+  return (
+    pagination !== undefined &&
+    typeof pagination.page === 'number' &&
+    typeof pagination.limit === 'number'
+  );
+}
 
 /**
  * Action that fetches a single shelter from the database

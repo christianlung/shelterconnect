@@ -1,28 +1,39 @@
 import { z } from 'zod';
-import type { Prisma } from '@prisma/client';
 import {
   EnumLanguageNullableListFilterSchema,
   BoolFilterSchema,
   SupplyObjectEqualityInputSchema,
-  CoordinateObjectEqualityInputSchema,
-  CoordinateNullableCompositeFilterSchema,
   StringFilterSchema,
   IntNullableFilterSchema,
   StringNullableListFilterSchema,
-  JsonNullableFilterSchema,
   SupplyCompositeListFilterSchema,
+  VolunteerPreferencesObjectEqualityInputSchema,
+  VolunteerPreferencesNullableCompositeFilterSchema,
 } from '@/prisma/generated/zod';
 
-export const GetSheltersParamsSchema: z.ZodType<Prisma.ShelterWhereInput> = z
+export interface Coordinates {
+  longitude: number;
+  latitude: number;
+}
+
+export interface PaginationParams {
+  page: number;
+  limit: number;
+}
+
+export const CoordinatesSchema = z.object({
+  longitude: z.number(),
+  latitude: z.number(),
+});
+
+export const PaginationParamsSchema = z.object({
+  page: z.number().int().positive(),
+  limit: z.number().int().positive().max(100),
+});
+
+export const GetSheltersParamsSchema = z
   .object({
     name: z.union([z.lazy(() => StringFilterSchema), z.string()]).optional(),
-    location: z
-      .union([
-        z.lazy(() => CoordinateNullableCompositeFilterSchema),
-        z.lazy(() => CoordinateObjectEqualityInputSchema),
-      ])
-      .optional()
-      .nullable(),
     volunteerCapacity: z
       .union([z.lazy(() => IntNullableFilterSchema), z.number()])
       .optional()
@@ -50,7 +61,13 @@ export const GetSheltersParamsSchema: z.ZodType<Prisma.ShelterWhereInput> = z
     waterProvided: z
       .union([z.lazy(() => BoolFilterSchema), z.boolean()])
       .optional(),
-    volunteerPreferences: z.lazy(() => JsonNullableFilterSchema).optional(),
+    volunteerPreferences: z
+      .union([
+        z.lazy(() => VolunteerPreferencesNullableCompositeFilterSchema),
+        z.lazy(() => VolunteerPreferencesObjectEqualityInputSchema),
+      ])
+      .optional()
+      .nullable(),
     suppliesNeeded: z
       .union([
         z.lazy(() => SupplyCompositeListFilterSchema),
@@ -60,6 +77,8 @@ export const GetSheltersParamsSchema: z.ZodType<Prisma.ShelterWhereInput> = z
     requiredLanguages: z
       .lazy(() => EnumLanguageNullableListFilterSchema)
       .optional(),
+    coordinates: CoordinatesSchema.optional(),
+    pagination: PaginationParamsSchema.optional(),
   })
   .strict();
 
