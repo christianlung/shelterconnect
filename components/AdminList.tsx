@@ -6,57 +6,20 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { useRouter } from "next/navigation";
-
-interface Address {
-  street: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-}
-
-interface Coordinate {
-  latitude: number;
-  longitude: number;
-}
-
-interface Supply {
-  item: string;
-  received: number;
-  needed: number;
-}
-
-interface Shelter {
-  id: string;
-  name: string;
-  location?: Coordinate;
-  address: Address;
-  picture?: string;
-  volunteerCapacity?: number;
-  evacueeCapacity?: number;
-  accommodations?: string[];
-  suppliesNeeded?: Supply[];
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { Shelter } from '@prisma/client';
 
 interface AdminListProps {
   shelters: Shelter[];
-  onDelete: (id: string) => void;
+  onDelete: (id: string) => Promise<void>;
   onEdit: (shelter: Shelter) => void;
 }
 
-export default function ShelterList({ shelters, onDelete, onEdit }: AdminListProps) {
-  const router = useRouter();
-
+export default function AdminList({ shelters, onDelete, onEdit } : AdminListProps) {
   const [expanded, setExpanded] = useState<number | null>(null);
-
   const toggleExpand = (index: number) => setExpanded(expanded === index ? null : index);
 
-  const formatAddress = (address: Address) =>
+  const formatAddress = (address: { street: string; city: string; state: string; zipCode: string; country: string }) =>
     `${address.street}, ${address.city}, ${address.state} ${address.zipCode}, ${address.country}`;
-
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -71,7 +34,7 @@ export default function ShelterList({ shelters, onDelete, onEdit }: AdminListPro
               <IconButton onClick={(e) => { e.stopPropagation(); onEdit(shelter); }}>
                 <EditIcon />
               </IconButton>
-              <IconButton onClick={(e) => { e.stopPropagation(); onDelete(shelter.id) }}>
+              <IconButton onClick={(e) => { e.stopPropagation(); onDelete(shelter.id); }}>
                 <DeleteIcon color="error" />
               </IconButton>
               <IconButton onClick={(e) => { e.stopPropagation(); toggleExpand(index); }}>
@@ -81,11 +44,6 @@ export default function ShelterList({ shelters, onDelete, onEdit }: AdminListPro
           </Box>
           <Collapse in={expanded === index}>
             <CardContent sx={{ bgcolor: "#e0f2fe", borderRadius: "10px", mt: 2 }}>
-              {/* {shelter.location && (
-                <Typography variant="body2" sx={{ mb: 1 }}>
-                  Location: {shelter.location.latitude}, {shelter.location.longitude}
-                </Typography>
-              )} */}
               {shelter.volunteerCapacity && shelter.evacueeCapacity && (
                 <div>
                   <Typography variant="body2" sx={{ mb: 1, fontWeight: "bold" }}>
