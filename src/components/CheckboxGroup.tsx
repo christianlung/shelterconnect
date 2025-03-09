@@ -17,7 +17,7 @@ const CheckboxGroup: FC<CheckboxGroupProps> = memo(function CheckboxGroup({
   return (
     <div className={'flex flex-row gap-2 py-2'}>
       {options.map((option) => (
-        <label key={option.value} className="inline-flex items-center">
+        <label key={option.value} className="inline-flex items-center gap-1">
           <input
             type="checkbox"
             className="rounded border-gray-300 text-primary-500"
