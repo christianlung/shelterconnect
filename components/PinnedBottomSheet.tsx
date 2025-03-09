@@ -52,7 +52,7 @@ const PinnedBottomSheet = function PinnedBottomSheet(
       detent="content-height"
     >
       <Sheet.Container>
-        <Sheet.Header className="bg-white shadow-sm">
+        <Sheet.Header className={`shadow-sm ${className}`}>
           <div className="flex w-full flex-col items-center">
             <motion.div
               className={`my-3 h-1 w-12 rounded-full transition-colors md:hidden ${isTopSnap ? 'bg-primary-500' : 'bg-gray-300'}`}
@@ -81,7 +81,7 @@ const PinnedBottomSheet = function PinnedBottomSheet(
             </motion.button>
           </div>
         </Sheet.Header>
-        <Sheet.Content className={`bg-white ${className}`}>
+        <Sheet.Content className={`${className}`}>
           <Sheet.Scroller>
             <AnimatePresence>
               <motion.div
