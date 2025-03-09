@@ -25,7 +25,11 @@ export async function createDonor(donorName: string, finalDonorAmount: string): 
  */
 export async function getDonor(): Promise<ActionResult<Donor[]>> {
   try {
-    const donors = await prisma.donor.findMany();
+    const donors = await prisma.donor.findMany({
+      orderBy: {
+        finalDonorAmount: 'desc', 
+      },
+    });
     return { success: true, data: donors };
   } catch (error) {
     console.error("[getDonor] Failed to fetch donors:", error);

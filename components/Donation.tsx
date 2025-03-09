@@ -36,15 +36,22 @@ export default function Donation() {
     setLoading(true);
     setFinalDonorAmount(finalAmount.toString());
 
-    const res = await fetch('/api/payment-intent', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ donationAmount: finalAmount }),
-    });
+    try {
+      const response = await fetch('/api/payment-intent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ donationAmount: finalAmount }),
+      });
 
-    const data = await res.json();
-    setClientSecret(data.clientSecret);
-    setLoading(false);
+      const data = await response.json();
+      setClientSecret(data.clientSecret);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error:', error);
+      setLoading(false);
+    }
   };
 
   const handleCheckboxChange = () => {
