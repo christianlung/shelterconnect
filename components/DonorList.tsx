@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -22,6 +21,8 @@ import {
 } from '@/components/ui/pagination';
 
 import { Donor } from '@prisma/client';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUsers } from '@fortawesome/free-solid-svg-icons';
 
 interface DonorListProps {
   donors: Donor[];
@@ -30,7 +31,7 @@ interface DonorListProps {
 export default function DonorList({ donors }: DonorListProps) {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const donorsPerPage = 15;
+  const donorsPerPage = 10;
 
   useEffect(() => {
     setLoading(false);
@@ -45,7 +46,7 @@ export default function DonorList({ donors }: DonorListProps) {
 
   const getPaginationItems = () => {
     const pages = [];
-    const numVisiblePages = 4;
+    const numVisiblePages = 3;
     const halfRange = Math.floor(numVisiblePages / 2);
 
     pages.push(
@@ -87,58 +88,76 @@ export default function DonorList({ donors }: DonorListProps) {
       pages.push(<PaginationEllipsis key="end-ellipsis" />);
     }
 
-    pages.push(
-      <PaginationItem key={totalPages}>
-        <PaginationLink
-          isActive={currentPage === totalPages}
-          onClick={() => setCurrentPage(totalPages)}
-        >
-          {totalPages}
-        </PaginationLink>
-      </PaginationItem>,
-    );
+    if (totalPages > 1) {
+      pages.push(
+        <PaginationItem key={totalPages}>
+          <PaginationLink
+            isActive={currentPage === totalPages}
+            onClick={() => setCurrentPage(totalPages)}
+          >
+            {totalPages}
+          </PaginationLink>
+        </PaginationItem>,
+      );
+    }
 
     return pages;
   };
 
   return (
-    <div>
-      <Table>
-        <TableCaption>A list of our amazing donors!</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Donor</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-            <TableHead className="text-right">Date</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {currentDonors.length > 0 ? (
-            currentDonors.map((donor) => (
-              <TableRow key={donor.id}>
-                <TableCell className="font-medium">{donor.donorName}</TableCell>
-                <TableCell className="text-right">
-                  ${donor.finalDonorAmount}
-                </TableCell>
-                <TableCell className="text-right">
-                  {new Date(donor.createdAt).toLocaleDateString()}
+    <div className="w-full rounded-xl bg-white p-6 shadow-sm">
+      <div className="mb-6 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100">
+            <FontAwesomeIcon
+              icon={faUsers}
+              className="h-5 w-5 text-primary-500"
+            />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900">Recent Donors</h2>
+        </div>
+        <span className="text-sm text-gray-500">{donors.length} total</span>
+      </div>
+
+      <div className="overflow-hidden rounded-lg border border-gray-200">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="bg-gray-50">Donor</TableHead>
+              <TableHead className="bg-gray-50 text-right">Amount</TableHead>
+              <TableHead className="bg-gray-50 text-right">Date</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {currentDonors.length > 0 ? (
+              currentDonors.map((donor) => (
+                <TableRow key={donor.id}>
+                  <TableCell className="font-medium">
+                    {donor.donorName}
+                  </TableCell>
+                  <TableCell className="text-right font-medium text-primary-500">
+                    ${donor.finalDonorAmount}
+                  </TableCell>
+                  <TableCell className="text-right text-gray-500">
+                    {new Date(donor.createdAt).toLocaleDateString()}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={3} className="text-center text-gray-500">
+                  No donors yet. Be the first to donate!
                 </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={3} className="text-center">
-                No donors found.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            )}
+          </TableBody>
+        </Table>
+      </div>
 
       {totalPages > 1 && (
-        <div className="flex">
-          <Pagination className="mt-4">
-            <PaginationContent className="flex-wrap justify-center">
+        <div className="mt-4 flex max-w-full justify-center">
+          <Pagination>
+            <PaginationContent className="gap-1">
               <PaginationItem>
                 <PaginationPrevious
                   onClick={() =>
@@ -149,9 +168,7 @@ export default function DonorList({ donors }: DonorListProps) {
                   }
                 />
               </PaginationItem>
-
               {getPaginationItems()}
-
               <PaginationItem>
                 <PaginationNext
                   onClick={() =>
