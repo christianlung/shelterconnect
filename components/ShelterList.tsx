@@ -9,6 +9,7 @@ import ShelterQuickInfo from './ShelterQuickInfo';
 import { useShelters } from '@/lib/hooks/useShelters';
 import { useState, useCallback } from 'react';
 import type { GetSheltersParams } from '@/lib/actions/shelter.schema';
+import CheckboxGroup from '@/src/components/CheckboxGroup';
 
 export default function ShelterList() {
   const [filters, setFilters] = useState<GetSheltersParams>({});
@@ -17,6 +18,13 @@ export default function ShelterList() {
   const handleSearch = useCallback(() => {
     refetch();
   }, [refetch]);
+
+  const handleFilterChange = useCallback((value: string, checked: boolean) => {
+    setFilters((prev) => ({
+      ...prev,
+      [value]: checked || undefined,
+    }));
+  }, []);
 
   return (
     <div className="container mx-auto max-w-6xl px-4 py-8">
@@ -90,112 +98,40 @@ export default function ShelterList() {
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Basic Services
               </label>
-              <div className="flex flex-row gap-2 py-2">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    className="rounded border-gray-300 text-primary-500"
-                    onChange={(e) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        foodProvided: e.target.checked || undefined,
-                      }))
-                    }
-                  />
-                  <span className="ml-2 text-sm text-gray-600">
-                    Food Provided
-                  </span>
-                </label>
-                <label className="inline-flex items-center">
-                  <input
-                    type="checkbox"
-                    className="rounded border-gray-300 text-primary-500"
-                    onChange={(e) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        waterProvided: e.target.checked || undefined,
-                      }))
-                    }
-                  />
-                  <span className="ml-2 text-sm text-gray-600">
-                    Water Provided
-                  </span>
-                </label>
-              </div>
+              <CheckboxGroup
+                options={[
+                  { label: 'Food Provided', value: 'foodProvided' },
+                  { label: 'Water Provided', value: 'waterProvided' },
+                ]}
+                onChange={handleFilterChange}
+              />
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Accommodations
               </label>
-              <div className="space-y-2">
-                <label className="inline-flex items-center">
-                  <input
-                    type="checkbox"
-                    className="rounded border-gray-300 text-primary-500"
-                    onChange={(e) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        wheelchairAccessible: e.target.checked || undefined,
-                      }))
-                    }
-                  />
-                  <span className="ml-2 text-sm text-gray-600">
-                    Wheelchair Accessible
-                  </span>
-                </label>
-                <label className="block inline-flex items-center">
-                  <input
-                    type="checkbox"
-                    className="rounded border-gray-300 text-primary-500"
-                    onChange={(e) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        hasCounselingUnit: e.target.checked || undefined,
-                      }))
-                    }
-                  />
-                  <span className="ml-2 text-sm text-gray-600">
-                    Counseling Unit
-                  </span>
-                </label>
-              </div>
+              <CheckboxGroup
+                options={[
+                  {
+                    label: 'Wheelchair Accessible',
+                    value: 'wheelchairAccessible',
+                  },
+                  { label: 'Counseling Unit', value: 'hasCounselingUnit' },
+                ]}
+                onChange={handleFilterChange}
+              />
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
                 Animal Housing
               </label>
-              <div className="space-y-2">
-                <label className="inline-flex items-center">
-                  <input
-                    type="checkbox"
-                    className="rounded border-gray-300 text-primary-500"
-                    onChange={(e) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        housesSmallAnimals: e.target.checked || undefined,
-                      }))
-                    }
-                  />
-                  <span className="ml-2 text-sm text-gray-600">
-                    Small Animals
-                  </span>
-                </label>
-                <label className="block inline-flex items-center">
-                  <input
-                    type="checkbox"
-                    className="rounded border-gray-300 text-primary-500"
-                    onChange={(e) =>
-                      setFilters((prev) => ({
-                        ...prev,
-                        housesLargeAnimals: e.target.checked || undefined,
-                      }))
-                    }
-                  />
-                  <span className="ml-2 text-sm text-gray-600">
-                    Large Animals
-                  </span>
-                </label>
-              </div>
+              <CheckboxGroup
+                options={[
+                  { label: 'Small Animals', value: 'housesSmallAnimals' },
+                  { label: 'Large Animals', value: 'housesLargeAnimals' },
+                ]}
+                onChange={handleFilterChange}
+              />
             </div>
           </div>
           <div className="mt-4 flex justify-end">
