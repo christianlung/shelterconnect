@@ -66,20 +66,10 @@ export async function addShelter(shelter: any): Promise<ActionResult<Shelter>> {
     console.log("Adding new shelter...");
     const newShelter = await prisma.shelter.create({
       data: {
-        name: shelter.name,
+        ...shelter,
         location: shelter.location ? { set: shelter.location } : undefined,
         address: { set: shelter.address },
-        picture: shelter.picture,
-        volunteerCapacity: shelter.volunteerCapacity,
-        evacueeCapacity: shelter.evacueeCapacity,
         accommodations: shelter.accommodations || [],
-        wheelchairAccessible: shelter.wheelchairAccessible,
-        housesLargeAnimals: shelter.housesLargeAnimals,
-        housesSmallAnimals: shelter.housesSmallAnimals,
-        hasCounselingUnit: shelter.hasCounselingUnit,
-        foodProvided: shelter.foodProvided,
-        waterProvided: shelter.waterProvided,
-        volunteerPreferences: shelter.volunteerPreferences,
         suppliesNeeded: shelter.suppliesNeeded || [],
         requiredLanguages: shelter.requiredLanguages || [],
       },
