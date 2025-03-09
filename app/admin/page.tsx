@@ -40,6 +40,13 @@ export default function Page() {
     accommodations: [],
     suppliesNeeded: [],
   });
+
+  if (loading) {
+    return <div>Loading shelters...</div>;
+  }
+  if (error) {
+    return <div>Error loading shelters</div>;
+  }
   
   // Opens the modal. If a shelter is passed, we're editing; otherwise, we're adding a new one.
   const handleOpen = (shelter: Shelter) => {
