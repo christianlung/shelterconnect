@@ -38,11 +38,18 @@ interface LimitStage {
 
 type AggregationStage = GeoNearStage | SkipStage | LimitStage;
 
+interface GetSheltersResult {
+  shelters: Shelter[];
+  total: number;
+}
+
 /**
  * Action that fetches all shelters from the database with optional geospatial sorting and pagination
  */
 export const getShelters = unstable_cache(
-  async (params: GetSheltersParams = {}): Promise<ActionResult<Shelter[]>> => {
+  async (
+    params: GetSheltersParams = {},
+  ): Promise<ActionResult<GetSheltersResult>> => {
     try {
       const { coordinates, pagination, ...whereParams } = params as {
         coordinates?: Coordinates;
@@ -66,6 +73,11 @@ export const getShelters = unstable_cache(
           },
         ];
 
+        // Get total count before applying pagination
+        const totalCount = await prisma.shelter.count({
+          where: whereParams as Prisma.ShelterWhereInput,
+        });
+
         if (isValidPagination(pagination)) {
           const skip = (pagination.page - 1) * pagination.limit;
           pipeline.push({ $skip: skip }, { $limit: pagination.limit });
@@ -78,16 +90,23 @@ export const getShelters = unstable_cache(
         })) as unknown as GeoNearResult;
 
         if (!shelters?.cursor?.firstBatch) {
-          return { success: true, data: [] };
+          return { success: true, data: { shelters: [], total: 0 } };
         }
 
         return {
           success: true,
-          data: shelters.cursor.firstBatch,
+          data: {
+            shelters: shelters.cursor.firstBatch,
+            total: totalCount,
+          },
         };
       }
 
       // If no coordinates provided, use regular findMany with pagination
+      const totalCount = await prisma.shelter.count({
+        where: whereParams as Prisma.ShelterWhereInput,
+      });
+
       const paginationOptions = isValidPagination(pagination)
         ? {
             skip: (pagination.page - 1) * pagination.limit,
@@ -100,7 +119,13 @@ export const getShelters = unstable_cache(
         ...paginationOptions,
       });
 
-      return { success: true, data: shelters };
+      return {
+        success: true,
+        data: {
+          shelters,
+          total: totalCount,
+        },
+      };
     } catch (e) {
       console.error('[ShelterList] Error:', e);
       throw new Error('[ShelterList] Failed to fetch shelters from database');
