@@ -10,7 +10,7 @@ export default function Page() {
         <Map />
       </div>
       <ClientOnly>
-        <PinnedBottomSheet>
+        <PinnedBottomSheet className="bg-gray-100">
           <ShelterList />
         </PinnedBottomSheet>
       </ClientOnly>

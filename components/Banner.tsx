@@ -13,7 +13,7 @@ export default function Banner() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 100 }}
-      className="sticky top-0 z-50 flex h-12 w-full items-center gap-2 bg-white px-4 py-2 shadow-lg md:h-20 md:gap-4 md:px-6 md:py-4"
+      className="sticky top-0 z-50 flex h-12 w-full items-center gap-2 bg-gray-100 px-4 py-2 shadow-lg md:h-20 md:gap-4 md:px-6 md:py-4"
     >
       <Link
         href="/"
