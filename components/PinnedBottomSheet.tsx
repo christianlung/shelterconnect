@@ -6,7 +6,7 @@ interface PinnedBottomSheetProps {}
 
 /**
  * A bottom sheet that remains open on the screen.
- * Will snap close to the bottom of the screen without closing
+ * Will snap close to the bottom of the screen without closing.
  */
 const PinnedBottomSheet: React.FC<PinnedBottomSheetProps> = (
   props: PropsWithChildren<PinnedBottomSheetProps>,
@@ -18,7 +18,13 @@ const PinnedBottomSheet: React.FC<PinnedBottomSheetProps> = (
   }, []);
 
   return (
-    <Sheet ref={sheetRef} isOpen onClose={onClose} snapPoints={snapPoints}>
+    <Sheet
+      ref={sheetRef}
+      isOpen
+      onClose={onClose}
+      snapPoints={snapPoints}
+      initialSnap={1}
+    >
       <Sheet.Container>
         <Sheet.Header />
         <Sheet.Content>

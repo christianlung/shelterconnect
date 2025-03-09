@@ -1,15 +1,19 @@
-import { getShelters } from '@/lib/actions/shelter';
 import { Shelter } from '@prisma/client';
 import Link from 'next/link';
+import { unstable_cache } from 'next/cache'
+import { prisma } from "@/lib/prisma"
+
+const getShelters = unstable_cache(
+  async () => {
+    // console.log("caching!") // Using console log to show when it has to make a db query for the first time. Will not show up for subsequent requests
+    return await prisma.shelter.findMany()
+  },
+  ['shelters'],
+  { revalidate: 3600, tags: ['shelters'] }
+)
 
 export default async function ShelterList() {
-  const result = await getShelters();
-
-  let shelters: Shelter[] = [];
-
-  if (result.success) {
-    shelters = result.data;
-  }
+  const shelters = await getShelters();
 
   return (
     <div>
