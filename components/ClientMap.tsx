@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 import ReactMapGL, { ViewState } from 'react-map-gl/mapbox';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { MapProps, LatLng } from './Map';
-import type { Shelter } from '@prisma/client';
 import { useRouter } from 'next/navigation';
 import UserMarker from './map/UserMarker';
 import ShelterMarker from './map/ShelterMarker';
 import ShelterPopup from './map/ShelterPopup';
+import { useShelterStore } from '@/lib/store/shelterStore';
 
 interface ClientMapProps extends MapProps {
   /**
@@ -16,14 +16,11 @@ interface ClientMapProps extends MapProps {
    * an arbitrary location.
    */
   initialCoordinates: LatLng | null;
-  /**
-   * List of shelters to display on the map
-   */
-  shelters: Shelter[];
 }
 
 export default function ClientMap(props: ClientMapProps) {
-  const { height, initialCoordinates, shelters } = props;
+  const { height, initialCoordinates } = props;
+  const { shelters } = useShelterStore();
   const router = useRouter();
   const [viewState, setViewState] = useState<ViewState | null>({
     ...initialCoordinates,

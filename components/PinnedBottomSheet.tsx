@@ -49,7 +49,6 @@ const PinnedBottomSheet = function PinnedBottomSheet(
       initialSnap={initialSnap}
       style={{ zIndex: 40 }}
       onSnap={handleSnap}
-      detent="content-height"
     >
       <Sheet.Container>
         <Sheet.Header className={`shadow-sm ${className}`}>

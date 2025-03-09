@@ -1,21 +1,29 @@
 'use server';
 import { prisma } from '@/lib/prisma';
-import type { Shelter } from '@prisma/client';
+import type { Prisma, Shelter } from '@prisma/client';
 import type { ActionResult } from '@/types/models';
+import { unstable_cache } from 'next/cache';
+import { GetSheltersParams } from './shelter.schema';
 
 /**
  * Action that fetches all shelters from the database
  */
-export async function getShelters(): Promise<ActionResult<Shelter[]>> {
-  try {
-    const shelters = await prisma.shelter.findMany();
-    return { success: true, data: shelters };
-  } catch (e) {
-    console.log(e);
+export const getShelters = unstable_cache(
+  async (params: GetSheltersParams = {}): Promise<ActionResult<Shelter[]>> => {
+    try {
+      const shelters = await prisma.shelter.findMany({
+        where: params,
+      });
+      return { success: true, data: shelters };
+    } catch (e) {
+      console.log(e);
 
-    throw new Error('[ShelterList] Failed to fetch shelters from database');
-  }
-}
+      throw new Error('[ShelterList] Failed to fetch shelters from database');
+    }
+  },
+  ['shelters'],
+  { revalidate: 3600, tags: ['shelters'] },
+);
 
 /**
  * Action that fetches a single shelter from the database
@@ -41,54 +49,50 @@ export async function getShelterById(
  */
 export async function deleteShelter(shelterId: string) {
   try {
-    console.log("Deleting dependent volunteerSignups");
+    console.log('Deleting dependent volunteerSignups');
     await prisma.volunteerSignup.deleteMany({
-      where: { shelterId }
+      where: { shelterId },
     });
 
-
-    console.log("Deleting the shelter");
+    console.log('Deleting the shelter');
     await prisma.shelter.delete({
-      where: { id: shelterId }
+      where: { id: shelterId },
     });
 
-    return { success: true, message: "Shelter deleted successfully" };
-
+    return { success: true, message: 'Shelter deleted successfully' };
   } catch (error) {
-    console.error("Error deleting shelter:", error);
-    return { success: false, message: "Failed to delete shelter", error };
+    console.error('Error deleting shelter:', error);
+    return { success: false, message: 'Failed to delete shelter', error };
   }
 }
 
-export async function addShelter(shelter: any): Promise<ActionResult<Shelter>> {
+export async function addShelter(
+  shelter: Prisma.ShelterCreateInput,
+): Promise<ActionResult<Shelter>> {
   try {
-    console.log("Adding new shelter...");
+    console.log('Adding new shelter...');
     const newShelter = await prisma.shelter.create({
-      data: {
-        ...shelter,
-        location: shelter.location ? { set: shelter.location } : undefined,
-        address: { set: shelter.address },
-        accommodations: shelter.accommodations || [],
-        suppliesNeeded: shelter.suppliesNeeded || [],
-        requiredLanguages: shelter.requiredLanguages || [],
-      },
+      data: shelter,
     });
-    console.log("Inserted shelter:", newShelter);
-    return { success: true, data: newShelter };;
+    console.log('Inserted shelter:', newShelter);
+    return { success: true, data: newShelter };
   } catch (error) {
-    console.error("Error inserting shelter:", error);
+    console.error('Error inserting shelter:', error);
     return { success: false };
   }
 }
 
-export async function updateShelter(shelterId: string, updatedData: Partial<Shelter>): Promise<ActionResult<Shelter>> {
+export async function updateShelter(
+  shelterId: string,
+  updatedData: Prisma.ShelterUpdateInput,
+): Promise<ActionResult<Shelter>> {
   try {
     const shelter = await prisma.shelter.update({
       where: { id: shelterId },
       data: updatedData,
     });
-    return { success: true, data: shelter};
-  } catch (error){
+    return { success: true, data: shelter };
+  } catch {
     return { success: false };
   }
 }
