@@ -1,7 +1,7 @@
 'use server';
 import { prisma } from '@/lib/prisma';
 import { validateTimeSlot } from '@/lib/utils/dates';
-import type { SignupDetails } from '@/types/shelter';
+import type { SignupDetails, VolunteerSignupWithShelter } from '@/types/shelter';
 import type {
   VolunteerSignupCreationAttributes,
   ActionResult,
@@ -55,6 +55,25 @@ export async function signupVolunteer({
 
     return { success: true, data: { ...signup } };
   } catch {
+    throw new Error('[VolunteerSignup] Database operation failed');
+  }
+}
+
+export async function getVolunteerDashboard(): Promise<ActionResult<VolunteerSignupWithShelter[]>>{
+  try{
+    const volunteerSignups = await prisma.volunteerSignup.findMany({
+      include: {
+        shelter: {
+          select: {
+            name: true,
+            address: true,
+          },
+        },
+      },
+    });
+
+    return { success: true, data: volunteerSignups }    
+  } catch{
     throw new Error('[VolunteerSignup] Database operation failed');
   }
 }

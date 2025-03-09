@@ -91,9 +91,9 @@ model Shelter {
   foodProvided        Boolean          @default(false)
   waterProvided       Boolean          @default(false)
   volunteerPreferences Json?
-  suppliesNeeded      Supply[]         @default([])
+  suppliesNeeded      Supply[]
   requiredLanguages   Language[]       @default([])
-  signups             VolunteerSignup[] @default([])
+  signups             VolunteerSignup[]
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
 }
@@ -104,6 +104,7 @@ model VolunteerSignup {
   volunteerId String    @db.ObjectId
   timeSlot    TimeSlot
   status      String    @default("pending") // pending, confirmed, cancelled
+  tasks       String[]  @default([])
   shelter     Shelter   @relation(fields: [shelterId], references: [id])
   volunteer   Volunteer @relation(fields: [volunteerId], references: [id])
   createdAt   DateTime  @default(now())

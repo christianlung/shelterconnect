@@ -1,6 +1,8 @@
 'use client';
-import { signupVolunteer } from '@/lib/actions/volunteer';
+import { useState, useEffect } from 'react';
+import { signupVolunteer, getVolunteerDashboard } from '@/lib/actions/volunteer';
 import type { VolunteerSignupCreationAttributes } from '@/types/models';
+import { VolunteerSignupWithShelter } from '@/types/shelter';
 
 import { SignupDetails } from '@/types/shelter';
 
@@ -19,4 +21,33 @@ export function useVolunteerSignup() {
     }
     return result.data;
   };
+}
+
+export function useVolunteerDashboard() {
+  const [data, setData] = useState<VolunteerSignupWithShelter[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const fetchDashboard = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await getVolunteerDashboard();
+      if (result.success) {
+        setData(result.data);
+      } else {
+        setError(new Error('Failed to load volunteer dashboard'));
+      }
+    } catch (err: any) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboard();
+  }, []);
+
+  return { data, loading, error, refetch: fetchDashboard };
 }

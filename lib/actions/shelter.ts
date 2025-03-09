@@ -2,7 +2,6 @@
 import { prisma } from '@/lib/prisma';
 import type { Shelter } from '@prisma/client';
 import type { ActionResult } from '@/types/models';
-import { AnyBulkWriteOperation, ObjectId } from "mongodb";
 
 /**
  * Action that fetches all shelters from the database

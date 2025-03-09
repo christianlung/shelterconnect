@@ -1,4 +1,4 @@
-import type { Shelter, Volunteer, VolunteerSignup } from '@prisma/client';
+import type { Shelter, Volunteer, VolunteerSignup, Address } from '@prisma/client';
 import type { Interval } from 'date-fns';
 
 export interface VolunteerDetails
@@ -22,4 +22,14 @@ export interface Supply {
 export interface VolunteerPreferences {
   minAge: number;
   requiredTraining: string[];
+}
+
+export interface VolunteerSignupWithShelter extends Pick<
+VolunteerSignup, 
+'id' | 'shelterId' | 'volunteerId' | 'timeSlot' | 'tasks' | 'createdAt' | 'updatedAt' | 'status'
+> {
+  shelter:{
+    name: string;
+    address: Address;
+  };
 }
