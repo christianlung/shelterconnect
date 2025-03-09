@@ -33,7 +33,7 @@ export default function Page() {
   const [newShelter, setNewShelter] = useState<NewShelterForm>({
     name: "",
     location: { latitude: "", longitude: "" },
-    address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
+    address: { street: "", city: "", state: "", zipCode: "", country: "" },
     picture: "",
     volunteerCapacity: "",
     evacueeCapacity: "",
@@ -47,7 +47,7 @@ export default function Page() {
   if (error) {
     return <div>Error loading shelters</div>;
   }
-  
+
   // Opens the modal. If a shelter is passed, we're editing; otherwise, we're adding a new one.
   const handleOpen = (shelter: Shelter) => {
     if (shelter) {
@@ -63,7 +63,7 @@ export default function Page() {
           city: shelter.address.city,
           state: shelter.address.state,
           zipCode: shelter.address.zipCode,
-          country: shelter.address.country || "USA",
+          country: shelter.address.country,
         },
         picture: shelter.picture ?? "",
         volunteerCapacity: shelter.volunteerCapacity ? String(shelter.volunteerCapacity) : "",
@@ -82,7 +82,7 @@ export default function Page() {
       setNewShelter({
         name: "",
         location: { latitude: "", longitude: "" },
-        address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
+        address: { street: "", city: "", state: "", zipCode: "", country: "" },
         picture: "",
         volunteerCapacity: "",
         evacueeCapacity: "",
@@ -99,7 +99,7 @@ export default function Page() {
     setNewShelter({
       name: "",
       location: { latitude: "", longitude: "" },
-      address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
+      address: { street: "", city: "", state: "", zipCode: "", country: "" },
       picture: "",
       volunteerCapacity: "",
       evacueeCapacity: "",
@@ -253,6 +253,15 @@ export default function Page() {
               value={newShelter.address.zipCode}
               onChange={(e) =>
                 setNewShelter({ ...newShelter, address: { ...newShelter.address, zipCode: e.target.value } })
+              }
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Country"
+              fullWidth
+              value={newShelter.address.country}
+              onChange={(e) =>
+                setNewShelter({ ...newShelter, address: { ...newShelter.address, country: e.target.value } })
               }
               sx={{ mb: 2 }}
             />
