@@ -1,6 +1,7 @@
 'use client';
 import { Sheet, SheetRef } from 'react-modal-sheet';
 import { PropsWithChildren, useCallback, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface PinnedBottomSheetProps {}
 
@@ -23,18 +24,32 @@ const PinnedBottomSheet: React.FC<PinnedBottomSheetProps> = (
       isOpen
       onClose={onClose}
       snapPoints={snapPoints}
-      initialSnap={1}
+      initialSnap={initialSnap}
+      style={{ zIndex: 40 }}
     >
       <Sheet.Container>
-        <Sheet.Header />
-        <Sheet.Content>
-          <Sheet.Scroller>{children}</Sheet.Scroller>
-        </Sheet.Content>
+        <Sheet.Header className="bg-white shadow-sm">
+          <Sheet.Content>
+            <Sheet.Scroller>
+              <AnimatePresence>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {children}
+                </motion.div>
+              </AnimatePresence>
+            </Sheet.Scroller>
+          </Sheet.Content>
+        </Sheet.Header>
       </Sheet.Container>
     </Sheet>
   );
 };
 
 const snapPoints = [0.9, 0.1];
+const initialSnap = 1;
 
 export default PinnedBottomSheet;
