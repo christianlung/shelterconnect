@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 
 import {
   Pagination,
@@ -19,9 +19,9 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination";
+} from '@/components/ui/pagination';
 
-import { Donor } from "@prisma/client";
+import { Donor } from '@prisma/client';
 
 interface DonorListProps {
   donors: Donor[];
@@ -50,14 +50,17 @@ export default function DonorList({ donors }: DonorListProps) {
 
     pages.push(
       <PaginationItem key={1}>
-        <PaginationLink isActive={currentPage === 1} onClick={() => setCurrentPage(1)}>
+        <PaginationLink
+          isActive={currentPage === 1}
+          onClick={() => setCurrentPage(1)}
+        >
           1
         </PaginationLink>
-      </PaginationItem>
+      </PaginationItem>,
     );
 
     let startPage = Math.max(2, currentPage - halfRange);
-    let endPage = Math.min(totalPages - 1, startPage + numVisiblePages - 1);
+    const endPage = Math.min(totalPages - 1, startPage + numVisiblePages - 1);
 
     if (endPage >= totalPages - 1) {
       startPage = Math.max(2, totalPages - numVisiblePages);
@@ -70,10 +73,13 @@ export default function DonorList({ donors }: DonorListProps) {
     for (let i = startPage; i <= endPage; i++) {
       pages.push(
         <PaginationItem key={i}>
-          <PaginationLink isActive={currentPage === i} onClick={() => setCurrentPage(i)}>
+          <PaginationLink
+            isActive={currentPage === i}
+            onClick={() => setCurrentPage(i)}
+          >
             {i}
           </PaginationLink>
-        </PaginationItem>
+        </PaginationItem>,
       );
     }
 
@@ -83,10 +89,13 @@ export default function DonorList({ donors }: DonorListProps) {
 
     pages.push(
       <PaginationItem key={totalPages}>
-        <PaginationLink isActive={currentPage === totalPages} onClick={() => setCurrentPage(totalPages)}>
+        <PaginationLink
+          isActive={currentPage === totalPages}
+          onClick={() => setCurrentPage(totalPages)}
+        >
           {totalPages}
         </PaginationLink>
-      </PaginationItem>
+      </PaginationItem>,
     );
 
     return pages;
@@ -108,7 +117,9 @@ export default function DonorList({ donors }: DonorListProps) {
             currentDonors.map((donor) => (
               <TableRow key={donor.id}>
                 <TableCell className="font-medium">{donor.donorName}</TableCell>
-                <TableCell className="text-right">${donor.finalDonorAmount}</TableCell>
+                <TableCell className="text-right">
+                  ${donor.finalDonorAmount}
+                </TableCell>
                 <TableCell className="text-right">
                   {new Date(donor.createdAt).toLocaleDateString()}
                 </TableCell>
@@ -125,25 +136,37 @@ export default function DonorList({ donors }: DonorListProps) {
       </Table>
 
       {totalPages > 1 && (
-        <Pagination className="mt-4">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
-              />
-            </PaginationItem>
+        <div className="flex">
+          <Pagination className="mt-4">
+            <PaginationContent className="flex-wrap justify-center">
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
+                  className={
+                    currentPage === 1 ? 'pointer-events-none opacity-50' : ''
+                  }
+                />
+              </PaginationItem>
 
-            {getPaginationItems()}
+              {getPaginationItems()}
 
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
+                  className={
+                    currentPage === totalPages
+                      ? 'pointer-events-none opacity-50'
+                      : ''
+                  }
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       )}
     </div>
   );
