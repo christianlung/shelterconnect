@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shelter } from '@prisma/client';
-import { Supply, VolunteerPreferences } from '@/types/shelter';
 import { useSession } from '@clerk/nextjs';
 
 enum Role {
@@ -21,11 +20,8 @@ export default function ShelterDetails({ shelter }: { shelter: Shelter }) {
   const role: Role =
     (session?.user?.unsafeMetadata?.role as Role) || Role.EVACUEE;
 
-  // Cast suppliesNeeded to Supply[]
-  const suppliesNeeded: Supply[] = (shelter.suppliesNeeded as any) || [];
-  // Cast volunteerPreferences to VolunteerPreferences
-  const volunteerPreferences: VolunteerPreferences =
-    (shelter.volunteerPreferences as any) || null;
+  const suppliesNeeded = shelter.suppliesNeeded;
+  const volunteerPreferences = shelter.volunteerPreferences;
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-gray-50 p-4">
@@ -44,8 +40,9 @@ export default function ShelterDetails({ shelter }: { shelter: Shelter }) {
 
               {shelter.location && (
                 <p>
-                  <strong>Coordinates:</strong> {shelter.location.latitude},{' '}
-                  {shelter.location.longitude}
+                  <strong>Coordinates:</strong>{' '}
+                  {shelter.location.coordinates[1]},{' '}
+                  {shelter.location.coordinates[0]}
                 </p>
               )}
 

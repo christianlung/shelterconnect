@@ -24,8 +24,8 @@ const ShelterPopup: FC<ShelterPopupProps> = memo(function ShelterPopup({
 
   return (
     <Popup
-      longitude={shelter.location.longitude}
-      latitude={shelter.location.latitude}
+      longitude={shelter.location.coordinates[0]}
+      latitude={shelter.location.coordinates[1]}
       closeButton={false}
       closeOnClick={false}
       anchor="bottom"

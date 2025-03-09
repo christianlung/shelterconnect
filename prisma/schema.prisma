@@ -45,9 +45,9 @@ type Address {
   country String
 }
 
-type Coordinate {
-  latitude  Float
-  longitude Float
+type Location {
+  type        String    @default("Point")
+  coordinates Float[]
 }
 
 type TimeSlot {
@@ -59,6 +59,11 @@ type Supply {
   item      String
   received  Int
   needed    Int
+}
+
+type VolunteerPreferences {
+  minAge           Int
+  requiredTraining String[]
 }
 
 model Volunteer {
@@ -78,7 +83,7 @@ model Volunteer {
 model Shelter {
   id                  String            @id @default(auto()) @map("_id") @db.ObjectId
   name                String
-  location            Coordinate?
+  location            Location?
   address             Address
   picture             String?
   volunteerCapacity   Int?
@@ -90,7 +95,7 @@ model Shelter {
   hasCounselingUnit   Boolean          @default(false)
   foodProvided        Boolean          @default(false)
   waterProvided       Boolean          @default(false)
-  volunteerPreferences Json?
+  volunteerPreferences VolunteerPreferences?
   suppliesNeeded      Supply[]         
   requiredLanguages   Language[]       
   signups             VolunteerSignup[]

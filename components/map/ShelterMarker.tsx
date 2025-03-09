@@ -17,8 +17,8 @@ const ShelterMarker: FC<ShelterMarkerProps> = memo(function ShelterMarker({
 
   return (
     <Marker
-      longitude={shelter.location.longitude}
-      latitude={shelter.location.latitude}
+      longitude={shelter.location.coordinates[0]}
+      latitude={shelter.location.coordinates[1]}
       anchor="bottom"
     >
       <div onClick={() => onClick(shelter.id)} className="cursor-pointer">

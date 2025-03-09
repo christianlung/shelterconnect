@@ -34,8 +34,8 @@ async function getLocationFromIP(): Promise<LatLng | null> {
 
     if (data.latitude && data.longitude) {
       return {
-        latitude: data.latitude,
         longitude: data.longitude,
+        latitude: data.latitude,
       };
     }
     return null;
