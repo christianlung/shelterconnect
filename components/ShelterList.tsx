@@ -6,28 +6,34 @@ import {
   faSpinner,
 } from '@fortawesome/free-solid-svg-icons';
 import ShelterQuickInfo from './ShelterQuickInfo';
-import { useShelters } from '@/lib/hooks/useShelters';
-import { useState, useCallback } from 'react';
-import type { GetSheltersParams } from '@/lib/actions/shelter.schema';
+import { useCallback } from 'react';
 import CheckboxGroup from '@/src/components/CheckboxGroup';
+import { useShelterStore } from '@/lib/store/shelterStore';
+import type { GetSheltersParams } from '@/lib/actions/shelter.schema';
+import useOnMount from '@/src/hooks/useOnMount';
 
 export default function ShelterList() {
-  const [filters, setFilters] = useState<GetSheltersParams>({});
-  const { shelters, refetch, loading } = useShelters(filters);
+  const { shelters, loading, setFilters, fetchShelters } = useShelterStore();
+  useOnMount(() => {
+    fetchShelters();
+  });
 
   const handleSearch = useCallback(() => {
-    refetch();
-  }, [refetch]);
+    fetchShelters();
+  }, [fetchShelters]);
 
-  const handleFilterChange = useCallback((value: string, checked: boolean) => {
-    setFilters((prev) => ({
-      ...prev,
-      [value]: checked || undefined,
-    }));
-  }, []);
+  const handleFilterChange = useCallback(
+    (value: string, checked: boolean) => {
+      setFilters((prev: GetSheltersParams) => ({
+        ...prev,
+        [value]: checked || undefined,
+      }));
+    },
+    [setFilters],
+  );
 
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-8">
+    <div className="container mx-auto max-w-6xl px-4 pb-8">
       <div className="mb-8">
         <div className="mb-6 flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-100">
@@ -52,7 +58,7 @@ export default function ShelterList() {
                 className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none"
                 placeholder="Search by name"
                 onChange={(e) =>
-                  setFilters((prev) => ({
+                  setFilters((prev: GetSheltersParams) => ({
                     ...prev,
                     name: e.target.value || undefined,
                   }))
@@ -70,7 +76,7 @@ export default function ShelterList() {
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none"
                   placeholder="Min volunteer capacity"
                   onChange={(e) =>
-                    setFilters((prev) => ({
+                    setFilters((prev: GetSheltersParams) => ({
                       ...prev,
                       volunteerCapacity: e.target.value
                         ? { gte: parseInt(e.target.value) }
@@ -84,7 +90,7 @@ export default function ShelterList() {
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none"
                   placeholder="Min evacuee capacity"
                   onChange={(e) =>
-                    setFilters((prev) => ({
+                    setFilters((prev: GetSheltersParams) => ({
                       ...prev,
                       evacueeCapacity: e.target.value
                         ? { gte: parseInt(e.target.value) }
