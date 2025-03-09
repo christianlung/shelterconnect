@@ -1,37 +1,42 @@
-import { unstable_cache } from 'next/cache'
+import { unstable_cache } from 'next/cache';
 
-import DonorList from "@/components/DonorList";
-import { getDonor } from "@/lib/actions/donor";
-import Donation from "@/components/Donation"
-import { prisma } from "@/lib/prisma"
+import DonorList from '@/components/DonorList';
+import Donation from '@/components/Donation';
+import { prisma } from '@/lib/prisma';
 
 const getDonors = unstable_cache(
   async () => {
     // console.log("caching!") // Using console log to show when it has to make a db query for the first time. Will not show up for subsequent requests
-    return await prisma.donor.findMany()
+    return await prisma.donor.findMany();
   },
   ['donors'],
-  { revalidate: 3600, tags: ['donors'] }
-)
+  { revalidate: 3600, tags: ['donors'] },
+);
 
 export default async function Page() {
   const donors = await getDonors();
 
   return (
-    <div className="flex flex-row justify-center gap-10 w-full p-6">
-      <div className="w-2/3 flex flex-col">
-        <div className="flex flex-col items-center">
-          <p className="text-center text-gray-700 max-w-4xl mb-6 text-xl leading-relaxed">
-            Every year, countless families lose their homes and belongings due to devastating wildfires, hurricanes, and other natural disasters. 
-            Your donation directly supports those in need by providing emergency shelter, food, medical aid, and essential supplies to help them rebuild their lives. 
-            Even a small contribution can make a significant difference in bringing hope and relief to disaster victims. 
-            Choose an amount below to donate and stand with those affected.
-          </p>
+    <div className="container mx-auto max-w-6xl px-4 py-8 lg:py-12">
+      <h1 className="mb-8 text-center text-3xl font-bold text-gray-900 lg:text-4xl">
+        Support Those in Need
+      </h1>
+      <div className="flex w-full flex-col justify-center gap-6 lg:flex-row lg:gap-10">
+        <div className="flex w-full flex-col lg:w-3/5">
+          <div className="mb-8 flex flex-col items-center">
+            <p className="max-w-2xl text-center text-lg leading-relaxed text-gray-600">
+              Every year, countless families lose their homes and belongings due
+              to devastating wildfires, hurricanes, and other natural disasters.
+              Your donation directly supports those in need by providing
+              emergency shelter, food, medical aid, and essential supplies to
+              help them rebuild their lives.
+            </p>
+          </div>
+          <Donation />
         </div>
-        <Donation />
-      </div>
-      <div className="w-1/3 mt-3 items-end">
-        <DonorList donors={donors} />
+        <div className="w-full lg:w-2/5">
+          <DonorList donors={donors} />
+        </div>
       </div>
     </div>
   );

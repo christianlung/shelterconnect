@@ -43,6 +43,15 @@ Create a `.env` file in the `prisma` directory with this value:
 DATABASE_URL="mongodb://..."
 ```
 
+If you want to run test, create a `.env.test` file in the root directory with the following values:
+
+```
+DATABASE_URL=mongodb+srv://...
+NEXT_PUBLIC_STRIPE_SK=sk_test_...
+NEXT_PUBLIC_STRIPE_PK=pk_test_...
+
+```
+
 Run the setup command to install dependencies and generate the Prisma client:
 
 ```
@@ -80,3 +89,19 @@ If you want to run a script (to upload data to the database just once, for examp
 ```
 npm run node-script <path-to-script>
 ```
+
+
+### Unit testing
+To run all unit tests in the project, you can run:
+
+```
+npm run jest
+```
+
+To run unit tests for a specific file and, optionally, a specific test name, run:
+
+```
+npm run jest <filename> -t <testname>
+```
+
+Note, you don't need to include the whole path to the file, jest will search for the file in the project.

@@ -3,6 +3,7 @@
 import redis from "../redis";
 import { prisma } from '@/lib/prisma';
 import { Donor } from "@prisma/client";
+import { DonorSchema } from "@/prisma/generated/zod";
 
 export async function fetchWithCache(url: string) {
   const cacheKey = `cache_key:${url}`;
@@ -20,8 +21,8 @@ export async function fetchWithCache(url: string) {
 
     return data;
   }
-  catch (e: any) {
-    throw new Error(e.message);
+  catch (e: unknown) {
+    throw new Error(e instanceof Error ? e.message : "Unknown error");
   }
 }
 
@@ -30,7 +31,7 @@ export async function cacheDonors(): Promise<{success: boolean, data: Donor[] | 
   const cachedData = await redis.get(cacheKey);
 
   if (cachedData) {
-    return { success: true, data: JSON.parse(cachedData)};
+    return { success: true, data: DonorSchema.array().parse(JSON.parse(cachedData))};
   }
 
   try {
