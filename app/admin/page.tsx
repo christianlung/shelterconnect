@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 import AdminList from '@/components/AdminList';
-import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, IconButton } from '@mui/material';
+import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, IconButton, Chip } from '@mui/material';
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -20,6 +20,12 @@ interface NewShelterForm {
   evacueeCapacity: string;
   accommodations: string[];
   suppliesNeeded: { item: string; received: string; needed: string }[];
+  wheelchairAccessible: boolean;
+  housesLargeAnimals: boolean;
+  housesSmallAnimals: boolean;
+  hasCounselingUnit: boolean;
+  foodProvided: boolean;
+  waterProvided: boolean;
 }
 
 export default function Page() {
@@ -33,14 +39,28 @@ export default function Page() {
   const [newShelter, setNewShelter] = useState<NewShelterForm>({
     name: "",
     location: { latitude: "", longitude: "" },
-    address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
+    address: { street: "", city: "", state: "", zipCode: "", country: "" },
     picture: "",
     volunteerCapacity: "",
     evacueeCapacity: "",
     accommodations: [],
     suppliesNeeded: [],
+    wheelchairAccessible: false,
+    housesLargeAnimals: false,
+    housesSmallAnimals: false,
+    hasCounselingUnit: false,
+    foodProvided: false,
+    waterProvided: false,
+
   });
-  
+
+  if (loading) {
+    return <div>Loading shelters...</div>;
+  }
+  if (error) {
+    return <div>Error loading shelters</div>;
+  }
+
   // Opens the modal. If a shelter is passed, we're editing; otherwise, we're adding a new one.
   const handleOpen = (shelter: Shelter) => {
     if (shelter) {
@@ -56,7 +76,7 @@ export default function Page() {
           city: shelter.address.city,
           state: shelter.address.state,
           zipCode: shelter.address.zipCode,
-          country: shelter.address.country || "USA",
+          country: shelter.address.country,
         },
         picture: shelter.picture ?? "",
         volunteerCapacity: shelter.volunteerCapacity ? String(shelter.volunteerCapacity) : "",
@@ -69,18 +89,30 @@ export default function Page() {
             needed: String(supply.needed),
           }))
           : [],
+        wheelchairAccessible: shelter.wheelchairAccessible,
+        housesLargeAnimals: shelter.housesLargeAnimals,
+        housesSmallAnimals: shelter.housesSmallAnimals,
+        hasCounselingUnit: shelter.hasCounselingUnit,
+        foodProvided: shelter.foodProvided,
+        waterProvided: shelter.waterProvided,
       });
     } else {
       setEditingShelterId(null);
       setNewShelter({
         name: "",
         location: { latitude: "", longitude: "" },
-        address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
+        address: { street: "", city: "", state: "", zipCode: "", country: "" },
         picture: "",
         volunteerCapacity: "",
         evacueeCapacity: "",
         accommodations: [],
         suppliesNeeded: [],
+        wheelchairAccessible: false,
+        housesLargeAnimals: false,
+        housesSmallAnimals: false,
+        hasCounselingUnit: false,
+        foodProvided: false,
+        waterProvided: false,
       });
     }
     setOpen(true);
@@ -92,12 +124,18 @@ export default function Page() {
     setNewShelter({
       name: "",
       location: { latitude: "", longitude: "" },
-      address: { street: "", city: "", state: "", zipCode: "", country: "USA" },
+      address: { street: "", city: "", state: "", zipCode: "", country: "" },
       picture: "",
       volunteerCapacity: "",
       evacueeCapacity: "",
       accommodations: [],
       suppliesNeeded: [],
+      wheelchairAccessible: false,
+      housesLargeAnimals: false,
+      housesSmallAnimals: false,
+      hasCounselingUnit: false,
+      foodProvided: false,
+      waterProvided: false,
     });
   };
 
@@ -128,6 +166,12 @@ export default function Page() {
         received: Number(supply.received),
         needed: Number(supply.needed),
       })),
+      wheelchairAccessible: newShelter.wheelchairAccessible,
+      housesLargeAnimals: newShelter.housesLargeAnimals,
+      housesSmallAnimals: newShelter.housesLargeAnimals,
+      hasCounselingUnit: newShelter.hasCounselingUnit,
+      foodProvided: newShelter.foodProvided,
+      waterProvided: newShelter.waterProvided
     };
 
     if (editingShelterId) {
@@ -250,6 +294,15 @@ export default function Page() {
               sx={{ mb: 2 }}
             />
             <TextField
+              label="Country"
+              fullWidth
+              value={newShelter.address.country}
+              onChange={(e) =>
+                setNewShelter({ ...newShelter, address: { ...newShelter.address, country: e.target.value } })
+              }
+              sx={{ mb: 2 }}
+            />
+            <TextField
               label="Picture URL (optional)"
               fullWidth
               value={newShelter.picture}
@@ -288,6 +341,57 @@ export default function Page() {
               }
               sx={{ mb: 2 }}
             />
+
+            <Typography variant="subtitle1" sx={{ mt: 2 }}>Shelter Options:</Typography>
+            <Chip
+              label="Wheelchair Accessible"
+              onClick={() =>
+                setNewShelter({ ...newShelter, wheelchairAccessible: !newShelter.wheelchairAccessible })
+              }
+              color={newShelter.wheelchairAccessible ? "primary" : "default"}
+              sx={{ mr: 1, mb: 1 }}
+            />
+            <Chip
+              label="Houses Large Animals"
+              onClick={() =>
+                setNewShelter({ ...newShelter, housesLargeAnimals: !newShelter.housesLargeAnimals })
+              }
+              color={newShelter.housesLargeAnimals ? "primary" : "default"}
+              sx={{ mr: 1, mb: 1 }}
+            />
+            <Chip
+              label="Houses Small Animals"
+              onClick={() =>
+                setNewShelter({ ...newShelter, housesSmallAnimals: !newShelter.housesSmallAnimals })
+              }
+              color={newShelter.housesSmallAnimals ? "primary" : "default"}
+              sx={{ mr: 1, mb: 1 }}
+            />
+            <Chip
+              label="Counseling Unit"
+              onClick={() =>
+                setNewShelter({ ...newShelter, hasCounselingUnit: !newShelter.hasCounselingUnit })
+              }
+              color={newShelter.hasCounselingUnit ? "primary" : "default"}
+              sx={{ mr: 1, mb: 1 }}
+            />
+            <Chip
+              label="Food Provided"
+              onClick={() =>
+                setNewShelter({ ...newShelter, foodProvided: !newShelter.foodProvided })
+              }
+              color={newShelter.foodProvided ? "primary" : "default"}
+              sx={{ mr: 1, mb: 1 }}
+            />
+            <Chip
+              label="Water Provided"
+              onClick={() =>
+                setNewShelter({ ...newShelter, waterProvided: !newShelter.waterProvided })
+              }
+              color={newShelter.waterProvided ? "primary" : "default"}
+              sx={{ mr: 1, mb: 1 }}
+            />
+
             <Typography variant="subtitle1">Accommodations (optional):</Typography>
             {newShelter.accommodations.map((acc, index) => (
               <Box key={index} sx={{ display: "flex", alignItems: "center", mb: 2, gap: 1 }}>

@@ -1,102 +1,56 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  Box, 
-  Card, 
-  CardContent, 
-  Typography, 
-  IconButton, 
-  Collapse 
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  IconButton,
+  Collapse
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-
-interface Address {
-  street: string;
-  city: string;
-  state: string;
-  zip: string;
-}
-
-interface Shelter {
-  id: string;
-  name: string;
-  address: Address;
-}
-
-interface TimeSlot {
-  start: string;
-  end: string;
-}
-
-type SignupStatus = "pending" | "confirmed" | "cancelled";
-
-interface VolunteerSignup {
-  id: string;
-  shelter: Shelter;
-  timeSlot: TimeSlot;
-  status: SignupStatus;
-  tasks: string[];
-}
+import { useVolunteerDashboard } from "@/lib/hooks/useVolunteerSignup";
+import { TimeSlot } from "@prisma/client";
+import { VolunteerSignupWithShelter } from "@/types/shelter";
 
 export default function VolunteerDashboard() {
-  const [signups] = useState<VolunteerSignup[]>([
-    {
-      id: "1",
-      shelter: {
-        id: "shelter1",
-        name: "Shelter A",
-        address: { street: "123 Main St", city: "Springfield", state: "CA", zip: "12345" },
-      },
-      timeSlot: { start: "2023-03-25T09:00:00", end: "2023-03-25T12:30:00" },
-      status: "pending",
-      tasks: ["Bring blankets", "Set up chairs"],
-    },
-    {
-      id: "2",
-      shelter: {
-        id: "shelter2",
-        name: "Shelter B",
-        address: { street: "456 Oak Rd", city: "Springfield", state: "CA", zip: "12345" },
-      },
-      timeSlot: { start: "2023-03-27T09:00:00", end: "2023-03-27T12:30:00" },
-      status: "confirmed",
-      tasks: ["Volunteer check-in", "Distribute food"],
-    },
-    {
-      id: "3",
-      shelter: {
-        id: "shelter3",
-        name: "Shelter C",
-        address: { street: "789 Pine St", city: "Springfield", state: "CA", zip: "12345" },
-      },
-      timeSlot: { start: "2023-03-28T09:00:00", end: "2023-03-28T12:30:00" },
-      status: "cancelled",
-      tasks: ["Setup sign-in desk"],
-    },
-  ]);
-
-  const filteredSignups = signups.filter(
-    (signup) => signup.status === "pending" || signup.status === "confirmed"
-  );
-  const confirmedSignups = filteredSignups.filter((signup) => signup.status === "confirmed");
-  const pendingSignups = filteredSignups.filter((signup) => signup.status === "pending");
-
+  const { data: signups, loading, error } = useVolunteerDashboard();
   const [expanded, setExpanded] = useState<string | null>(null);
   const toggleExpand = (id: string) => setExpanded(expanded === id ? null : id);
 
   const formatTimeSlot = (timeSlot: TimeSlot) => {
     const start = new Date(timeSlot.start);
     const end = new Date(timeSlot.end);
-    const month = start.getMonth() + 1;
-    const day = start.getDate();
-    const formatTime = (date: Date) =>
-      date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
-    return `${month}/${day}: ${formatTime(start)} - ${formatTime(end)}`;
-  };
 
-  const renderSignups = (signups: VolunteerSignup[], statusColor: string) =>
+    const formatDate = (date: Date) => date.toLocaleDateString("en-US", { year: "numeric", month: "numeric", day: "numeric" });
+    const formatTime = (date: Date) => date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
+
+    const isSameDay = start.toDateString() === end.toDateString();
+
+    if (isSameDay) {
+        return `${formatDate(start)}: ${formatTime(start)} - ${formatTime(end)}`;
+    } else {
+        return `${formatDate(start)} ${formatTime(start)} - ${formatDate(end)} ${formatTime(end)}`;
+    }
+};
+
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  const now = new Date();
+
+  const pastSignups = signups.filter(
+    (signup) => new Date(signup.timeSlot.end) < now
+  );
+
+  const currentSignups = signups.filter(
+    (signup) => new Date(signup.timeSlot.end) >= now
+  );
+
+  const renderSignups = (signups: VolunteerSignupWithShelter[], statusColor: string) =>
     signups.map((signup) => (
       <Card
         key={signup.id}
@@ -107,7 +61,7 @@ export default function VolunteerDashboard() {
           <Box>
             <Typography variant="h6">{signup.shelter.name}</Typography>
             <Typography sx={{ color: "gray" }}>
-              {signup.shelter.address.street}, {signup.shelter.address.city}
+              {signup.shelter.address.street}, {signup.shelter.address.city}, {signup.shelter.address.state}, {signup.shelter.address.zipCode}, USA
             </Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -137,26 +91,33 @@ export default function VolunteerDashboard() {
     ));
 
   return (
-    <Box sx={{ maxWidth: 600, margin: "auto", pt: 4 }}>
-      <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2 }}>
-        My Volunteer Signups
-      </Typography>
-      {confirmedSignups.length > 0 && (
+    <div>
+      <title>ShelterConnect | Volunteer</title>
+      <Box sx={{ maxWidth: 600, margin: "auto", pt: 4 }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2 }}>
+          My Volunteer Signups
+        </Typography>
         <Box sx={{ mb: 3 }}>
-          <Typography variant="h5" sx={{ fontWeight: "bold", color: "green", mb: 1 }}>
-            Confirmed
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "teal", mb: 1 }}>
+            Upcoming Signups
           </Typography>
-          {renderSignups(confirmedSignups, "green")}
+          {currentSignups.length > 0 ? (
+            renderSignups(currentSignups, "teal")
+          ) : (
+            <Typography variant="body1">No upcoming signups</Typography>
+          )}
         </Box>
-      )}
-      {pendingSignups.length > 0 && (
         <Box sx={{ mb: 3 }}>
-          <Typography variant="h5" sx={{ fontWeight: "bold", color: "goldenrod", mb: 1 }}>
-            Pending
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "darkgoldenrod", mb: 1 }}>
+            Past Signups
           </Typography>
-          {renderSignups(pendingSignups, "goldenrod")}
+          {pastSignups.length > 0 ? (
+            renderSignups(pastSignups, "darkgoldenrod")
+          ) : (
+            <Typography variant="body1">No past signups</Typography>
+          )}
         </Box>
-      )}
-    </Box>
+      </Box>
+    </div>
   );
 }
