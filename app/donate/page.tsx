@@ -6,8 +6,12 @@ import { prisma } from '@/lib/prisma';
 
 const getDonors = unstable_cache(
   async () => {
-    // console.log("caching!") // Using console log to show when it has to make a db query for the first time. Will not show up for subsequent requests
-    return await prisma.donor.findMany();
+    console.log("caching!") // Using console log to show when it has to make a db query for the first time. Will not show up for subsequent requests
+    return await prisma.donor.findMany({
+      orderBy: {
+        finalDonorAmount: 'desc', 
+      },
+    });
   },
   ['donors'],
   { revalidate: 3600, tags: ['donors'] },

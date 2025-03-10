@@ -72,19 +72,23 @@ function PaymentForm( { donorName, finalDonorAmount} : PaymentFormProps ) {
     spacedAccordionItems: false
   };
 
-  return (
+  return (   
     <form id="payment-form" onSubmit={handleSubmit}>
-      <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button 
-        disabled={isLoading || !stripe || !elements} 
-        id="submit"
-        className="w-36 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition disabled:bg-gray-400 disabled:cursor-not-allowed">
-        <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Donate now"}
-        </span>
-      </button>
-      {/* Show any error or success messages */}
-      {message && <div id="payment-message">{message}</div>}
+      <div className="flex flex-col">
+        <PaymentElement id="payment-element" options={paymentElementOptions} />
+        <div className="flex justify-center mt-4"> {/* Added flex and justify-center to center the button */}
+          <button 
+            disabled={isLoading || !stripe || !elements} 
+            id="submit"
+            className="w-36 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition disabled:bg-gray-400 disabled:cursor-not-allowed">
+            <span id="button-text">
+              {isLoading ? <div className="spinner" id="spinner"></div> : "Donate now"}
+            </span>
+          </button>
+        </div>
+        {/* Show any error or success messages */}
+        {message && <div id="payment-message">{message}</div>}
+      </div>
     </form>
   );
 }
@@ -96,7 +100,6 @@ interface CheckoutFormProps {
 }
 
 export default function CheckoutForm({ clientSecret, donorName, finalDonorAmount }: CheckoutFormProps) {
-  console.log({donorName, finalDonorAmount})
   const appearance = {
     theme: 'stripe' as const,
   };

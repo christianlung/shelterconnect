@@ -1,5 +1,3 @@
-'use server';
-
 import { z } from 'zod';
 import { stripe } from '@/lib/stripe';
 import type { Stripe } from 'stripe';
@@ -9,13 +7,18 @@ export const PaymentIntentAmountSchema = z.number().min(1);
 export async function createPaymentIntent(
   amount: z.infer<typeof PaymentIntentAmountSchema>,
 ) {
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: amount * 100,
-    currency: 'usd',
-    automatic_payment_methods: { enabled: true },
-  });
-
-  return paymentIntent;
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount * 100,
+      currency: 'usd',
+      automatic_payment_methods: { enabled: true },
+    });
+    return paymentIntent;
+  } catch (err) {
+    throw new Error(
+      err instanceof Error ? err.message : 'Failed to create payment intent',
+    );
+  }
 }
 
 export interface WebhookEvent {
