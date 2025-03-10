@@ -94,9 +94,9 @@ export default function ClientMap(props: ClientMapProps) {
       >
         {userLocation && <UserMarker location={userLocation} />}
 
-        {shelters.map((shelter) => (
+        {shelters.map((shelter, index) => (
           <ShelterMarker
-            key={shelter.id}
+            key={shelter.id || `shelter-${index}`}
             shelter={shelter}
             onClick={handleShelterClick}
           />
