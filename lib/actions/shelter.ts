@@ -9,9 +9,14 @@ import type {
   PaginationParams,
 } from './shelter.schema';
 
+// MongoDB's representation of the shelter object with _id object
+type RawShelter = Shelter & {
+  _id?: { $oid: string }; // Add _id from MongoDB
+};
+
 interface GeoNearResult {
   cursor: {
-    firstBatch: Array<Shelter & { distance: number }>;
+    firstBatch: Array<RawShelter & { distance: number }>;
   };
   ok: number;
 }
@@ -83,20 +88,26 @@ export const getShelters = unstable_cache(
           pipeline.push({ $skip: skip }, { $limit: pagination.limit });
         }
 
-        const shelters = (await prisma.$runCommandRaw({
+        const rawShelters = (await prisma.$runCommandRaw({
           aggregate: 'Shelter',
           pipeline: pipeline as unknown as Prisma.InputJsonValue[],
           cursor: {},
         })) as unknown as GeoNearResult;
 
-        if (!shelters?.cursor?.firstBatch) {
+        if (!rawShelters?.cursor?.firstBatch) {
           return { success: true, data: { shelters: [], total: 0 } };
         }
+
+        // Normalize `_id` to `id`
+        const shelters = rawShelters.cursor.firstBatch.map((shelter) => ({
+          ...shelter,
+          id: shelter._id?.$oid || 'MISSING_ID',
+        }));
 
         return {
           success: true,
           data: {
-            shelters: shelters.cursor.firstBatch,
+            shelters: shelters,
             total: totalCount,
           },
         };
