@@ -2,7 +2,7 @@
 import { prisma } from '@/lib/prisma';
 import type { Prisma, Shelter } from '@prisma/client';
 import type { ActionResult } from '@/types/models';
-import { unstable_cache } from 'next/cache';
+import { revalidateTag, unstable_cache } from 'next/cache';
 import type {
   GetSheltersParams,
   Coordinates,
@@ -199,7 +199,7 @@ export async function deleteShelter(shelterId: string) {
     await prisma.shelter.delete({
       where: { id: shelterId },
     });
-
+    revalidateTag('shelters')
     return { success: true, message: 'Shelter deleted successfully' };
   } catch (error) {
     console.error('Error deleting shelter:', error);
@@ -216,6 +216,7 @@ export async function addShelter(
       data: shelter,
     });
     console.log('Inserted shelter:', newShelter);
+    revalidateTag('shelters')
     return { success: true, data: newShelter };
   } catch (error) {
     console.error('Error inserting shelter:', error);
@@ -232,6 +233,7 @@ export async function updateShelter(
       where: { id: shelterId },
       data: updatedData,
     });
+    revalidateTag('shelters')
     return { success: true, data: shelter };
   } catch {
     return { success: false };

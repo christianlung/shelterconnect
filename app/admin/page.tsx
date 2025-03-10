@@ -168,6 +168,7 @@ export default function Page() {
   };
 
   const handleAddOrUpdateShelter = async () => {
+    console.log('newShelter', newShelter);
     if (!newShelter.name.trim() || !newShelter.address.street.trim()) return;
 
     const formattedShelter = {
@@ -222,6 +223,7 @@ export default function Page() {
       const result = (await addShelterAction(
         formattedShelter,
       )) as ActionResult<Shelter>;
+      console.log('result', result);
       if (result.success && result.data) {
         await refetch();
       }
