@@ -1,6 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { signupVolunteer, getVolunteerDashboard } from '@/lib/actions/volunteer';
+import {
+  signupVolunteer,
+  getVolunteerDashboard,
+} from '@/lib/actions/volunteer';
 import type { VolunteerSignupCreationAttributes } from '@/types/models';
 import { VolunteerSignupWithShelter } from '@/types/shelter';
 
@@ -38,8 +41,8 @@ export function useVolunteerDashboard() {
       } else {
         setError(new Error('Failed to load volunteer dashboard'));
       }
-    } catch (err: any) {
-      setError(err);
+    } catch (err) {
+      setError(err as Error);
     } finally {
       setLoading(false);
     }
