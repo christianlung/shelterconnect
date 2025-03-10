@@ -6,8 +6,14 @@ import { Progress } from '@/components/ui/progress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shelter } from '@prisma/client';
 import { useSession } from '@clerk/nextjs';
+import { useState } from 'react';
+import VolunteerSignupModal, {
+  VolunteerSignUpFormData,
+} from './VolunteerSignupModal';
+import { addVolunteer, signupVolunteer } from '@/lib/actions/volunteer';
+import { format } from 'date-fns';
 
-enum Role {
+export enum Role {
   EVACUEE = 'evacuee',
   VOLUNTEER = 'volunteer',
   COORDINATOR = 'coordinator',
@@ -19,9 +25,42 @@ export default function ShelterDetails({ shelter }: { shelter: Shelter }) {
   const { session } = useSession();
   const role: Role =
     (session?.user?.unsafeMetadata?.role as Role) || Role.EVACUEE;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const suppliesNeeded = shelter.suppliesNeeded;
   const volunteerPreferences = shelter.volunteerPreferences;
+
+  const handleSignupSubmit = async (formData: VolunteerSignUpFormData) => {
+    console.log('Volunteer Signup Data:', {
+      ...formData,
+      formattedTimeSlot: `${format(formData.timeSlot[0], 'PPpp')} - ${format(formData.timeSlot[1], 'PPpp')}`,
+    });
+
+    const volunteer = await addVolunteer({
+      name: formData.name,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+    });
+
+    if (!volunteer.success) {
+      console.error('Failed to add volunteer');
+      return;
+    }
+
+    const result = await signupVolunteer({
+      volunteerId: volunteer.data.id,
+      shelterId: shelter.id,
+      timeSlot: {
+        start: new Date(formData.timeSlot[0]),
+        end: new Date(formData.timeSlot[1]),
+      },
+    });
+
+    if (!result.success) {
+      console.error('Failed to signup volunteer');
+      return;
+    }
+  };
 
   return (
     <div className="flex min-h-screen flex-col items-center bg-gray-50 p-4">
@@ -151,7 +190,18 @@ export default function ShelterDetails({ shelter }: { shelter: Shelter }) {
                 </div>
               )}
 
-              <Button onClick={() => router.back()} className="mt-4 w-full">
+              <Button
+                onClick={() => setIsModalOpen(true)}
+                className="mt-4 w-full"
+              >
+                Sign up as a volunteer!
+              </Button>
+
+              <Button
+                variant="secondary"
+                onClick={() => router.back()}
+                className="mt-4 w-full"
+              >
                 Back
               </Button>
             </div>
@@ -160,6 +210,13 @@ export default function ShelterDetails({ shelter }: { shelter: Shelter }) {
           )}
         </CardContent>
       </Card>
+
+      {/* Volunteer Signup Modal */}
+      <VolunteerSignupModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleSignupSubmit}
+      />
     </div>
   );
 }
