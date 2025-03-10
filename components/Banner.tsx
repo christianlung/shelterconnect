@@ -12,6 +12,7 @@ export default function Banner() {
   const { user } = useUser();
   
   const isCoordinator = isLoaded && user?.unsafeMetadata?.role === "coordinator";
+  const isVolunteer = isLoaded && user?.unsafeMetadata?.role === "volunteer";
 
   return (
     <motion.div
@@ -40,6 +41,18 @@ export default function Banner() {
       </Link>
 
       <div className="ml-auto flex items-center gap-2 md:gap-4">
+      {isVolunteer && (
+          <Link
+            href="/volunteer"
+            className="flex items-center gap-2 rounded-lg bg-primary-500 px-4 py-1.5 text-sm font-medium text-white shadow-md transition-colors hover:bg-primary-600 md:px-6 md:py-2 md:text-base"
+          >
+            <FontAwesomeIcon
+              icon={faChartLine}
+              className="h-4 w-4 md:h-5 md:w-5"
+            />
+            Volunteer Dashboard
+          </Link>
+        )}
         {isCoordinator && (
           <Link
             href="/admin"
