@@ -35,9 +35,9 @@ on:
       - '"main"'
 
 env:
-  PROJECT_ID: 'shelterconnect-453223' # TODO: update to your Google Cloud project ID
-  REGION: 'us-central1' # TODO: update to your region
-  SERVICE: 'shelterconnect' # TODO: update to your service name
+  PROJECT_ID: 'shelterconnect-453223'
+  REGION: 'us-central1'
+  SERVICE: 'shelterconnect'
 
 jobs:
   deploy:
@@ -59,7 +59,7 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@f112390a2df9932162083945e46d439060d66ec2' # google-github-actions/auth@v2
         with:
-          workload_identity_provider: 'projects/93337496830/locations/global/workloadIdentityPools/github/providers/my-repo' # TODO: replace with your workload identity provider
+          workload_identity_provider: 'projects/93337496830/locations/global/workloadIdentityPools/github/providers/my-repo'
 
       - name: 'Deploy to Cloud Run'
         uses: 'google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17' # google-github-actions/deploy-cloudrun@v2
@@ -68,6 +68,14 @@ jobs:
           region: '${{ env.REGION }}'
           # NOTE: If using a different source folder, update the image name below:
           source: './'
+          secrets: |-
+            NEXT_PUBLIC_MAPBOX_TOKEN=${{ secrets.NEXT_PUBLIC_MAPBOX_TOKEN }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            NEXT_PUBLIC_STRIPE_SK=${{ secrets.NEXT_PUBLIC_STRIPE_SK }}
+            NEXT_PUBLIC_STRIPE_PK=${{ secrets.NEXT_PUBLIC_STRIPE_PK }}
+            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+            CLERK_SECRET_KEY=${{ secrets.CLERK_SECRET_KEY }}
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
 
       # If required, use the Cloud Run URL output in later steps
       - name: 'Show output'
