@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { stripe } from '@/lib/stripe';
-import type { Stripe } from 'stripe';
+import { type Stripe as StripeType, Stripe } from 'stripe';
 
 export const PaymentIntentAmountSchema = z.number().min(1);
 
@@ -8,6 +7,8 @@ export async function createPaymentIntent(
   amount: z.infer<typeof PaymentIntentAmountSchema>,
 ) {
   try {
+    const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SK as string);
+
     const paymentIntent = await stripe.paymentIntents.create({
       amount: amount * 100,
       currency: 'usd',
@@ -27,9 +28,10 @@ export interface WebhookEvent {
 }
 
 export async function handleStripeWebhook(input: WebhookEvent) {
-  let event: Stripe.Event;
+  let event: StripeType.Event;
 
   try {
+    const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SK as string);
     event = stripe.webhooks.constructEvent(
       input.body,
       input.signature,
@@ -49,7 +51,7 @@ export async function handleStripeWebhook(input: WebhookEvent) {
 
   switch (event.type) {
     case 'payment_intent.succeeded':
-      const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      const paymentIntent = event.data.object as StripeType.PaymentIntent;
       return { type: event.type, data: paymentIntent };
     default:
       throw new Error(`Unhandled event: ${event.type}`);
