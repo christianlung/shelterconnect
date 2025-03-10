@@ -14,6 +14,7 @@ import type { GetSheltersParams } from '@/lib/actions/shelter.schema';
 /** Hook for fetching shelters */
 export function useShelters(params: GetSheltersParams = {}) {
   const [shelters, setShelters] = useState<Shelter[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -22,7 +23,8 @@ export function useShelters(params: GetSheltersParams = {}) {
     try {
       const result = await getShelters(params);
       if (result.success) {
-        setShelters(result.data);
+        setShelters(result.data.shelters);
+        setTotalCount(result.data.total);
       } else {
         setError('Failed to fetch shelters');
       }
@@ -38,7 +40,7 @@ export function useShelters(params: GetSheltersParams = {}) {
     fetchShelters();
   });
 
-  return { shelters, loading, error, refetch: fetchShelters };
+  return { shelters, totalCount, loading, error, refetch: fetchShelters };
 }
 
 /** Hook for deleting specific shelter */

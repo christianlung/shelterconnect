@@ -1,20 +1,42 @@
-"use client"
-import { useState } from "react";
+'use client';
+import { useState } from 'react';
 
 import AdminList from '@/components/AdminList';
-import { Box, Typography, Button, Dialog, DialogTitle, DialogContent, TextField, DialogActions, IconButton, Chip } from '@mui/material';
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  Box,
+  Typography,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
+  IconButton,
+  Chip,
+} from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Shelter } from '@prisma/client';
-import { useShelters, useAddShelter, useDeleteShelter, useUpdateShelter } from "@/lib/hooks/useShelters";
+import {
+  useShelters,
+  useAddShelter,
+  useDeleteShelter,
+  useUpdateShelter,
+} from '@/lib/hooks/useShelters';
 
 import type { ActionResult } from '@/types/models';
 
 interface NewShelterForm {
   name: string;
-  location: { latitude: string; longitude: string };
-  address: { street: string; city: string; state: string; zipCode: string; country: string };
+  location: { type: string; coordinates: number[] };
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
   picture: string;
   volunteerCapacity: string;
   evacueeCapacity: string;
@@ -30,19 +52,20 @@ interface NewShelterForm {
 
 export default function Page() {
   const { shelters, loading, error, refetch } = useShelters();
-  const { handleAddShelter: addShelterAction, loading: addLoading } = useAddShelter();
+  const { handleAddShelter: addShelterAction, loading: addLoading } =
+    useAddShelter();
   const { handleDelete } = useDeleteShelter();
   const { handleUpdateShelter, loading: updateLoading } = useUpdateShelter();
 
   const [open, setOpen] = useState(false);
   const [editingShelterId, setEditingShelterId] = useState<string | null>(null);
   const [newShelter, setNewShelter] = useState<NewShelterForm>({
-    name: "",
-    location: { latitude: "", longitude: "" },
-    address: { street: "", city: "", state: "", zipCode: "", country: "" },
-    picture: "",
-    volunteerCapacity: "",
-    evacueeCapacity: "",
+    name: '',
+    location: { type: 'Point', coordinates: [] },
+    address: { street: '', city: '', state: '', zipCode: '', country: '' },
+    picture: '',
+    volunteerCapacity: '',
+    evacueeCapacity: '',
     accommodations: [],
     suppliesNeeded: [],
     wheelchairAccessible: false,
@@ -51,7 +74,6 @@ export default function Page() {
     hasCounselingUnit: false,
     foodProvided: false,
     waterProvided: false,
-
   });
 
   if (loading) {
@@ -68,8 +90,10 @@ export default function Page() {
       setNewShelter({
         name: shelter.name,
         location: {
-          latitude: shelter.location ? String(shelter.location.latitude) : "",
-          longitude: shelter.location ? String(shelter.location.longitude) : "",
+          type: 'Point',
+          coordinates: shelter.location
+            ? [shelter.location.coordinates[0], shelter.location.coordinates[1]]
+            : [],
         },
         address: {
           street: shelter.address.street,
@@ -78,16 +102,20 @@ export default function Page() {
           zipCode: shelter.address.zipCode,
           country: shelter.address.country,
         },
-        picture: shelter.picture ?? "",
-        volunteerCapacity: shelter.volunteerCapacity ? String(shelter.volunteerCapacity) : "",
-        evacueeCapacity: shelter.evacueeCapacity ? String(shelter.evacueeCapacity) : "",
+        picture: shelter.picture ?? '',
+        volunteerCapacity: shelter.volunteerCapacity
+          ? String(shelter.volunteerCapacity)
+          : '',
+        evacueeCapacity: shelter.evacueeCapacity
+          ? String(shelter.evacueeCapacity)
+          : '',
         accommodations: shelter.accommodations ?? [],
         suppliesNeeded: shelter.suppliesNeeded
-          ? shelter.suppliesNeeded.map(supply => ({
-            item: supply.item,
-            received: String(supply.received),
-            needed: String(supply.needed),
-          }))
+          ? shelter.suppliesNeeded.map((supply) => ({
+              item: supply.item,
+              received: String(supply.received),
+              needed: String(supply.needed),
+            }))
           : [],
         wheelchairAccessible: shelter.wheelchairAccessible,
         housesLargeAnimals: shelter.housesLargeAnimals,
@@ -99,12 +127,12 @@ export default function Page() {
     } else {
       setEditingShelterId(null);
       setNewShelter({
-        name: "",
-        location: { latitude: "", longitude: "" },
-        address: { street: "", city: "", state: "", zipCode: "", country: "" },
-        picture: "",
-        volunteerCapacity: "",
-        evacueeCapacity: "",
+        name: '',
+        location: { type: 'Point', coordinates: [] },
+        address: { street: '', city: '', state: '', zipCode: '', country: '' },
+        picture: '',
+        volunteerCapacity: '',
+        evacueeCapacity: '',
         accommodations: [],
         suppliesNeeded: [],
         wheelchairAccessible: false,
@@ -122,12 +150,12 @@ export default function Page() {
     setOpen(false);
     setEditingShelterId(null);
     setNewShelter({
-      name: "",
-      location: { latitude: "", longitude: "" },
-      address: { street: "", city: "", state: "", zipCode: "", country: "" },
-      picture: "",
-      volunteerCapacity: "",
-      evacueeCapacity: "",
+      name: '',
+      location: { type: 'Point', coordinates: [] },
+      address: { street: '', city: '', state: '', zipCode: '', country: '' },
+      picture: '',
+      volunteerCapacity: '',
+      evacueeCapacity: '',
       accommodations: [],
       suppliesNeeded: [],
       wheelchairAccessible: false,
@@ -144,12 +172,16 @@ export default function Page() {
 
     const formattedShelter = {
       name: newShelter.name,
-      location: (newShelter.location.latitude && newShelter.location.longitude)
-        ? {
-          latitude: parseFloat(newShelter.location.latitude),
-          longitude: parseFloat(newShelter.location.longitude),
-        }
-        : null,
+      location:
+        newShelter.location.coordinates.length === 2
+          ? {
+              type: 'Point',
+              coordinates: [
+                parseFloat(String(newShelter.location.coordinates[0])),
+                parseFloat(String(newShelter.location.coordinates[1])),
+              ],
+            }
+          : null,
       address: {
         street: newShelter.address.street,
         city: newShelter.address.city,
@@ -158,10 +190,14 @@ export default function Page() {
         country: newShelter.address.country,
       },
       picture: newShelter.picture || null,
-      volunteerCapacity: newShelter.volunteerCapacity ? parseInt(newShelter.volunteerCapacity) : null,
-      evacueeCapacity: newShelter.evacueeCapacity ? parseInt(newShelter.evacueeCapacity) : null,
+      volunteerCapacity: newShelter.volunteerCapacity
+        ? parseInt(newShelter.volunteerCapacity)
+        : null,
+      evacueeCapacity: newShelter.evacueeCapacity
+        ? parseInt(newShelter.evacueeCapacity)
+        : null,
       accommodations: newShelter.accommodations,
-      suppliesNeeded: newShelter.suppliesNeeded.map(supply => ({
+      suppliesNeeded: newShelter.suppliesNeeded.map((supply) => ({
         item: supply.item,
         received: Number(supply.received),
         needed: Number(supply.needed),
@@ -171,16 +207,21 @@ export default function Page() {
       housesSmallAnimals: newShelter.housesLargeAnimals,
       hasCounselingUnit: newShelter.hasCounselingUnit,
       foodProvided: newShelter.foodProvided,
-      waterProvided: newShelter.waterProvided
+      waterProvided: newShelter.waterProvided,
     };
 
     if (editingShelterId) {
-      const result = await handleUpdateShelter(editingShelterId, formattedShelter) as ActionResult<Shelter>;
+      const result = (await handleUpdateShelter(
+        editingShelterId,
+        formattedShelter,
+      )) as ActionResult<Shelter>;
       if (result.success && result.data) {
         await refetch();
       }
     } else {
-      const result = await addShelterAction(formattedShelter) as ActionResult<Shelter>;
+      const result = (await addShelterAction(
+        formattedShelter,
+      )) as ActionResult<Shelter>;
       if (result.success && result.data) {
         await refetch();
       }
@@ -196,7 +237,7 @@ export default function Page() {
   const addAccommodation = () => {
     setNewShelter({
       ...newShelter,
-      accommodations: [...newShelter.accommodations, ""],
+      accommodations: [...newShelter.accommodations, ''],
     });
   };
 
@@ -215,11 +256,18 @@ export default function Page() {
   const addSupply = () => {
     setNewShelter({
       ...newShelter,
-      suppliesNeeded: [...newShelter.suppliesNeeded, { item: "", received: "", needed: "" }],
+      suppliesNeeded: [
+        ...newShelter.suppliesNeeded,
+        { item: '', received: '', needed: '' },
+      ],
     });
   };
 
-  const updateSupply = (index: number, field: "item" | "received" | "needed", value: string) => {
+  const updateSupply = (
+    index: number,
+    field: 'item' | 'received' | 'needed',
+    value: string,
+  ) => {
     const updated = [...newShelter.suppliesNeeded];
     updated[index] = { ...updated[index], [field]: value };
     setNewShelter({ ...newShelter, suppliesNeeded: updated });
@@ -231,20 +279,36 @@ export default function Page() {
     setNewShelter({ ...newShelter, suppliesNeeded: updated });
   };
 
-
   return (
     <div>
       <title>ShelterConnect | Admin</title>
-      <Box sx={{ maxWidth: 600, margin: "auto", pt: 4 }}>
-        <Typography variant="h4" sx={{ fontWeight: "bold", ml: 1.5 }}>
+      <Box sx={{ maxWidth: 600, margin: 'auto', pt: 4 }}>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', ml: 1.5 }}>
           My Shelters
         </Typography>
-        <Box sx={{ display: "flex", justifyContent: "flex-start", mt: 1, mb: 2, ml: 2 }}>
-          <Button variant="contained" color="primary" sx={{ textTransform: "none", borderRadius: "6px" }} onClick={() => setOpen(true)} >
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            mt: 1,
+            mb: 2,
+            ml: 2,
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ textTransform: 'none', borderRadius: '6px' }}
+            onClick={() => setOpen(true)}
+          >
             + New
           </Button>
         </Box>
-        <AdminList shelters={shelters} onDelete={handleDeleteShelter} onEdit={handleOpen} />
+        <AdminList
+          shelters={shelters}
+          onDelete={handleDeleteShelter}
+          onEdit={handleOpen}
+        />
 
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
           <DialogTitle>Add New Shelter</DialogTitle>
@@ -253,7 +317,9 @@ export default function Page() {
               label="Shelter Name"
               fullWidth
               value={newShelter.name}
-              onChange={(e) => setNewShelter({ ...newShelter, name: e.target.value })}
+              onChange={(e) =>
+                setNewShelter({ ...newShelter, name: e.target.value })
+              }
               sx={{ mb: 2, mt: 1 }}
             />
 
@@ -262,7 +328,10 @@ export default function Page() {
               fullWidth
               value={newShelter.address.street}
               onChange={(e) =>
-                setNewShelter({ ...newShelter, address: { ...newShelter.address, street: e.target.value } })
+                setNewShelter({
+                  ...newShelter,
+                  address: { ...newShelter.address, street: e.target.value },
+                })
               }
               sx={{ mb: 2 }}
             />
@@ -271,7 +340,10 @@ export default function Page() {
               fullWidth
               value={newShelter.address.city}
               onChange={(e) =>
-                setNewShelter({ ...newShelter, address: { ...newShelter.address, city: e.target.value } })
+                setNewShelter({
+                  ...newShelter,
+                  address: { ...newShelter.address, city: e.target.value },
+                })
               }
               sx={{ mb: 2 }}
             />
@@ -280,7 +352,10 @@ export default function Page() {
               fullWidth
               value={newShelter.address.state}
               onChange={(e) =>
-                setNewShelter({ ...newShelter, address: { ...newShelter.address, state: e.target.value } })
+                setNewShelter({
+                  ...newShelter,
+                  address: { ...newShelter.address, state: e.target.value },
+                })
               }
               sx={{ mb: 2 }}
             />
@@ -289,7 +364,10 @@ export default function Page() {
               fullWidth
               value={newShelter.address.zipCode}
               onChange={(e) =>
-                setNewShelter({ ...newShelter, address: { ...newShelter.address, zipCode: e.target.value } })
+                setNewShelter({
+                  ...newShelter,
+                  address: { ...newShelter.address, zipCode: e.target.value },
+                })
               }
               sx={{ mb: 2 }}
             />
@@ -298,7 +376,10 @@ export default function Page() {
               fullWidth
               value={newShelter.address.country}
               onChange={(e) =>
-                setNewShelter({ ...newShelter, address: { ...newShelter.address, country: e.target.value } })
+                setNewShelter({
+                  ...newShelter,
+                  address: { ...newShelter.address, country: e.target.value },
+                })
               }
               sx={{ mb: 2 }}
             />
@@ -306,102 +387,160 @@ export default function Page() {
               label="Picture URL (optional)"
               fullWidth
               value={newShelter.picture}
-              onChange={(e) => setNewShelter({ ...newShelter, picture: e.target.value })}
+              onChange={(e) =>
+                setNewShelter({ ...newShelter, picture: e.target.value })
+              }
               sx={{ mb: 2 }}
             />
             <TextField
               label="Volunteer Capacity (optional)"
               fullWidth
               value={newShelter.volunteerCapacity}
-              onChange={(e) => setNewShelter({ ...newShelter, volunteerCapacity: e.target.value })}
+              onChange={(e) =>
+                setNewShelter({
+                  ...newShelter,
+                  volunteerCapacity: e.target.value,
+                })
+              }
               sx={{ mb: 2 }}
             />
             <TextField
               label="Evacuee Capacity (optional)"
               fullWidth
               value={newShelter.evacueeCapacity}
-              onChange={(e) => setNewShelter({ ...newShelter, evacueeCapacity: e.target.value })}
-              sx={{ mb: 2 }}
-            />
-            <TextField
-              label="Latitude (optional)"
-              fullWidth
-              value={newShelter.location.latitude}
               onChange={(e) =>
-                setNewShelter({ ...newShelter, location: { ...newShelter.location, latitude: e.target.value } })
+                setNewShelter({
+                  ...newShelter,
+                  evacueeCapacity: e.target.value,
+                })
               }
               sx={{ mb: 2 }}
             />
             <TextField
               label="Longitude (optional)"
               fullWidth
-              value={newShelter.location.longitude}
+              value={newShelter.location.coordinates[0] || ''}
               onChange={(e) =>
-                setNewShelter({ ...newShelter, location: { ...newShelter.location, longitude: e.target.value } })
+                setNewShelter({
+                  ...newShelter,
+                  location: {
+                    ...newShelter.location,
+                    coordinates: [
+                      parseFloat(e.target.value) || 0,
+                      newShelter.location.coordinates[1] || 0,
+                    ],
+                  },
+                })
+              }
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              label="Latitude (optional)"
+              fullWidth
+              value={newShelter.location.coordinates[1] || ''}
+              onChange={(e) =>
+                setNewShelter({
+                  ...newShelter,
+                  location: {
+                    ...newShelter.location,
+                    coordinates: [
+                      newShelter.location.coordinates[0] || 0,
+                      parseFloat(e.target.value) || 0,
+                    ],
+                  },
+                })
               }
               sx={{ mb: 2 }}
             />
 
-            <Typography variant="subtitle1" sx={{ mt: 2 }}>Shelter Options:</Typography>
+            <Typography variant="subtitle1" sx={{ mt: 2 }}>
+              Shelter Options:
+            </Typography>
             <Chip
               label="Wheelchair Accessible"
               onClick={() =>
-                setNewShelter({ ...newShelter, wheelchairAccessible: !newShelter.wheelchairAccessible })
+                setNewShelter({
+                  ...newShelter,
+                  wheelchairAccessible: !newShelter.wheelchairAccessible,
+                })
               }
-              color={newShelter.wheelchairAccessible ? "primary" : "default"}
+              color={newShelter.wheelchairAccessible ? 'primary' : 'default'}
               sx={{ mr: 1, mb: 1 }}
             />
             <Chip
               label="Houses Large Animals"
               onClick={() =>
-                setNewShelter({ ...newShelter, housesLargeAnimals: !newShelter.housesLargeAnimals })
+                setNewShelter({
+                  ...newShelter,
+                  housesLargeAnimals: !newShelter.housesLargeAnimals,
+                })
               }
-              color={newShelter.housesLargeAnimals ? "primary" : "default"}
+              color={newShelter.housesLargeAnimals ? 'primary' : 'default'}
               sx={{ mr: 1, mb: 1 }}
             />
             <Chip
               label="Houses Small Animals"
               onClick={() =>
-                setNewShelter({ ...newShelter, housesSmallAnimals: !newShelter.housesSmallAnimals })
+                setNewShelter({
+                  ...newShelter,
+                  housesSmallAnimals: !newShelter.housesSmallAnimals,
+                })
               }
-              color={newShelter.housesSmallAnimals ? "primary" : "default"}
+              color={newShelter.housesSmallAnimals ? 'primary' : 'default'}
               sx={{ mr: 1, mb: 1 }}
             />
             <Chip
               label="Counseling Unit"
               onClick={() =>
-                setNewShelter({ ...newShelter, hasCounselingUnit: !newShelter.hasCounselingUnit })
+                setNewShelter({
+                  ...newShelter,
+                  hasCounselingUnit: !newShelter.hasCounselingUnit,
+                })
               }
-              color={newShelter.hasCounselingUnit ? "primary" : "default"}
+              color={newShelter.hasCounselingUnit ? 'primary' : 'default'}
               sx={{ mr: 1, mb: 1 }}
             />
             <Chip
               label="Food Provided"
               onClick={() =>
-                setNewShelter({ ...newShelter, foodProvided: !newShelter.foodProvided })
+                setNewShelter({
+                  ...newShelter,
+                  foodProvided: !newShelter.foodProvided,
+                })
               }
-              color={newShelter.foodProvided ? "primary" : "default"}
+              color={newShelter.foodProvided ? 'primary' : 'default'}
               sx={{ mr: 1, mb: 1 }}
             />
             <Chip
               label="Water Provided"
               onClick={() =>
-                setNewShelter({ ...newShelter, waterProvided: !newShelter.waterProvided })
+                setNewShelter({
+                  ...newShelter,
+                  waterProvided: !newShelter.waterProvided,
+                })
               }
-              color={newShelter.waterProvided ? "primary" : "default"}
+              color={newShelter.waterProvided ? 'primary' : 'default'}
               sx={{ mr: 1, mb: 1 }}
             />
 
-            <Typography variant="subtitle1">Accommodations (optional):</Typography>
+            <Typography variant="subtitle1">
+              Accommodations (optional):
+            </Typography>
             {newShelter.accommodations.map((acc, index) => (
-              <Box key={index} sx={{ display: "flex", alignItems: "center", mb: 2, gap: 1 }}>
+              <Box
+                key={index}
+                sx={{ display: 'flex', alignItems: 'center', mb: 2, gap: 1 }}
+              >
                 <TextField
                   label={`Accommodation ${index + 1}`}
                   fullWidth
                   value={acc}
                   onChange={(e) => updateAccommodation(index, e.target.value)}
                 />
-                <IconButton onClick={() => deleteAccommodation(index)} color="error">
+                <IconButton
+                  onClick={() => deleteAccommodation(index)}
+                  color="error"
+                >
                   <DeleteIcon />
                 </IconButton>
               </Box>
@@ -410,26 +549,35 @@ export default function Page() {
               <AddIcon />
             </IconButton>
 
-            <Typography variant="subtitle1">Supplies Needed (optional):</Typography>
+            <Typography variant="subtitle1">
+              Supplies Needed (optional):
+            </Typography>
             {newShelter.suppliesNeeded.map((supply, index) => (
-              <Box key={index} sx={{ display: "flex", alignItems: "center", gap: 1, mb: 2 }}>
+              <Box
+                key={index}
+                sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}
+              >
                 <TextField
                   label={`Item ${index + 1}`}
                   fullWidth
                   value={supply.item}
-                  onChange={(e) => updateSupply(index, "item", e.target.value)}
+                  onChange={(e) => updateSupply(index, 'item', e.target.value)}
                 />
                 <TextField
                   label="Received"
                   fullWidth
                   value={supply.received}
-                  onChange={(e) => updateSupply(index, "received", e.target.value)}
+                  onChange={(e) =>
+                    updateSupply(index, 'received', e.target.value)
+                  }
                 />
                 <TextField
                   label="Needed"
                   fullWidth
                   value={supply.needed}
-                  onChange={(e) => updateSupply(index, "needed", e.target.value)}
+                  onChange={(e) =>
+                    updateSupply(index, 'needed', e.target.value)
+                  }
                 />
                 <IconButton onClick={() => deleteSupply(index)} color="error">
                   <DeleteIcon />
@@ -441,9 +589,16 @@ export default function Page() {
             </IconButton>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="error">Cancel</Button>
-            <Button onClick={handleAddOrUpdateShelter} variant="contained" color="primary" disabled={addLoading || updateLoading}>
-              {editingShelterId ? "Update" : "Add"}
+            <Button onClick={handleClose} color="error">
+              Cancel
+            </Button>
+            <Button
+              onClick={handleAddOrUpdateShelter}
+              variant="contained"
+              color="primary"
+              disabled={addLoading || updateLoading}
+            >
+              {editingShelterId ? 'Update' : 'Add'}
             </Button>
           </DialogActions>
         </Dialog>

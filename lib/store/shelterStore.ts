@@ -8,12 +8,15 @@ interface ShelterState {
   loading: boolean;
   error: string | null;
   filters: GetSheltersParams;
+  totalShelters: number;
+  currentPage: number;
   setFilters: (
     setFunc: (prevFilters: GetSheltersParams) => GetSheltersParams,
   ) => void;
   setShelters: (shelters: Shelter[]) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
+  setCurrentPage: (page: number) => void;
   fetchShelters: () => Promise<void>;
   refetch: () => Promise<void>;
 }
@@ -26,7 +29,11 @@ export const useShelterStore = create<ShelterState>()((set, get) => {
     try {
       const result = await getShelters(filters);
       if (result.success) {
-        set({ shelters: result.data });
+        set({
+          shelters: result.data.shelters,
+          totalShelters: result.data.total,
+          currentPage: filters.pagination?.page || 1,
+        });
       } else {
         set({ error: 'Failed to fetch shelters' });
       }
@@ -43,6 +50,8 @@ export const useShelterStore = create<ShelterState>()((set, get) => {
     loading: false,
     error: null,
     filters: {},
+    totalShelters: 0,
+    currentPage: 1,
 
     setFilters: (setFunc) =>
       set((state) => ({
@@ -52,6 +61,7 @@ export const useShelterStore = create<ShelterState>()((set, get) => {
     setShelters: (shelters) => set({ shelters }),
     setLoading: (loading) => set({ loading }),
     setError: (error) => set({ error }),
+    setCurrentPage: (page) => set({ currentPage: page }),
 
     fetchShelters,
     refetch: fetchShelters,

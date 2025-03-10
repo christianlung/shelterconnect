@@ -4,8 +4,8 @@
       "id": "65f0f8b47d654321b9876543",
       "name": "Downtown LA Emergency Shelter",
       "location": {
-        "latitude": 34.0407,
-        "longitude": -118.2468
+        "type": "Point",
+        "coordinates": [-118.2468, 34.0407]
       },
       "address": {
         "street": "123 Main Street",
@@ -43,8 +43,8 @@
       "id": "65f0f8b47d654321b9876544",
       "name": "Hollywood Community Center",
       "location": {
-        "latitude": 34.0928,
-        "longitude": -118.3287
+        "type": "Point",
+        "coordinates": [-118.3287, 34.0928]
       },
       "address": {
         "street": "456 Hollywood Blvd",
@@ -82,8 +82,8 @@
       "id": "65f0f8b47d654321b9876545",
       "name": "Koreatown Relief Center",
       "location": {
-        "latitude": 34.061,
-        "longitude": -118.3012
+        "type": "Point",
+        "coordinates": [-118.3012, 34.061]
       },
       "address": {
         "street": "789 Western Ave",
@@ -121,8 +121,8 @@
       "id": "65f0f8b47d654321b9876546",
       "name": "East LA Family Shelter",
       "location": {
-        "latitude": 34.0224,
-        "longitude": -118.1677
+        "type": "Point",
+        "coordinates": [-118.1677, 34.0224]
       },
       "address": {
         "street": "321 Cesar E Chavez Ave",
@@ -160,8 +160,8 @@
       "id": "65f0f8b47d654321b9876547",
       "name": "Chinatown Community Center",
       "location": {
-        "latitude": 34.0623,
-        "longitude": -118.2383
+        "type": "Point",
+        "coordinates": [-118.2383, 34.0623]
       },
       "address": {
         "street": "567 N Broadway",
@@ -199,8 +199,8 @@
       "id": "65f0f8b47d654321b9876548",
       "name": "South LA Resource Center",
       "location": {
-        "latitude": 33.989,
-        "longitude": -118.2987
+        "type": "Point",
+        "coordinates": [-118.2987, 33.989]
       },
       "address": {
         "street": "890 W Vernon Ave",
@@ -238,8 +238,8 @@
       "id": "65f0f8b47d654321b9876549",
       "name": "Valley Emergency Center",
       "location": {
-        "latitude": 34.1687,
-        "longitude": -118.3782
+        "type": "Point",
+        "coordinates": [-118.3782, 34.1687]
       },
       "address": {
         "street": "123 Van Nuys Blvd",
@@ -277,8 +277,8 @@
       "id": "65f0f8b47d654321b987654a",
       "name": "Little Tokyo Support Center",
       "location": {
-        "latitude": 34.0505,
-        "longitude": -118.24
+        "type": "Point",
+        "coordinates": [-118.24, 34.0505]
       },
       "address": {
         "street": "456 E 1st St",
@@ -316,8 +316,8 @@
       "id": "65f0f8b47d654321b987654b",
       "name": "Westside Relief Station",
       "location": {
-        "latitude": 34.0211,
-        "longitude": -118.4814
+        "type": "Point",
+        "coordinates": [-118.4814, 34.0211]
       },
       "address": {
         "street": "789 Santa Monica Blvd",
@@ -355,8 +355,8 @@
       "id": "65f0f8b47d654321b987654c",
       "name": "Echo Park Crisis Center",
       "location": {
-        "latitude": 34.0781,
-        "longitude": -118.2606
+        "type": "Point",
+        "coordinates": [-118.2606, 34.0781]
       },
       "address": {
         "street": "321 Sunset Blvd",
@@ -389,6 +389,377 @@
       "requiredLanguages": ["ENGLISH", "SPANISH", "TAGALOG"],
       "createdAt": "2024-03-12T08:09:00.000Z",
       "updatedAt": "2024-03-12T08:09:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b987654d",
+      "name": "SF Mission District Haven",
+      "location": {
+        "type": "Point",
+        "coordinates": [-122.4194, 37.7601]
+      },
+      "address": {
+        "street": "2000 Mission Street",
+        "city": "San Francisco",
+        "state": "CA",
+        "zipCode": "94110",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/sfmission.jpg",
+      "volunteerCapacity": 45,
+      "evacueeCapacity": 180,
+      "accommodations": ["Beds", "Community Kitchen", "Tech Center"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Cultural Sensitivity", "Tech Support"]
+      },
+      "suppliesNeeded": [
+        { "item": "Blankets", "received": 15, "needed": 30 },
+        { "item": "Laptops", "received": 5, "needed": 20 },
+        { "item": "Water bottles", "received": 50, "needed": 100 },
+        { "item": "Towels", "received": 25, "needed": 40 }
+      ],
+      "requiredLanguages": ["ENGLISH", "SPANISH", "MANDARIN"],
+      "createdAt": "2024-03-12T08:10:00.000Z",
+      "updatedAt": "2024-03-12T08:10:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b987654e",
+      "name": "Oakland Community Shelter",
+      "location": {
+        "type": "Point",
+        "coordinates": [-122.2712, 37.8044]
+      },
+      "address": {
+        "street": "1200 Broadway",
+        "city": "Oakland",
+        "state": "CA",
+        "zipCode": "94612",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/oakland.jpg",
+      "volunteerCapacity": 40,
+      "evacueeCapacity": 160,
+      "accommodations": ["Beds", "Art Space", "Job Training Center"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Job Training", "Mental Health First Aid"]
+      },
+      "suppliesNeeded": [
+        { "item": "Art Supplies", "received": 10, "needed": 30 },
+        { "item": "Professional Clothing", "received": 20, "needed": 50 },
+        { "item": "Laptops", "received": 5, "needed": 15 }
+      ],
+      "requiredLanguages": ["ENGLISH", "SPANISH", "VIETNAMESE"],
+      "createdAt": "2024-03-12T08:11:00.000Z",
+      "updatedAt": "2024-03-12T08:11:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b987654f",
+      "name": "Berkeley Youth Center",
+      "location": {
+        "type": "Point",
+        "coordinates": [-122.2728, 37.8716]
+      },
+      "address": {
+        "street": "2400 Bancroft Way",
+        "city": "Berkeley",
+        "state": "CA",
+        "zipCode": "94704",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/berkeley.jpg",
+      "volunteerCapacity": 35,
+      "evacueeCapacity": 120,
+      "accommodations": ["Beds", "Study Areas", "Computer Lab"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": false,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 21,
+        "requiredTraining": ["Youth Counseling", "Education"]
+      },
+      "suppliesNeeded": [
+        { "item": "School Supplies", "received": 30, "needed": 100 },
+        { "item": "Backpacks", "received": 15, "needed": 50 },
+        { "item": "Hygiene Kits", "received": 25, "needed": 75 }
+      ],
+      "requiredLanguages": ["ENGLISH", "MANDARIN", "KOREAN"],
+      "createdAt": "2024-03-12T08:12:00.000Z",
+      "updatedAt": "2024-03-12T08:12:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b9876550",
+      "name": "Denver Downtown Refuge",
+      "location": {
+        "type": "Point",
+        "coordinates": [-104.9903, 39.7392]
+      },
+      "address": {
+        "street": "1500 Lawrence Street",
+        "city": "Denver",
+        "state": "CO",
+        "zipCode": "80202",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/denver.jpg",
+      "volunteerCapacity": 50,
+      "evacueeCapacity": 200,
+      "accommodations": ["Beds", "Mountain View Lounge", "Fitness Center"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Winter Safety", "First Aid"]
+      },
+      "suppliesNeeded": [
+        { "item": "Winter Coats", "received": 30, "needed": 100 },
+        { "item": "Snow Boots", "received": 20, "needed": 80 },
+        { "item": "Thermal Blankets", "received": 40, "needed": 120 }
+      ],
+      "requiredLanguages": ["ENGLISH", "SPANISH"],
+      "createdAt": "2024-03-12T08:13:00.000Z",
+      "updatedAt": "2024-03-12T08:13:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b9876551",
+      "name": "Boulder Mountain Haven",
+      "location": {
+        "type": "Point",
+        "coordinates": [-105.2705, 40.015]
+      },
+      "address": {
+        "street": "1777 Broadway",
+        "city": "Boulder",
+        "state": "CO",
+        "zipCode": "80302",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/boulder.jpg",
+      "volunteerCapacity": 30,
+      "evacueeCapacity": 120,
+      "accommodations": ["Beds", "Climbing Wall", "Meditation Room"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": true,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Outdoor Safety", "Mental Health Support"]
+      },
+      "suppliesNeeded": [
+        { "item": "Hiking Gear", "received": 10, "needed": 40 },
+        { "item": "Camping Equipment", "received": 5, "needed": 25 },
+        { "item": "First Aid Kits", "received": 15, "needed": 35 }
+      ],
+      "requiredLanguages": ["ENGLISH", "SPANISH", "OTHER"],
+      "createdAt": "2024-03-12T08:14:00.000Z",
+      "updatedAt": "2024-03-12T08:14:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b9876552",
+      "name": "Colorado Springs Sanctuary",
+      "location": {
+        "type": "Point",
+        "coordinates": [-104.8214, 38.8339]
+      },
+      "address": {
+        "street": "215 East Pikes Peak Ave",
+        "city": "Colorado Springs",
+        "state": "CO",
+        "zipCode": "80903",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/coloradosprings.jpg",
+      "volunteerCapacity": 40,
+      "evacueeCapacity": 150,
+      "accommodations": ["Beds", "Veterans' Services", "Training Center"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 21,
+        "requiredTraining": ["Veterans Affairs", "Emergency Response"]
+      },
+      "suppliesNeeded": [
+        { "item": "Military Gear", "received": 20, "needed": 60 },
+        { "item": "Medical Supplies", "received": 30, "needed": 80 },
+        { "item": "Winter Clothing", "received": 40, "needed": 100 }
+      ],
+      "requiredLanguages": ["ENGLISH", "SPANISH", "ARABIC"],
+      "createdAt": "2024-03-12T08:15:00.000Z",
+      "updatedAt": "2024-03-12T08:15:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b9876553",
+      "name": "Manhattan Emergency Center",
+      "location": {
+        "type": "Point",
+        "coordinates": [-73.9857, 40.7484]
+      },
+      "address": {
+        "street": "350 5th Avenue",
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "10118",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/nyc.jpg",
+      "volunteerCapacity": 60,
+      "evacueeCapacity": 250,
+      "accommodations": ["Beds", "Business Center", "Urban Garden"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Urban Navigation", "Crisis Management"]
+      },
+      "suppliesNeeded": [
+        { "item": "Business Attire", "received": 50, "needed": 150 },
+        { "item": "Metro Cards", "received": 100, "needed": 300 },
+        { "item": "Phone Chargers", "received": 30, "needed": 100 }
+      ],
+      "requiredLanguages": ["ENGLISH", "SPANISH", "MANDARIN", "OTHER"],
+      "createdAt": "2024-03-12T08:16:00.000Z",
+      "updatedAt": "2024-03-12T08:16:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b9876554",
+      "name": "Boston Harbor Shelter",
+      "location": {
+        "type": "Point",
+        "coordinates": [-71.0589, 42.3601]
+      },
+      "address": {
+        "street": "126 State Street",
+        "city": "Boston",
+        "state": "MA",
+        "zipCode": "02109",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/boston.jpg",
+      "volunteerCapacity": 45,
+      "evacueeCapacity": 175,
+      "accommodations": ["Beds", "Study Hall", "Maritime View"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Maritime Safety", "Education Support"]
+      },
+      "suppliesNeeded": [
+        { "item": "Rain Gear", "received": 25, "needed": 75 },
+        { "item": "Study Materials", "received": 40, "needed": 100 },
+        { "item": "Winter Clothing", "received": 60, "needed": 150 }
+      ],
+      "requiredLanguages": ["ENGLISH", "SPANISH", "FRENCH"],
+      "createdAt": "2024-03-12T08:17:00.000Z",
+      "updatedAt": "2024-03-12T08:17:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b9876555",
+      "name": "DC Capitol Support Center",
+      "location": {
+        "type": "Point",
+        "coordinates": [-77.0369, 38.9072]
+      },
+      "address": {
+        "street": "1275 K Street NW",
+        "city": "Washington",
+        "state": "DC",
+        "zipCode": "20005",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/dc.jpg",
+      "volunteerCapacity": 50,
+      "evacueeCapacity": 200,
+      "accommodations": ["Beds", "Policy Center", "Conference Rooms"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Policy Education", "Government Services"]
+      },
+      "suppliesNeeded": [
+        { "item": "Professional Attire", "received": 45, "needed": 120 },
+        { "item": "Laptops", "received": 15, "needed": 50 },
+        { "item": "Metro Passes", "received": 80, "needed": 200 }
+      ],
+      "requiredLanguages": ["ENGLISH", "SPANISH", "FRENCH", "ARABIC"],
+      "createdAt": "2024-03-12T08:18:00.000Z",
+      "updatedAt": "2024-03-12T08:18:00.000Z"
+    },
+    {
+      "id": "65f0f8b47d654321b9876556",
+      "name": "Miami Beach Relief Center",
+      "location": {
+        "type": "Point",
+        "coordinates": [-80.13, 25.7907]
+      },
+      "address": {
+        "street": "1701 Collins Avenue",
+        "city": "Miami Beach",
+        "state": "FL",
+        "zipCode": "33139",
+        "country": "USA"
+      },
+      "picture": "https://example.com/shelters/miami.jpg",
+      "volunteerCapacity": 55,
+      "evacueeCapacity": 220,
+      "accommodations": ["Beds", "Beach Access", "Hurricane Shelter"],
+      "wheelchairAccessible": true,
+      "housesLargeAnimals": false,
+      "housesSmallAnimals": true,
+      "hasCounselingUnit": true,
+      "foodProvided": true,
+      "waterProvided": true,
+      "volunteerPreferences": {
+        "minAge": 18,
+        "requiredTraining": ["Hurricane Preparedness", "Water Safety"]
+      },
+      "suppliesNeeded": [
+        { "item": "Hurricane Supplies", "received": 50, "needed": 150 },
+        { "item": "Beach Safety Gear", "received": 30, "needed": 80 },
+        { "item": "Sunscreen", "received": 100, "needed": 300 }
+      ],
+      "requiredLanguages": ["ENGLISH", "SPANISH", "FRENCH", "OTHER"],
+      "createdAt": "2024-03-12T08:19:00.000Z",
+      "updatedAt": "2024-03-12T08:19:00.000Z"
     }
   ]
 }

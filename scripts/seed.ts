@@ -9,35 +9,35 @@ const prisma = new PrismaClient();
 
 async function main() {
   try {
-    console.log('Clearing existing data...');
-    await prisma.volunteerSignup.deleteMany();
-    await prisma.volunteer.deleteMany();
-    await prisma.shelter.deleteMany();
+    console.log('Starting database seeding...');
 
-    console.log('Creating volunteers...');
-    for (const volunteer of volunteerData) {
-      await prisma.volunteer.create({
-        data: volunteer,
+    await prisma.$transaction(async (tx) => {
+      console.log('Clearing existing data...');
+      await tx.volunteerSignup.deleteMany();
+      await tx.volunteer.deleteMany();
+      await tx.shelter.deleteMany();
+
+      console.log('Creating volunteers...');
+      await tx.volunteer.createMany({
+        data: volunteerData,
       });
-    }
 
-    console.log('Creating shelters...');
-    for (const shelter of shelterData) {
-      await prisma.shelter.create({
-        data: shelter,
+      console.log('Creating shelters...');
+      await tx.shelter.createMany({
+        data: shelterData,
       });
-    }
 
-    console.log('Creating volunteer signups...');
-    for (const signup of signupData) {
-      await prisma.volunteerSignup.create({
-        data: signup,
-      });
-    }
+      console.log('Creating volunteer signups...');
+      for (const signup of signupData) {
+        await tx.volunteerSignup.create({
+          data: signup,
+        });
+      }
+    });
 
-    console.log('Seeding completed successfully!');
+    console.log('Database seeding completed successfully!');
   } catch (error) {
-    console.error('Error seeding the database:', error);
+    console.error('Error seeding database:', error);
     throw error;
   } finally {
     await prisma.$disconnect();

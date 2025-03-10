@@ -4,33 +4,82 @@ import {
   faHouseChimney,
   faMagnifyingGlass,
   faSpinner,
+  faChevronLeft,
+  faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import ShelterQuickInfo from './ShelterQuickInfo';
-import { useCallback } from 'react';
+import { useCallback, useMemo, useEffect } from 'react';
 import CheckboxGroup from '@/src/components/CheckboxGroup';
 import { useShelterStore } from '@/lib/store/shelterStore';
 import type { GetSheltersParams } from '@/lib/actions/shelter.schema';
-import useOnMount from '@/src/hooks/useOnMount';
+
+const ITEMS_PER_PAGE = 9;
 
 export default function ShelterList() {
-  const { shelters, loading, setFilters, fetchShelters } = useShelterStore();
-  useOnMount(() => {
-    fetchShelters();
-  });
+  const {
+    shelters,
+    loading,
+    setFilters,
+    fetchShelters,
+    totalShelters,
+    currentPage,
+  } = useShelterStore();
+
+  const totalPages = useMemo(() => {
+    return Math.ceil(totalShelters / ITEMS_PER_PAGE);
+  }, [totalShelters]);
 
   const handleSearch = useCallback(() => {
+    setFilters((prev: GetSheltersParams) => ({
+      ...prev,
+      pagination: {
+        page: 1,
+        limit: ITEMS_PER_PAGE,
+      },
+    }));
     fetchShelters();
-  }, [fetchShelters]);
+  }, [setFilters, fetchShelters]);
 
   const handleFilterChange = useCallback(
     (value: string, checked: boolean) => {
       setFilters((prev: GetSheltersParams) => ({
         ...prev,
         [value]: checked || undefined,
+        pagination: {
+          page: 1,
+          limit: ITEMS_PER_PAGE,
+        },
       }));
+      fetchShelters();
     },
-    [setFilters],
+    [setFilters, fetchShelters],
   );
+
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      setFilters((prev: GetSheltersParams) => ({
+        ...prev,
+        pagination: {
+          page: newPage,
+          limit: ITEMS_PER_PAGE,
+        },
+      }));
+      fetchShelters();
+    },
+    [setFilters, fetchShelters],
+  );
+
+  // Initialize pagination on mount
+  useEffect(() => {
+    setFilters((prev: GetSheltersParams) => ({
+      ...prev,
+      pagination: {
+        page: 1,
+        limit: ITEMS_PER_PAGE,
+      },
+    }));
+    fetchShelters();
+  }, [setFilters, fetchShelters]);
 
   return (
     <div className="container mx-auto max-w-6xl px-4 pb-8">
@@ -162,15 +211,37 @@ export default function ShelterList() {
           </div>
         </div>
 
-        <div className="flex items-center justify-end">
-          <span className="text-sm text-gray-500">{shelters.length} total</span>
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-gray-500">
+            Showing {(currentPage - 1) * ITEMS_PER_PAGE + 1} to{' '}
+            {Math.min(currentPage * ITEMS_PER_PAGE, totalShelters)} of{' '}
+            {totalShelters} shelters
+          </div>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1 || loading}
+              className="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none disabled:opacity-50"
+            >
+              <FontAwesomeIcon icon={faChevronLeft} className="mr-2 h-4 w-4" />
+              Previous
+            </button>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage >= totalPages || loading}
+              className="inline-flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none disabled:opacity-50"
+            >
+              Next
+              <FontAwesomeIcon icon={faChevronRight} className="ml-2 h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
 
       {shelters.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {shelters.map((shelter) => (
-            <ShelterQuickInfo key={shelter.id} shelter={shelter} />
+            <ShelterQuickInfo key={Math.random()} shelter={shelter} />
           ))}
         </div>
       ) : (
