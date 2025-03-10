@@ -1,13 +1,12 @@
 'use server';
 
-import { stripe } from '@/lib/stripe';
 import { createPaymentIntent, handleStripeWebhook } from './stripe';
 import Stripe from 'stripe';
 
-const originalCreate = stripe.paymentIntents.create;
-const originalConstructEvent = stripe.webhooks.constructEvent;
-
 describe(createPaymentIntent, () => {
+  const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SK as string);
+  const originalCreate = stripe.paymentIntents.create;
+
   beforeEach(() => {
     stripe.paymentIntents.create = originalCreate;
   });
@@ -53,6 +52,8 @@ describe(createPaymentIntent, () => {
 });
 
 describe(handleStripeWebhook, () => {
+  const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SK as string);
+  const originalConstructEvent = stripe.webhooks.constructEvent;
   const mockSignature = 'mock_signature';
   const mockSecret = 'mock_secret';
   process.env.STRIPE_WEBHOOK_SECRET = mockSecret;
