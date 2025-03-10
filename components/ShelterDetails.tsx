@@ -150,7 +150,7 @@ export default function ShelterDetails({ shelter }: { shelter: Shelter }) {
                   )}
                 </div>
               )}
-
+              <Button onClick={() => router.push('/volunteer-sign-up')} className="w-1/4 bg-red-500 hover:bg-red-600"> Volunteer Here </Button>
               <Button onClick={() => router.back()} className="mt-4 w-full">
                 Back
               </Button>
